@@ -1,14 +1,14 @@
-
+ï»¿
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    //ÃßÀû
+    //ì¶”ì 
     [SerializeField] private Transform target;
     [SerializeField] private float smoothSpeed = 0.125f;
     [SerializeField] private Vector3 offset = new Vector3(0f, 0f, -10f);
     
-    //¸Ê °æ°è
+    //ë§µ ê²½ê³„
 	[SerializeField] private bool useBounds = true;
     [SerializeField] private Vector2 minBounds;
     [SerializeField] private Vector2 maxBounds;
@@ -36,19 +36,19 @@ public class CameraController : MonoBehaviour
         if (target == null)
             return;
 
-        //¸ñÇ¥ À§Ä¡
+        //ëª©í‘œ ìœ„ì¹˜
         Vector3 targetPosition = target.position + offset;
 
 
-        //È­¸éÀÇ °æ°è
+        //í™”ë©´ì˜ ê²½ê³„
 		if (useBounds)
         {
-            //°æ°è ³»·Î Á¦ÇÑ
+            //ê²½ê³„ ë‚´ë¡œ ì œí•œ
             targetPosition.x = Mathf.Clamp(targetPosition.x, minBounds.x, maxBounds.x);
             targetPosition.y = Mathf.Clamp(targetPosition.y, minBounds.y, maxBounds.y);
         }
        
-        //ºÎµå·´°Ô ÀÌµ¿
+        //ë¶€ë“œëŸ½ê²Œ ì´ë™
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, smoothSpeed*Time.deltaTime);
 
         transform.position = smoothedPosition;

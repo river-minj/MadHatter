@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public abstract class InteractionController : MonoBehaviour, IInteractable
 {
 
-    [SerializeField] protected bool isInteractable = true; //ÀÎÅÍ·º¼Ç °¡´É¿©ºÎ
-	[SerializeField] protected string interactionMessage = "Press 'E' to interact"; //ÀÎÅÍ·¢¼Ç ¸Ş½ÃÁö
+    [SerializeField] protected bool isInteractable = true; //ì¸í„°ë ‰ì…˜ ê°€ëŠ¥ì—¬ë¶€
+	[SerializeField] protected string interactionMessage = "Press 'E' to interact"; //ì¸í„°ë™ì…˜ ë©”ì‹œì§€
 
-	protected bool playerInside = false; //ÇÃ·¹ÀÌ¾î°¡ ÀÎÅÍ·º¼Ç ¹üÀ§ ¾È¿¡ ÀÖ´ÂÁö ¿©ºÎ
-	protected Transform playerTransform; //ÇÃ·¹ÀÌ¾î Æ®·£½ºÆû ÂüÁ¶
+	protected bool playerInside = false; //í”Œë ˆì´ì–´ê°€ ì¸í„°ë ‰ì…˜ ë²”ìœ„ ì•ˆì— ìˆëŠ”ì§€ ì—¬ë¶€
+	protected Transform playerTransform; //í”Œë ˆì´ì–´ íŠ¸ëœìŠ¤í¼ ì°¸ì¡°
 
 
-	//IInteractable ±¸Çö > ¼öÇàÇÒ Çàµ¿
+	//IInteractable êµ¬í˜„ > ìˆ˜í–‰í•  í–‰ë™
 	public virtual void Intercat(PlayerController player)
 
 	{
@@ -24,23 +24,23 @@ public abstract class InteractionController : MonoBehaviour, IInteractable
 		OnInteract();
 	}
 
-	//iinteractable ±¸Çö > ÀÎÅÍ·¢¼Ç °¡´É ¿©ºÎ
+	//iinteractable êµ¬í˜„ > ì¸í„°ë™ì…˜ ê°€ëŠ¥ ì—¬ë¶€
 	public virtual bool CanInteract()
 	{
-		//ÀÎÅÍ·¢¼Ç °¡´É ¿©ºÎ È®ÀÎ
+		//ì¸í„°ë™ì…˜ ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
 		return isInteractable;
 	}
 
 	public virtual string GetInteractionMessage()
 	{
-		//ÀÎÅÍ·¢¼Ç ¸Ş½ÃÁö ¹İÈ¯
+		//ì¸í„°ë™ì…˜ ë©”ì‹œì§€ ë°˜í™˜
 		return interactionMessage;
 	}
 	
-	//ÀÚ½Ä Å¬·¡½º¿¡¼­ ÇÊ¼ö ±¸Çö
+	//ìì‹ í´ë˜ìŠ¤ì—ì„œ í•„ìˆ˜ êµ¬í˜„
 	protected abstract void OnInteract();
 
-	//ÀÔ·Â ÇÚµé·¯¿ë public API
+	//ì…ë ¥ í•¸ë“¤ëŸ¬ìš© public API
 	public void NotifyPlayerEnter(Transform player)
 	{
 		playerInside = true;
@@ -57,16 +57,16 @@ public abstract class InteractionController : MonoBehaviour, IInteractable
 		OnPlayerExit();
 	}
 
-	//ÀÚ½Ä Å¬·¡½º¿¡¼­ ÇÊ¿ä¿¡ µû¶ó ¿À¹ö¶óÀÌµå °¡´É
+	//ìì‹ í´ë˜ìŠ¤ì—ì„œ í•„ìš”ì— ë”°ë¼ ì˜¤ë²„ë¼ì´ë“œ ê°€ëŠ¥
 	protected virtual void OnPlayerEnter()
 	{
-		//ÇÃ·¹ÀÌ¾î°¡ ÀÎÅÍ·¢¼Ç ¹üÀ§¿¡ µé¾î¿ÔÀ» ¶§ÀÇ ±âº» µ¿ÀÛ (¼­ºêÅ¬·¡½º¿¡¼­ ¿À¹ö¶óÀÌµå °¡´É)
+		//í”Œë ˆì´ì–´ê°€ ì¸í„°ë™ì…˜ ë²”ìœ„ì— ë“¤ì–´ì™”ì„ ë•Œì˜ ê¸°ë³¸ ë™ì‘ (ì„œë¸Œí´ë˜ìŠ¤ì—ì„œ ì˜¤ë²„ë¼ì´ë“œ ê°€ëŠ¥)
 		Debug.Log("Player entered interaction range of " + gameObject.name);
 	}
 
 	protected void OnPlayerExit()
 	{
-		//ÇÃ·¹ÀÌ¾î°¡ ÀÎÅÍ·¢¼Ç ¹üÀ§¿¡¼­ ³ª°¬À» ¶§ÀÇ ±âº» µ¿ÀÛ (¼­ºêÅ¬·¡½º¿¡¼­ ¿À¹ö¶óÀÌµå °¡´É)
+		//í”Œë ˆì´ì–´ê°€ ì¸í„°ë™ì…˜ ë²”ìœ„ì—ì„œ ë‚˜ê°”ì„ ë•Œì˜ ê¸°ë³¸ ë™ì‘ (ì„œë¸Œí´ë˜ìŠ¤ì—ì„œ ì˜¤ë²„ë¼ì´ë“œ ê°€ëŠ¥)
 		Debug.Log("Player exited interaction range of " + gameObject.name);
 	}
 

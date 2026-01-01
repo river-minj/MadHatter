@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
@@ -12,58 +12,58 @@ public class ColliderDebug : MonoBehaviour
 
 	void CheckColliders()
 	{
-		// Tilemap Collider È®ÀÎ
+		// Tilemap Collider í™•ì¸
 		var tilemapCollider = GetComponent<TilemapCollider2D>();
 		if (tilemapCollider != null)
 		{
-			Debug.Log("TilemapCollider2D Á¸Àç");
+			Debug.Log("TilemapCollider2D ì¡´ì¬");
 			Debug.Log($"   Used By Composite: {tilemapCollider.usedByComposite}");
 		}
 		else
 		{
-			Debug.LogError(" TilemapCollider2D ¾øÀ½!");
+			Debug.LogError(" TilemapCollider2D ì—†ìŒ!");
 		}
 
-		// Composite Collider È®ÀÎ
+		// Composite Collider í™•ì¸
 		var compositeCollider = GetComponent<CompositeCollider2D>();
 		if (compositeCollider != null)
 		{
-			Debug.Log(" CompositeCollider2D Á¸Àç");
+			Debug.Log(" CompositeCollider2D ì¡´ì¬");
 			Debug.Log($"   Geometry Type: {compositeCollider.geometryType}");
 			Debug.Log($"   Point Count: {compositeCollider.pointCount}");
 
-			// Æ÷ÀÎÆ®°¡ 0ÀÌ¸é Collider »ı¼º ¾È µÈ °Í
+			// í¬ì¸íŠ¸ê°€ 0ì´ë©´ Collider ìƒì„± ì•ˆ ëœ ê²ƒ
 			if (compositeCollider.pointCount == 0)
 			{
-				Debug.LogWarning("Composite Collider°¡ ºñ¾îÀÖÀ½! Å¸ÀÏÀ» ±×·ÁÁÖ¼¼¿ä.");
+				Debug.LogWarning("Composite Colliderê°€ ë¹„ì–´ìˆìŒ! íƒ€ì¼ì„ ê·¸ë ¤ì£¼ì„¸ìš”.");
 			}
 		}
 		else
 		{
-			Debug.LogError("CompositeCollider2D ¾øÀ½!");
+			Debug.LogError("CompositeCollider2D ì—†ìŒ!");
 		}
 
-		// Rigidbody È®ÀÎ
+		// Rigidbody í™•ì¸
 		var rb = GetComponent<Rigidbody2D>();
 		if (rb != null)
 		{
-			Debug.Log("Rigidbody2D Á¸Àç");
+			Debug.Log("Rigidbody2D ì¡´ì¬");
 			Debug.Log($"   Body Type: {rb.bodyType}");
 
 			if (rb.bodyType != RigidbodyType2D.Static)
 			{
-				Debug.LogWarning("Body TypeÀÌ StaticÀÌ ¾Æ´Õ´Ï´Ù!");
+				Debug.LogWarning("Body Typeì´ Staticì´ ì•„ë‹™ë‹ˆë‹¤!");
 			}
 		}
 		else
 		{
-			Debug.LogError("Rigidbody2D ¾øÀ½!");
+			Debug.LogError("Rigidbody2D ì—†ìŒ!");
 		}
 	}
 
 	void OnDrawGizmos()
 	{
-		// °­Á¦·Î Collider °æ°è ±×¸®±â
+		// ê°•ì œë¡œ Collider ê²½ê³„ ê·¸ë¦¬ê¸°
 		var compositeCollider = GetComponent<CompositeCollider2D>();
 		if (compositeCollider != null)
 		{
@@ -82,7 +82,7 @@ public class ColliderDebug : MonoBehaviour
 					);
 				}
 
-				// ¸¶Áö¸·°ú Ã¹ Á¡ ¿¬°á
+				// ë§ˆì§€ë§‰ê³¼ ì²« ì  ì—°ê²°
 				if (path.Length > 0)
 				{
 					Gizmos.DrawLine(

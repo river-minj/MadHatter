@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// Trigger ±â¹İ ÀÔ·Â Ã³¸®
-/// OnTriggerEnter/Exit À¸·Î ÇÃ·¹ÀÌ¾î ÀÔÅğÀå °¨Áö
+/// Trigger ê¸°ë°˜ ì…ë ¥ ì²˜ë¦¬
+/// OnTriggerEnter/Exit ìœ¼ë¡œ í”Œë ˆì´ì–´ ì…í‡´ì¥ ê°ì§€
 /// </summary>
 
 public class TriggerInputHandler : MonoBehaviour, IInputStrategy
@@ -44,7 +44,7 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 		}
 	}
 
-	//trigger ÀÔÅğÀå
+	//trigger ì…í‡´ì¥
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (!isEnabled) return;

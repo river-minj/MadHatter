@@ -1,6 +1,6 @@
-public interface IInteractable
+ï»¿public interface IInteractable
 {
-    //ÀÎÅÍ·¢¼Ç ÇÒ¼ö ÀÖ´Â ´ë»ó¿¡ È®ÀåÇÒ ¶§ »ç¿ë
-    void Intercat(PlayerController player); //¼öÇàÇÒ ÀÎÅÍ·¢¼Ç
-    bool CanInteract(); //ÀÎÅÍ·¢¼Ç °¡´É¿©ºÎ
+    //ì¸í„°ë™ì…˜ í• ìˆ˜ ìˆëŠ” ëŒ€ìƒì— í™•ì¥í•  ë•Œ ì‚¬ìš©
+    void Intercat(PlayerController player); //ìˆ˜í–‰í•  ì¸í„°ë™ì…˜
+    bool CanInteract(); //ì¸í„°ë™ì…˜ ê°€ëŠ¥ì—¬ë¶€
 }
