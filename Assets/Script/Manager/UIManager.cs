@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		if(npcPrompt != null)
+		if(npcPrompt == null)
 		{
 			npcPrompt = FindObjectOfType<NPCPromptUI>();
 

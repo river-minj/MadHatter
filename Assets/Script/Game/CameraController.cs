@@ -1,11 +1,17 @@
 ﻿
+using System;
 using UnityEngine;
 
+/// <summary>
+/// 1.tracing target
+/// 2.map boundary 
+/// 3.smooth movement
+/// </summary>
 public class CameraController : MonoBehaviour
 {
     //추적
     [SerializeField] private Transform target;
-    [SerializeField] private float smoothSpeed = 0.125f;
+    [SerializeField] private float smoothSpeed = 5f;
     [SerializeField] private Vector3 offset = new Vector3(0f, 0f, -10f);
     
     //맵 경계
@@ -53,4 +59,9 @@ public class CameraController : MonoBehaviour
 
         transform.position = smoothedPosition;
     }
+
+	public void SetBounds(Vector2 minBounds, Vector2 maxBounds)
+	{
+
+	}
 }
