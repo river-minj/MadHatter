@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,18 +8,14 @@ using UnityEngine;
 /// </summary>
 public class MapTransistor : MonoBehaviour
 {
-	[SerializeField] private MapBounds _mextMapBounds;
+	[SerializeField] private MapBounds _nextMapBounds;
 	[SerializeField] private Vector3 _playerSpawnPosition;
 
-	private MapController _mapController;
+	private bool triggered = false;
+
 
 	private void Awake()
 	{
-		_mapController = FindObjectOfType<MapController>();
-		if(_mapController == null)
-		{
-			Debug.LogError("MapController not found in the scene.");
-		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -27,13 +23,16 @@ public class MapTransistor : MonoBehaviour
 		if (other.CompareTag("Player") == false)
 			return;
 
+		 MapController _mapController;
+		_mapController = FindObjectOfType<MapController>();
+
 		if (_mapController == null)
 		{
 			Debug.LogWarning("MapController or next MapBounds is not assigned.");
 			return;
 		}
 		
-		_mapController.ChangeMap(_mextMapBounds, _playerSpawnPosition);
+		_mapController.ChangeMap(_nextMapBounds, _playerSpawnPosition);
 		
 	}
 }

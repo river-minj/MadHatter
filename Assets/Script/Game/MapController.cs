@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -13,27 +14,28 @@ public class MapController : MonoBehaviour
 
 	private void Awake()
 	{
-		if(_cameraController == null)
+		if (_cameraController == null)
 		{
 			_cameraController = Camera.main.GetComponent<CameraController>();
-			if(_cameraController == null)
+			if (_cameraController == null)
 			{
 				Debug.LogError("CameraController component is required on the main camera.");
 			}
+		}
 
-			if(_player == null)
+		if (_player == null)
+		{
+			GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+			if (playerObj != null)
 			{
-				GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-				if(playerObj != null)
-				{
-					_player = playerObj.transform;
-				}
-				else
-				{
-					Debug.LogError("Player object with tag 'Player' is required in the scene.");
-				}
+				_player = playerObj.transform;
+			}
+			else
+			{
+				Debug.LogError("Player object with tag 'Player' is required in the scene.");
 			}
 		}
+
 	}
 	private void Start()
 	{
@@ -48,9 +50,7 @@ public class MapController : MonoBehaviour
 			return;
 		}
 
-		Vector2 minBounds = _currentMap.GetMinBounds();
-		Vector2 maxBounds = _currentMap.GetMaxBounds();
-		_cameraController.SetBounds(minBounds, maxBounds);
+		_cameraController.SetBounds(_currentMap.GetBounds());
 	}
 
 	//맵 전환 요청
@@ -79,12 +79,54 @@ public class MapController : MonoBehaviour
 		ApplyCurrentMap();
 	}
 
+	bool isTransitioning = false;
+	public void RequestMapTransition(MapBounds nextMapBounds)
+	{
+		//이미 전환 중이면 무시
+		if (isTransitioning)
+			return;
+
+		if(nextMapBounds == null)
+		{
+			Debug.LogError("Next MapBounds is null.");
+			return;
+		}
+
+		StartCoroutine(MapTransitionRoutine(nextMapBounds));
+	}
+	
+	private IEnumerator MapTransitionRoutine(MapBounds nextMap)
+	{
+		isTransitioning = true;
+
+		UIManager.Instance?.FadeOut();
+
+		yield return new WaitForSeconds(0.7f); //페이드 아웃 시간 대기
+
+
+		if (_player != null)
+		{
+			_player.position = nextMap.transform.position;
+		}
+
+		if (_cameraController != null)
+		{
+			_cameraController.SetBounds(nextMap.GetBounds());
+		}
+
+		UIManager.Instance?.FadeIn();
+
+		yield return new WaitForSeconds(0.7f); //페이드 인 시간 대기
+
+		isTransitioning = false;
+	}
+
 	//for debugging
 	public Bounds GetCurrentMapBounds()
 	{
 		if(_currentMap != null)
 		{
-			return _currentMap.mapBound;
+			return _currentMap._mapBound;
 		}
 		else
 		{

@@ -2138,7 +2138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mextMapBounds: {fileID: 0}
+  _nextMapBounds: {fileID: 0}
   _playerSpawnPosition: {x: 0, y: 0, z: 0}
 --- !u!61 &112356454
 BoxCollider2D:
@@ -2550,9 +2550,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b11b14ed43b3c4bb311667dcf36f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  skel: {fileID: 322109395}
-  rb: {fileID: 322109393}
+  _moveSpeed: 5
+  _skel: {fileID: 322109395}
+  _rb: {fileID: 322109393}
 --- !u!114 &322109395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2961,6 +2961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1140135735}
   - component: {fileID: 1140135734}
+  - component: {fileID: 1140135736}
   m_Layer: 0
   m_Name: Map01_Grid
   m_TagString: Untagged
@@ -3000,6 +3001,21 @@ Transform:
   - {fileID: 112356452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1140135736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1140135733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10caf2fd4591dc14299c57184c6cf542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraController: {fileID: 519420033}
+  _player: {fileID: 322109391}
+  _currentMap: {fileID: 1815218309}
 --- !u!1 &1253460097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3706,7 +3722,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1815218307}
   - component: {fileID: 1815218308}
-  m_Layer: 0
+  - component: {fileID: 1815218309}
+  m_Layer: 6
   m_Name: MapBound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3773,6 +3790,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18, y: 10}
   m_EdgeRadius: 0
+--- !u!114 &1815218309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815218306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249480494a350f44c935df1cbd34e431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boundsCollider: {fileID: 1815218308}
+  _playerSpawnPosition: {fileID: 1815218307}
 --- !u!1 &2008209222
 GameObject:
   m_ObjectHideFlags: 0

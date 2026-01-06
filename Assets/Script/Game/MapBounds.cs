@@ -5,31 +5,56 @@
 /// </summary>
 public class MapBounds : MonoBehaviour
 {
-	[SerializeField] private BoxCollider2D boundsCollider;
+	[SerializeField] private BoxCollider2D _boundsCollider;
+	[SerializeField] private Transform _playerSpawnPosition;
 
-	public Bounds mapBound { get; private set; }
+	public Bounds _mapBound { get; private set; }
 
 	private void Awake()
 	{
-		if(boundsCollider == null)
+		if(_boundsCollider == null)
 		{
-			boundsCollider = GetComponent<BoxCollider2D>();
-			if(boundsCollider == null)
+			_boundsCollider = GetComponent<BoxCollider2D>();
+			if(_boundsCollider == null)
 			{
 				Debug.LogError("BoxCollider2D component is required for MapBounds.");
 				return;
 			}
 		}
 
-		mapBound = boundsCollider.bounds;
+		_mapBound = _boundsCollider.bounds;
 	}
 
-	public Vector2 GetMinBounds()
+	public Bounds GetBounds()
 	{
-		return mapBound.min;
+		if(_boundsCollider == null)
+			{
+			Debug.LogError("BoxCollider2D component is required for MapBounds.");
+			return new Bounds();
+		}
+
+		return _boundsCollider.bounds;
 	}
-	public Vector2 GetMaxBounds()
+
+	public Vector3 GetPlayerSpawnPosition()
 	{
-		return mapBound.max;
+		if (_playerSpawnPosition != null)
+		{
+			return _playerSpawnPosition.position;
+		}
+
+		return _boundsCollider.bounds.center;
+		
 	}
+
+
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
+	{
+		if (_boundsCollider == null) return;
+
+		Gizmos.color = Color.green;
+		Gizmos.DrawWireCube(_boundsCollider.bounds.center, _boundsCollider.bounds.size);
+	}
+#endif
 }

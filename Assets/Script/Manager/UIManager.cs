@@ -31,6 +31,14 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	public void FadeOut()
+	{
+	}
+
+	public void FadeIn()
+	{
+	}
+
 
 	public void ShowNPCPrompt(string message, Transform npcTransfomt)
 	{
