@@ -11,8 +11,6 @@ public class MapTransistor : MonoBehaviour
 	[SerializeField] private MapBounds _nextMapBounds;
 	[SerializeField] private Vector3 _playerSpawnPosition;
 
-	private bool triggered = false;
-
 
 	private void Awake()
 	{

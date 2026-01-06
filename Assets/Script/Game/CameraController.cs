@@ -15,11 +15,6 @@ public class CameraController : MonoBehaviour
 
     private Bounds? currentBounds;
 
-    //맵 경계
-    [SerializeField] private bool useBounds = true;
-    [SerializeField] private Vector2 minBounds;
-    [SerializeField] private Vector2 maxBounds;
-
     // Start is called before the first frame update
     void Start()
     {

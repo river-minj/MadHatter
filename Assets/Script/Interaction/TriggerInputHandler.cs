@@ -8,7 +8,6 @@
 public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 {
 	private IInteractable interactable;
-	private bool playerInRange = false;
 	private bool isEnabled = true;
 
 	public void Initialize(IInteractable target)
@@ -22,7 +21,6 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 	public void Disable()
 	{
 		isEnabled = false;
-		playerInRange = false;
 	}
 
 	void Start()
@@ -51,7 +49,6 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 
 		if (other.CompareTag("Player"))
 		{
-			playerInRange = true;
 
 			if (interactable is InteractionController controller)
 			{
@@ -71,8 +68,6 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 	{
 		if (collision.CompareTag("Player"))
 		{
-			playerInRange = false;
-
 			if (interactable is InteractionController controller)
 			{
 				controller.NotifyPlayerExit();
