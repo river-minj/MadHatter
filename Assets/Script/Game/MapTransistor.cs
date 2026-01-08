@@ -8,12 +8,14 @@ using UnityEngine;
 /// </summary>
 public class MapTransistor : MonoBehaviour
 {
-	[SerializeField] private MapBounds _nextMapBounds;
+	[SerializeField] private GameObject _nextMapPrefab;
 	[SerializeField] private Vector3 _playerSpawnPosition;
 
+	private MapController _mapController;
 
 	private void Awake()
 	{
+		_mapController = FindObjectOfType<MapController>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -21,16 +23,13 @@ public class MapTransistor : MonoBehaviour
 		if (other.CompareTag("Player") == false)
 			return;
 
-		 MapController _mapController;
-		_mapController = FindObjectOfType<MapController>();
-
 		if (_mapController == null)
 		{
 			Debug.LogWarning("MapController or next MapBounds is not assigned.");
 			return;
 		}
 		
-		_mapController.ChangeMap(_nextMapBounds, _playerSpawnPosition);
+		//_mapController.ChangeMap(_nextMapBounds, _playerSpawnPosition);
 		
 	}
 }
