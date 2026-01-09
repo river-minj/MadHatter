@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class UIManager : MonoBehaviour
 		{
 			Debug.LogWarning("Multiple instances of UIManager detected. Destroying duplicate.");
 			Destroy(gameObject);
+			return;
 		}
 	}
 
@@ -22,6 +25,7 @@ public class UIManager : MonoBehaviour
 	{
 		if(npcPrompt == null)
 		{
+			//to do : 이 것의 위치 정리 고민 필요..
 			npcPrompt = FindObjectOfType<NPCPromptUI>();
 
 			if(npcPrompt == null)
@@ -29,6 +33,30 @@ public class UIManager : MonoBehaviour
 				Debug.LogWarning("NPCPromptUI not found in the scene.");
 			}
 		}
+	}
+
+	bool isFading = false;
+	float fadeDuration = 1.0f;
+	public IEnumerator FadeRoutine(Action onAction, Action onComplete)
+	{
+		if (isFading)
+			yield break;
+
+		isFading = true;
+
+		FadeOut();
+		yield return new WaitForSeconds(fadeDuration);
+		
+		onAction?.Invoke();
+		//한 프레임 대기 (새 맵 초기화)
+		yield return null;
+
+		FadeIn();
+		yield return new WaitForSeconds(fadeDuration);
+
+		onComplete?.Invoke();
+
+		isFading = false;
 	}
 
 	public void FadeOut()

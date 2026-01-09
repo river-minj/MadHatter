@@ -9,9 +9,11 @@ using UnityEngine;
 public class MapTransistor : MonoBehaviour
 {
 	[SerializeField] private GameObject _nextMapPrefab;
-	[SerializeField] private Vector3 _playerSpawnPosition;
+	[SerializeField] private GameObject _playerSpawnPosition;
 
 	private MapController _mapController;
+
+	//맵 변경 플로우 : MapTransistor -> MapController -> GameManager
 
 	private void Awake()
 	{
@@ -29,7 +31,7 @@ public class MapTransistor : MonoBehaviour
 			return;
 		}
 		
-		//_mapController.ChangeMap(_nextMapBounds, _playerSpawnPosition);
+		_mapController.RequestMapTransition(_nextMapPrefab, _playerSpawnPosition.transform);
 		
 	}
 }

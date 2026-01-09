@@ -80,47 +80,21 @@ public class MapController : MonoBehaviour
 	}
 
 	bool isTransitioning = false;
-	public void RequestMapTransition(MapBounds nextMapBounds)
+	public void RequestMapTransition(GameObject nextMapObj, Transform playerSpawnPos)
 	{
 		//이미 전환 중이면 무시
 		if (isTransitioning)
 			return;
 
-		if(nextMapBounds == null)
+		if(nextMapObj == null)
 		{
-			Debug.LogError("Next MapBounds is null.");
+			Debug.LogError("Next nextMapObj is null.");
 			return;
 		}
 
-		StartCoroutine(MapTransitionRoutine(nextMapBounds));
+		GameManager.Instance?.RequestMapChange(nextMapObj, playerSpawnPos.transform);
 	}
 	
-	private IEnumerator MapTransitionRoutine(MapBounds nextMap)
-	{
-		isTransitioning = true;
-
-		UIManager.Instance?.FadeOut();
-
-		yield return new WaitForSeconds(0.7f); //페이드 아웃 시간 대기
-
-
-		if (_player != null)
-		{
-			_player.position = nextMap.transform.position;
-		}
-
-		if (_cameraController != null)
-		{
-			_cameraController.SetBounds(nextMap.GetBounds());
-		}
-
-		UIManager.Instance?.FadeIn();
-
-		yield return new WaitForSeconds(0.7f); //페이드 인 시간 대기
-
-		isTransitioning = false;
-	}
-
 	//for debugging
 	public Bounds GetCurrentMapBounds()
 	{
