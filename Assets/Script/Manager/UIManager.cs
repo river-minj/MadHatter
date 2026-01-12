@@ -35,36 +35,49 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	bool isFading = false;
-	float fadeDuration = 1.0f;
-	public IEnumerator FadeRoutine(Action onAction, Action onComplete)
+	bool _isFading = false;
+	private IEnumerator FadeRoutine(float fadeDuration, Action onAction, Action onComplete= null)
 	{
-		if (isFading)
+		if (_isFading)
 			yield break;
 
-		isFading = true;
+		_isFading = true;
 
 		FadeOut();
 		yield return new WaitForSeconds(fadeDuration);
 		
 		onAction?.Invoke();
+
 		//한 프레임 대기 (새 맵 초기화)
 		yield return null;
 
-		FadeIn();
+		
 		yield return new WaitForSeconds(fadeDuration);
 
 		onComplete?.Invoke();
 
-		isFading = false;
+		_isFading = false;
 	}
 
-	public void FadeOut()
+	//어두워짐
+	private void FadeOut()
 	{
 	}
 
-	public void FadeIn()
+	//밝아짐	
+	private void FadeIn()
 	{
+	}
+
+	public void RequestFade(float fadeDuratio, Action onAction, Action onComplete = null)
+	{
+		if (_isFading)
+			return;
+
+		if (onAction == null)
+			return;
+
+		StartCoroutine(FadeRoutine(fadeDuratio, onAction, onComplete));
 	}
 
 

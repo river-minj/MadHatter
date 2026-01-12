@@ -3762,8 +3762,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nextMapBounds: {fileID: 0}
-  _playerSpawnPosition: {x: 0, y: 0, z: 0}
+  _nextMapPrefab: {fileID: 2290839826620829870, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
+  _playerSpawnPosition: {fileID: 0}
 --- !u!1 &7103969055009204828
 GameObject:
   m_ObjectHideFlags: 0

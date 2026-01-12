@@ -92,7 +92,7 @@ public class MapController : MonoBehaviour
 			return;
 		}
 
-		GameManager.Instance?.RequestMapChange(nextMapObj, playerSpawnPos.transform);
+		GameManager.Instance?.RequestMapTransition(nextMapObj, playerSpawnPos);
 	}
 	
 	//for debugging

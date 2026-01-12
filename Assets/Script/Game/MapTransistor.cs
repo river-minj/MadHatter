@@ -9,7 +9,7 @@ using UnityEngine;
 public class MapTransistor : MonoBehaviour
 {
 	[SerializeField] private GameObject _nextMapPrefab;
-	[SerializeField] private GameObject _playerSpawnPosition;
+	[SerializeField] private Transform _playerSpawnPosition;
 
 	private MapController _mapController;
 
@@ -25,13 +25,19 @@ public class MapTransistor : MonoBehaviour
 		if (other.CompareTag("Player") == false)
 			return;
 
+		RequestMapTransition();
+
+
+	}
+
+	private void RequestMapTransition()
+	{
 		if (_mapController == null)
 		{
 			Debug.LogWarning("MapController or next MapBounds is not assigned.");
 			return;
 		}
-		
-		_mapController.RequestMapTransition(_nextMapPrefab, _playerSpawnPosition.transform);
-		
+	
+		_mapController.RequestMapTransition(_nextMapPrefab, _playerSpawnPosition);
 	}
 }
