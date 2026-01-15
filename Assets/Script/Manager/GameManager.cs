@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     //전역 시스템 (플레이어, 카메라, UI 등) 관리
-    private CameraController _cameracCntroller;
-    private PlayerController _playerController;
+    [SerializeField] private CameraController _cameracCntroller;
+    [SerializeField] private PlayerController _playerController;
 
     public MapController CurrentMap { get; private set; }
 
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         //StartCoroutine(ChangeMapRoutine);
         //맵 전환 연출은 ui 매니저에게 맡긴다.
         //페이드 아웃
-        UIManager.Instance?.RequestFade(1.0f, () => ChangeMap(), null);
+        UIManager.Instance?.RequestFadeTransition(1.0f, () => ChangeMap(), null);
 		//기존 맵 언로드
 		//새 맵 로드
 		//플레이어 위치 설정
