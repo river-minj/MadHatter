@@ -940,6 +940,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcPrompt: {fileID: 2071686925}
+  fadeImage: {fileID: 0}
+  fadeDuration: 0.5
 --- !u!4 &1253460099
 Transform:
   m_ObjectHideFlags: 0
