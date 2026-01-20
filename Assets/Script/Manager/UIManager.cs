@@ -55,9 +55,10 @@ public class UIManager : MonoBehaviour
 		{
 			Debug.LogWarning("Fade Image is not assigned in UIManager.");
 			return;
-		}	
+		}
 
 		SetFadeAlpha(0f); //처음에는 투명하게
+		fadeImage.gameObject.SetActive(false);
 	}
 
 	private void SetFadeAlpha(float alpha)
@@ -68,6 +69,7 @@ public class UIManager : MonoBehaviour
 		Color color = fadeImage.color;
 		color.a = alpha;
 		fadeImage.color = color;
+
 	}
 
 	private IEnumerator FadeOutCouroutine(float duration)
@@ -82,6 +84,8 @@ public class UIManager : MonoBehaviour
 		float startAlpha = fadeImage.color.a;
 		float targetAlpha = 1f; //완전 불투명
 
+		fadeImage.gameObject.SetActive(true);
+		
 		//fade out을 위한 값 변경을 while에서 반복
 		while (elapsedTime < duration)
 		{
@@ -123,6 +127,7 @@ public class UIManager : MonoBehaviour
 		SetFadeAlpha(targetAlpha);
 		//페이드 인 완료 후 클릭 허용
 		fadeImage.raycastTarget = false;
+		fadeImage.gameObject.SetActive(false);
 	}
 
 
@@ -152,6 +157,7 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 
+		duration = Mathf.Max(fadeDuration, duration); //0 이하 방지
 	
 		_fadeCoroutine = StartCoroutine(FadeTransitionCoroutine(duration, onFadeOutComplete, onComplete));
 	}

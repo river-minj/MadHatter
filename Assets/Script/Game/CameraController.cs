@@ -9,21 +9,26 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     //추적
-    [SerializeField] private Transform target;
-    [SerializeField] private float smoothSpeed = 5f;
-    [SerializeField] private Vector3 offset = new Vector3(0f, 0f, -10f);
+    [SerializeField] private Transform _target;
+    [SerializeField] private float _smoothSpeed = 5f;
+    [SerializeField] private Vector3 _offset = new Vector3(0f, 0f, -10f);
 
-    private Bounds? currentBounds;
+    private Camera _cam;
+    private Bounds? _currentBounds;
 
-    // Start is called before the first frame update
-    void Start()
+	private void Awake()
+	{
+        _cam = Camera.main;
+	}
+
+	void Start()
     {
-        if (target == null)
+        if (_target == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                target = player.transform;
+                _target = player.transform;
             }
             else
             {
@@ -35,33 +40,51 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (target == null)
+        if (_target == null)
             return;
 
         //목표 위치
-        Vector3 targetPosition = target.position + offset;
+        Vector3 targetPosition = _target.position + _offset;
 
 
-        //화면의 경계
-        if (currentBounds.HasValue)
-        {
-            Bounds value = currentBounds.Value;
-
-            float camHalfHeight = Camera.main.orthographicSize;
-            float camhalfWidth = camHalfHeight * Camera.main.aspect;
-
-			//경계 내로 제한
-            targetPosition.x = Mathf.Clamp(targetPosition.x, value.min.x + camhalfWidth, value.max.x - camhalfWidth);
-            targetPosition.y = Mathf.Clamp(targetPosition.y, value.min.y + camHalfHeight, value.max.y - camHalfHeight);
-        }
+		//카메라 경계 처리 및 맵이 카메라보다 작은 경우 중심 고정
+		if (_currentBounds.HasValue)
+		{
+			targetPosition = ClampPositionToBounds(targetPosition, _currentBounds.Value);
+		}
 
         //부드럽게 이동
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, smoothSpeed * Time.deltaTime);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
     }
 
-    public void SetBounds(Bounds bounds)
+	private Vector3 ClampPositionToBounds(Vector3 targetPosition, Bounds bounds)
+	{
+		float camHalfHeight = _cam.orthographicSize;
+		float camHalfWidth = camHalfHeight * _cam.aspect;
+
+		float minX = bounds.min.x + camHalfWidth;
+		float maxX = bounds.max.x - camHalfWidth;
+		float minY = bounds.min.y + camHalfHeight;
+		float maxY = bounds.max.y - camHalfHeight;
+
+		// 맵이 카메라보다 작은 경우 → 중심 고정
+		if (minX > maxX)
+			targetPosition.x = bounds.center.x;
+		else
+			targetPosition.x = Mathf.Clamp(targetPosition.x, minX, maxX);
+
+		if (minY > maxY)
+			targetPosition.y = bounds.center.y;
+		else
+			targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
+
+		return targetPosition;
+	}
+
+
+	public void SetBounds(Bounds bounds)
     {
-        currentBounds = bounds;
+        _currentBounds = bounds;
     }
 }

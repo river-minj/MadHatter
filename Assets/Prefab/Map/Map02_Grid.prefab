@@ -2328,7 +2328,7 @@ Transform:
   m_GameObject: {fileID: 1714473471863274386}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.54, y: -4.92, z: 0}
+  m_LocalPosition: {x: -9.06, y: 1.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2391,7 +2391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nextMapPrefab: {fileID: 0}
+  _nextMapPrefab: {fileID: 5760676407397126706, guid: 0498579d6cce93e41b00120cdc11281e, type: 3}
   _playerSpawnPosition: {fileID: 0}
 --- !u!1 &2290839826620829870
 GameObject:
@@ -2456,9 +2456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10caf2fd4591dc14299c57184c6cf542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraController: {fileID: 0}
-  _player: {fileID: 0}
-  _currentMap: {fileID: 4985975337306907307}
+  _mapBounds: {fileID: 4985975337306907307}
 --- !u!1 &4145029661881727481
 GameObject:
   m_ObjectHideFlags: 0
