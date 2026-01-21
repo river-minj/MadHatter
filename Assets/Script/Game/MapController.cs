@@ -39,13 +39,13 @@ public class MapController : MonoBehaviour
 	protected virtual void OnMapEnter()
 	{
 		//맵 진입 시 처리 (적 스폰, 오브젝트 활성화 등)
-		Debug.LogErrorFormat("[Map Controller] Entered {0}", gameObject.name);
+		Debug.LogFormat("[Map Controller] Entered {0}", gameObject.name);
 	}
 
 	protected virtual void OnMapExit()
 	{
 		//맵 진입 시 처리 (적 스폰, 오브젝트 활성화 등)
-		Debug.LogErrorFormat("[Map Controller] Exiting {0}", gameObject.name);
+		Debug.LogFormat("[Map Controller] Exiting {0}", gameObject.name);
 	}
 
 	//맵 전환 요청

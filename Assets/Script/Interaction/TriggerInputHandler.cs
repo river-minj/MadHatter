@@ -9,6 +9,9 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 {
 	private IInteractable interactable;
 	private bool isEnabled = true;
+	private bool playerInRange = false;
+
+	private PlayerController _playercontroller;
 
 	public void Initialize(IInteractable target)
 	{
@@ -21,6 +24,7 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 	public void Disable()
 	{
 		isEnabled = false;
+		playerInRange = false;
 	}
 
 	void Start()
@@ -42,6 +46,19 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 		}
 	}
 
+	private void Update()
+	{
+		if(!isEnabled) return;
+
+		if (!playerInRange) return;
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+			interactable?.Interact(_playercontroller);
+			UIManager.Instance?.HideNPCPrompt();
+        }
+    }
+
 	//trigger 입퇴장
 	void OnTriggerEnter2D(Collider2D other)
 	{
@@ -49,6 +66,8 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 
 		if (other.CompareTag("Player"))
 		{
+			playerInRange = true;
+			_playercontroller = other.GetComponent<PlayerController>();
 
 			if (interactable is InteractionController controller)
 			{
@@ -68,6 +87,9 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 	{
 		if (collision.CompareTag("Player"))
 		{
+			playerInRange = false;
+			_playercontroller = null;
+
 			if (interactable is InteractionController controller)
 			{
 				controller.NotifyPlayerExit();

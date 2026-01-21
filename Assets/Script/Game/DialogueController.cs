@@ -76,7 +76,7 @@ public class DialogueController : MonoBehaviour
         if (_isDialogueRunning == false)
             return;
 
-        if (_lines == null &&  _lines.Count == 0)
+        if (_lines == null || _lines.Count == 0)
         {
 			EndDialogue();
 			return;

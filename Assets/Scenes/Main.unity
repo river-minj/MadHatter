@@ -731,7 +731,7 @@ MonoBehaviour:
   npcPrompt: {fileID: 2071686925}
   fadeImage: {fileID: 1760295055}
   fadeDuration: 3
-  _dialogueController: {fileID: 0}
+  _dialogueController: {fileID: 1931960181}
 --- !u!4 &1253460099
 Transform:
   m_ObjectHideFlags: 0
@@ -980,7 +980,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dialogueUI: {fileID: 1931960180}
-  testOnStart: 1
 --- !u!1 &2040393607
 GameObject:
   m_ObjectHideFlags: 0

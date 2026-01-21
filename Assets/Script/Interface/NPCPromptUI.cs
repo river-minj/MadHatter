@@ -89,14 +89,14 @@ public class NPCPromptUI : MonoBehaviour
 		float panelHeight = promptRect.rect.height;
 		Vector2 pivot = promptRect.pivot;
 
-		Debug.Log($"[NPCPromptUI] 스크린: {screenPosition}, 초기: {finalPosition}");
+		//Debug.Log($"[NPCPromptUI] 스크린: {screenPosition}, 초기: {finalPosition}");
 
 		// 상단 체크
 		float topEdge = finalPosition.y + (panelHeight * (1 - pivot.y));
 		if (topEdge > Screen.height)
 		{
 			finalPosition = screenPosition - new Vector2(0, offset.y);
-			Debug.Log($"[NPCPromptUI] 상단 벗어남 ({topEdge} > {Screen.height}) -> 아래로");
+			//Debug.Log($"[NPCPromptUI] 상단 벗어남 ({topEdge} > {Screen.height}) -> 아래로");
 		}
 
 		// 하단 체크
@@ -104,10 +104,10 @@ public class NPCPromptUI : MonoBehaviour
 		if (bottomEdge < 0)
 		{
 			finalPosition.y = panelHeight * pivot.y + 10;
-			Debug.Log($"[NPCPromptUI] 하단 벗어남 ({bottomEdge} < 0) -> 위로");
+			//Debug.Log($"[NPCPromptUI] 하단 벗어남 ({bottomEdge} < 0) -> 위로");
 		}
 
-		Debug.Log($"[NPCPromptUI] 최종: {finalPosition}");
+		//Debug.Log($"[NPCPromptUI] 최종: {finalPosition}");
 
 		promptRect.position = finalPosition;
 	}

@@ -18,7 +18,6 @@ public class DialogueUI : MonoBehaviour
 
 	private void Start()
 	{
-		Show("test");
 	}
 
 	private void Hide()

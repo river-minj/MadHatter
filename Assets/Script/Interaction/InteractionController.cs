@@ -11,7 +11,7 @@ public abstract class InteractionController : MonoBehaviour, IInteractable
 
 
 	//IInteractable 구현 > 수행할 행동
-	public virtual void Intercat(PlayerController player)
+	public virtual void Interact(PlayerController player)
 
 	{
 		if (CanInteract() == false)

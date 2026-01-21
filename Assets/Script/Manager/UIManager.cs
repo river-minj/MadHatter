@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 {
 	public static UIManager Instance { get; private set; }
 	
+	//NPC 프롬프트 UI
 	[SerializeField] private NPCPromptUI npcPrompt;
 
 	//fade 관련	
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private float fadeDuration = 0.5f;
 	private Coroutine _fadeCoroutine;
 
+	//대화 컨트롤러
 	[SerializeField] private DialogueController _dialogueController;
 
 	private void Awake()

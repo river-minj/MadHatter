@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4287861048775170973
 Transform:
   m_ObjectHideFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1243122825082947886}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.53, y: 2.66, z: 0}
+  m_LocalPosition: {x: -2.56, y: 1.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -101,6 +101,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
+  _npcMessage:
+  - Hello there, traveler! Welcome to our village.
+  - The weather is quite nice today, isn't it?
+  - Be careful if you venture into the forest.
+  - There are rumors of bandits lurking about.
 --- !u!58 &6420309224614454802
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3774,7 +3779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5448915756171667926
 Transform:
   m_ObjectHideFlags: 0
@@ -3784,7 +3789,7 @@ Transform:
   m_GameObject: {fileID: 3200944921546327963}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.46, y: 2.51, z: 0}
+  m_LocalPosition: {x: 4.47, y: 2.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3856,6 +3861,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
+  _npcMessage:
+  - Hello there, traveler! Welcome to our village.
+  - The weather is quite nice today, isn't it?
+  - Be careful if you venture into the forest.
+  - There are rumors of bandits lurking about.
 --- !u!58 &2208996860039501130
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3998,7 +4008,7 @@ Transform:
   m_GameObject: {fileID: 6061451857838149836}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.6, y: 1.47, z: 0}
+  m_LocalPosition: {x: 9.51, y: 1.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5191,7 +5201,7 @@ Transform:
   m_GameObject: {fileID: 8704062074127782875}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.475, y: 1.13, z: 0}
+  m_LocalPosition: {x: -6.475, y: 1.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -118,12 +119,24 @@ public class GameManager : MonoBehaviour
             _playerController.SetPosition(playerSpawnPos);
         }
     
-        Debug.LogErrorFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
+        Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
         
 	}
 
     public void SetLockInput(bool locked)
     {
         IsInputLock = locked;
+    }
+
+    public void StartDialogue(IEnumerable<string> lines, Action onComplete = null)
+    {
+        SetLockInput(true);
+
+        UIManager.Instance?.StartDialogue(lines, () => {
+
+            onComplete?.Invoke();
+
+            SetLockInput(false);
+        });
     }
 }
