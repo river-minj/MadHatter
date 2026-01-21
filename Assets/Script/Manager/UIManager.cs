@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -15,6 +16,8 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private Image fadeImage;
 	[SerializeField] private float fadeDuration = 0.5f;
 	private Coroutine _fadeCoroutine;
+
+	[SerializeField] private DialogueController _dialogueController;
 
 	private void Awake()
 	{
@@ -130,17 +133,6 @@ public class UIManager : MonoBehaviour
 		fadeImage.gameObject.SetActive(false);
 	}
 
-
-	//어두워짐
-	private void FadeOut(float duration, Action onComplete)
-	{
-	}
-
-	//밝아짐	
-	private void FadeIn()
-	{
-	}
-
 	private bool _isFading = false;
 
 	//외부 호출용
@@ -198,4 +190,18 @@ public class UIManager : MonoBehaviour
 			npcPrompt.Hide();
 		}
 	}
+
+	public void StartDialogue(IEnumerable<string> lines, Action onComplete = null)
+	{
+		if(_dialogueController != null)
+		{
+			_dialogueController.StartDialogue(lines, onComplete);
+		}
+	}
+
+	public bool IsDialogueOpen()
+	{
+		return _dialogueController != null && _dialogueController.IsDialogueRunning;
+	}
+	
 }
