@@ -6,7 +6,6 @@
 public class MapBounds : MonoBehaviour
 {
 	[SerializeField] private BoxCollider2D _boundsCollider;
-	[SerializeField] private Transform _playerSpawnPosition;
 
 	public Bounds _mapBound { get; private set; }
 
@@ -34,17 +33,6 @@ public class MapBounds : MonoBehaviour
 		}
 
 		return _boundsCollider.bounds;
-	}
-
-	public Vector3 GetPlayerSpawnPosition()
-	{
-		if (_playerSpawnPosition != null)
-		{
-			return _playerSpawnPosition.position;
-		}
-
-		return _boundsCollider.bounds.center;
-		
 	}
 
 

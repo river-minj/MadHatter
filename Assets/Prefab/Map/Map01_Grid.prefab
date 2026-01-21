@@ -3939,6 +3939,7 @@ Transform:
   - {fileID: 979816338179715190}
   - {fileID: 3618672702754329559}
   - {fileID: 1800269696886113044}
+  - {fileID: 5725344234577433733}
   - {fileID: 4287861048775170973}
   - {fileID: 5448915756171667926}
   m_Father: {fileID: 0}
@@ -3967,6 +3968,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10caf2fd4591dc14299c57184c6cf542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _nextMapMc: {fileID: 1275650001781604006, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
+  _playerSpawnPos: {fileID: 5725344234577433733}
   _mapBounds: {fileID: 4054690544027043557}
 --- !u!1 &6061451857838149836
 GameObject:
@@ -4058,8 +4061,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nextMapPrefab: {fileID: 2290839826620829870, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
-  _playerSpawnPosition: {fileID: 0}
 --- !u!1 &7103969055009204828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4151,7 +4152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boundsCollider: {fileID: 6783691819958071382}
-  _playerSpawnPosition: {fileID: 0}
 --- !u!1 &7499635955171888521
 GameObject:
   m_ObjectHideFlags: 0
@@ -5166,3 +5166,34 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &8704062074127782875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5725344234577433733}
+  m_Layer: 0
+  m_Name: PlayerSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5725344234577433733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8704062074127782875}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.475, y: 1.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4936220637325227308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

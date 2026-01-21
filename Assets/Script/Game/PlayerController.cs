@@ -21,6 +21,13 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
+		if(GameManager.Instance != null && GameManager.Instance.IsInputLock)
+		{
+			_moveDir = Vector2.zero;
+			PlaySkeletonAnimation(); // idle 애니메이션 유지
+			return;
+		}
+
 		// 키보드 입력 받기
 		HandleInput();
 		UpdateDirection();
@@ -111,6 +118,11 @@ public class PlayerController : MonoBehaviour
 			_skel.skeleton.ScaleX = -1f; //오른쪽 바라보기
 		}
 
+	}
+
+	public void SetPosition(Transform pos)
+	{
+		transform.position = pos.position;
 	}
 
 

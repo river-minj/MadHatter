@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public class MapController : MonoBehaviour
 {
-	//[SerializeField] private CameraController _cameraController;
-	//[SerializeField] private Transform _player;
+	[SerializeField] private MapController _nextMapMc;
+	[SerializeField] private Transform _playerSpawnPos;
 	[SerializeField] private MapBounds _mapBounds;
 
 	public MapBounds MapBounds => _mapBounds;
@@ -21,28 +21,6 @@ public class MapController : MonoBehaviour
 			_mapBounds = GetComponentInChildren<MapBounds>();
 		}
 
-		//if (_cameraController == null)
-		//{
-		//	_cameraController = Camera.main.GetComponent<CameraController>();
-		//	if (_cameraController == null)
-		//	{
-		//		Debug.LogError("CameraController component is required on the main camera.");
-		//	}
-		//}
-
-		//if (_player == null)
-		//{
-		//	GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-		//	if (playerObj != null)
-		//	{
-		//		_player = playerObj.transform;
-		//	}
-		//	else
-		//	{
-		//		Debug.LogError("Player object with tag 'Player' is required in the scene.");
-		//	}
-		//}
-
 	}
 	private void Start()
 	{
@@ -51,10 +29,9 @@ public class MapController : MonoBehaviour
 
 	private void InitializeMap()
 	{
-		if(_mapBounds != null && GameManager.Instance != null)
-		{
-			GameManager.Instance.ApplyCameraBounds(_mapBounds.GetBounds());
-		}
+		//맵 안에서만 일어나는 것
+		//NPC 스폰, 오브젝트 활성화 등
+		//BGM 재생 등
 
 		OnMapEnter();
 	}
@@ -72,26 +49,21 @@ public class MapController : MonoBehaviour
 	}
 
 	//맵 전환 요청
-	public void RequestMapTransition(GameObject nextMapObj, Transform playerSpawnPos)
+	public void RequestMapTransition()
 	{
-		if(nextMapObj == null)
+		if(_nextMapMc == null)
 		{
 			Debug.LogError("New MapBounds is null.");
 			return;
 		}
 
-		//if (_player != null)
-		//{
-		//	//플레이어 위치 이동
-		//	_player.position = playerSpawnPosition;
-		//}
-		//else
-		//{
-		//	Debug.LogWarning("Player transform is not assigned.");
-		//}
-
-		GameManager.Instance?.RequestMapTransition(nextMapObj, playerSpawnPos);
+		GameManager.Instance?.RequestMapTransition(_nextMapMc);
 	}
+
+	public Transform GetPlayerSpawnPoisition()
+	{ 		
+		return _playerSpawnPos;
+	}	
 
 	//for debugging
 	public Bounds GetCurrentMapBounds()

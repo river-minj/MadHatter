@@ -7,17 +7,14 @@ using UnityEngine;
 /// e.g., door, portal
 /// </summary>
 public class MapTransistor : MonoBehaviour
-{
-	[SerializeField] private GameObject _nextMapPrefab;
-	[SerializeField] private Transform _playerSpawnPosition;
-
+{ 
 	private MapController _mapController;
 
 	//맵 변경 플로우 : MapTransistor -> MapController -> GameManager
 
 	private void Awake()
 	{
-		_mapController = FindObjectOfType<MapController>();
+		_mapController = GetComponentInParent<MapController>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -38,6 +35,6 @@ public class MapTransistor : MonoBehaviour
 			return;
 		}
 	
-		_mapController.RequestMapTransition(_nextMapPrefab, _playerSpawnPosition);
+		_mapController.RequestMapTransition();
 	}
 }

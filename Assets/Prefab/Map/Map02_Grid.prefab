@@ -2391,8 +2391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nextMapPrefab: {fileID: 5760676407397126706, guid: 0498579d6cce93e41b00120cdc11281e, type: 3}
-  _playerSpawnPosition: {fileID: 0}
 --- !u!1 &2290839826620829870
 GameObject:
   m_ObjectHideFlags: 0
@@ -2456,6 +2454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10caf2fd4591dc14299c57184c6cf542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _nextMapMc: {fileID: 8137850298729097503, guid: 0498579d6cce93e41b00120cdc11281e, type: 3}
+  _playerSpawnPos: {fileID: 3788423120694967434}
   _mapBounds: {fileID: 4985975337306907307}
 --- !u!1 &4145029661881727481
 GameObject:
@@ -2548,7 +2548,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boundsCollider: {fileID: 4563801167309894617}
-  _playerSpawnPosition: {fileID: 3788423120694967434}
 --- !u!1 &4761458320862807111
 GameObject:
   m_ObjectHideFlags: 0

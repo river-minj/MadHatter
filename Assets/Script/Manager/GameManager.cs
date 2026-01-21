@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     //전역 시스템 (플레이어, 카메라, UI 등) 관리
-    [SerializeField] private CameraController _cameraCntroller;
+    [SerializeField] private CameraController _cameraController;
     [SerializeField] private PlayerController _playerController;
 
     //맵 생성 위치
@@ -15,11 +15,10 @@ public class GameManager : MonoBehaviour
     //인스펙터로 임시 연결해둔 첫번째 맵, 나중에는 첫번째 맵을 데이터에서 찾아와 로드하도록 변경
     [SerializeField] MapController _firstMapMc;
 
-    private GameObject? _currentMapObject;
     private MapController? _currentMapController;
 
     public MapController CurrentMapController => _currentMapController;
-
+    public bool IsInputLock { get; private set; }
     
 
     private void Awake()
@@ -37,9 +36,9 @@ public class GameManager : MonoBehaviour
         }
 
         //카메라
-        if (_cameraCntroller == null)
+        if (_cameraController == null)
         {
-            _cameraCntroller = Camera.main.GetComponent<CameraController>();
+            _cameraController = Camera.main.GetComponent<CameraController>();
             Debug.LogError("CameraController component is required on the main camera.");
         }
         
@@ -49,27 +48,30 @@ public class GameManager : MonoBehaviour
         {
             _playerController = playerObj.GetComponent<PlayerController>();
         }
-
-		//시작 맵 설정
-		SetCurrentMap(_firstMapMc);
-		SetcurrentMapObject(_firstMapMc ? _firstMapMc.gameObject : null);
 	}
 
-    public void SetCurrentMap(MapController mc)
+	public void Start()
+	{
+		LoadFristMap();
+	}
+
+    private void LoadFristMap()
     {
-        _currentMapController = mc;
+        if (_firstMapMc == null)
+        {
+			Debug.LogError("[GameManager] First map controller is not assigned.");
+			return;
+		}
+        
+        ChangeMap(_firstMapMc);
+    
     }
 
-    public void SetcurrentMapObject(GameObject currentMap)
-    {
-        _currentMapObject = currentMap;
-    }
-
-    public void RequestMapTransition(GameObject nextMapPrefab, Transform playerSpawnPos)
+    public void RequestMapTransition(MapController nextMap)
     {
         Debug.LogError("[GameManager] Map transition requested.");
 
-		if (nextMapPrefab == null)
+		if (nextMap == null)
 		{
 			Debug.LogError("[GameManager] Next map prefab is null.");
 			return;
@@ -81,23 +83,18 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-        //맵 전환 요청 처리
-        //맵 전환 연출은 ui 매니저에게 맡긴다.
-        //페이드 아웃
-        UIManager.Instance?.RequestFadeTransition(0, () => ChangeMap(nextMapPrefab, playerSpawnPos),
+        SetLockInput(true);
+
+        UIManager.Instance?.RequestFadeTransition(0, () => ChangeMap(nextMap),
 			() =>
 			{
+                SetLockInput(false);
 				Debug.LogErrorFormat("[GameManager] Map Transition complete");
 			});
 
-		//기존 맵 언로드
-		//새 맵 로드
-		//플레이어 위치 설정
-		//카메라 경계 설정
-		//페이드 인
 	}
 
-    private void ChangeMap(GameObject nextMapObject, Transform playerSpawnPos)
+    private void ChangeMap(MapController nextMap)
     {
         //기존 맵 언로드
         if (CurrentMapController != null)
@@ -109,26 +106,24 @@ public class GameManager : MonoBehaviour
             Debug.LogErrorFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
         }
 
-        //새 맵 로드
-        _currentMapObject = Instantiate(nextMapObject, _mapRoot) as GameObject;
-        _currentMapController = _currentMapObject.GetComponent<MapController>();
-        Debug.LogErrorFormat("[GameManager] Loaded new map: {0}", _currentMapObject.name);
+		//새 맵 로드
+		//새 맵이 instantiate될 때 해당 map의 mapController의 start에서 카메라 바운드 적용 요청을 함
+		_currentMapController = Instantiate(nextMap, _mapRoot);
+        _cameraController.SetBounds(_currentMapController.GetCurrentMapBounds());
 
         //플레이어 위치 설정
+        Transform playerSpawnPos = _currentMapController.GetPlayerSpawnPoisition();
         if(_playerController != null && playerSpawnPos != null)
         {
-            _playerController.GetComponentInParent<Transform>().position = playerSpawnPos.position;
+            _playerController.SetPosition(playerSpawnPos);
         }
+    
+        Debug.LogErrorFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
         
-        //카메라 경계 설정
 	}
 
-	public void ApplyCameraBounds(Bounds bounds)
-	{
-        if(_cameraCntroller != null)
-        {
-            _cameraCntroller.SetBounds(bounds);
-            Debug.LogErrorFormat("[GameManager] Applied camera bounds: {0}", bounds);
-        }
-	}
+    public void SetLockInput(bool locked)
+    {
+        IsInputLock = locked;
+    }
 }
