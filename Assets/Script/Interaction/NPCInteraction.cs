@@ -3,27 +3,39 @@ using UnityEngine;
 
 public class NPCInteraction : InteractionController
 {
-	private string npcName = "Guard";
 	private float lastInteractionTime;
 
-	[SerializeField]
-	string[] _npcMessage
-		= {
+	private string _npcName;
+	[SerializeField] DialogueData _dialogueData;
 
-		"Hello there, traveler! Welcome to our village.",
-		"The weather is quite nice today, isn't it?",
-		"Be careful if you venture into the forest.",
-		"There are rumors of bandits lurking about.",
-		};
 
 	protected override void OnInteract()
 	{
+		if(_dialogueData == null)
+		{
+			return;
+		}
+
+		var lines = _dialogueData.GetLines();
+		bool hasAnyLine = false;
+		foreach(var line in lines)
+		{
+			hasAnyLine = true;
+			break;
+		}
+		
+		if(hasAnyLine== false)
+		{
+			return;
+		}
+
+		
 		ShowDialogue();
 	}
 
 	private void ShowDialogue()
 	{
 		lastInteractionTime = Time.time;
-		GameManager.Instance?.StartDialogue(_npcMessage);
+		GameManager.Instance?.StartDialogue(_dialogueData);
 	}
 }

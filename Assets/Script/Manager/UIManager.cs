@@ -193,11 +193,11 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void StartDialogue(IEnumerable<string> lines, Action onComplete = null)
+	public void StartDialogue(string name, IEnumerable<string> lines, Action onComplete = null)
 	{
 		if(_dialogueController != null)
 		{
-			_dialogueController.StartDialogue(lines, onComplete);
+			_dialogueController.StartDialogue(name, lines, onComplete);
 		}
 	}
 

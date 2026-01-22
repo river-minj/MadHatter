@@ -106,6 +106,7 @@ MonoBehaviour:
   - The weather is quite nice today, isn't it?
   - Be careful if you venture into the forest.
   - There are rumors of bandits lurking about.
+  _dialogueData: {fileID: 11400000, guid: bee551be03a755a45a46cfb1a152775a, type: 2}
 --- !u!58 &6420309224614454802
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3866,6 +3867,7 @@ MonoBehaviour:
   - The weather is quite nice today, isn't it?
   - Be careful if you venture into the forest.
   - There are rumors of bandits lurking about.
+  _dialogueData: {fileID: 0}
 --- !u!58 &2208996860039501130
 CircleCollider2D:
   m_ObjectHideFlags: 0

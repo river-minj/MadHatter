@@ -16,9 +16,9 @@ public class GameManager : MonoBehaviour
     //인스펙터로 임시 연결해둔 첫번째 맵, 나중에는 첫번째 맵을 데이터에서 찾아와 로드하도록 변경
     [SerializeField] MapController _firstMapMc;
 
+    public MapController CurrentMapController => _currentMapController;
     private MapController? _currentMapController;
 
-    public MapController CurrentMapController => _currentMapController;
     public bool IsInputLock { get; private set; }
     
 
@@ -128,11 +128,11 @@ public class GameManager : MonoBehaviour
         IsInputLock = locked;
     }
 
-    public void StartDialogue(IEnumerable<string> lines, Action onComplete = null)
+    public void StartDialogue(DialogueData dialogueData, Action onComplete = null)
     {
         SetLockInput(true);
 
-        UIManager.Instance?.StartDialogue(lines, () => {
+        UIManager.Instance?.StartDialogue(dialogueData.name, dialogueData.GetLines(), () => {
 
             onComplete?.Invoke();
 

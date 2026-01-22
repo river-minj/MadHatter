@@ -6,6 +6,7 @@ public class DialogueUI : MonoBehaviour
 {
 	[SerializeField] private GameObject _dialoguePanel;
 	[SerializeField] private TextMeshProUGUI _dialogueText;
+	[SerializeField] private TextMeshProUGUI _name;
 
 	
 	public bool IsVisible { get; private set; }
@@ -30,20 +31,25 @@ public class DialogueUI : MonoBehaviour
 		IsVisible = false;
 	}
 
-	public void Show(string message)
+	public void Show(string name, string lines)
 	{
-		if(_dialoguePanel == null)
-		{
-			return;
-		}
 
 		if(_dialogueText != null)
 		{
-			_dialogueText.text = message;
+			_dialogueText.text = lines;
 		}
 
-		_dialoguePanel.SetActive(true);
-		IsVisible = true;
+		if(_name != null)
+		{
+			_name.text = name;
+		}
+		
+		if(_dialoguePanel != null)
+		{
+			_dialoguePanel.SetActive(true);
+			IsVisible = true;
+		}
+
 	}
 
 	public void Close()

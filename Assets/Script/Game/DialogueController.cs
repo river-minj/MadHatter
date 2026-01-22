@@ -6,12 +6,12 @@ public class DialogueController : MonoBehaviour
 {
     [SerializeField] private DialogueUI _dialogueUI;
 
+    private string _name;
     private Queue<string> _lines;
     private Action _onDialogueComplete;
 
-    bool _isDialogueRunning = false;
-
     public bool IsDialogueRunning => _isDialogueRunning;
+    bool _isDialogueRunning = false;
 
     private void Awake()
     {
@@ -41,7 +41,7 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    public void StartDialogue(IEnumerable<string> lines, Action onComplete = null)
+    public void StartDialogue(string name, IEnumerable<string> lines, Action onComplete = null)
     {
         if (_dialogueUI== null)
         {
@@ -64,6 +64,7 @@ public class DialogueController : MonoBehaviour
 			_lines.Enqueue(line); //큐에 대화 줄들을 추가
 		}
 
+        _name = name;
 		_onDialogueComplete = onComplete;
 		_isDialogueRunning = true;
 
@@ -83,7 +84,7 @@ public class DialogueController : MonoBehaviour
 		}
 
 		string line = _lines.Dequeue(); //큐 안에서 다음 대화를 꺼내오기
-		_dialogueUI.Show(line);
+		_dialogueUI.Show(_name, line);
 	}
 
 	private void EndDialogue()
