@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// game manager는 게임의 전역 상태와 시스템을 관리하는 싱글톤 클래스
+/// 게임의 전체 흐름을 제어하고, 맵 전환, 플레이어 상태, UI 관리 등을 담당
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }

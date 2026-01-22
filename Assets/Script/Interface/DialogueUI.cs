@@ -2,6 +2,9 @@ using TMPro;
 using UnityEditor.Search;
 using UnityEngine;
 
+/// <summary>
+///	대화 UI 컨트롤러
+/// </summary>
 public class DialogueUI : MonoBehaviour
 {
 	[SerializeField] private GameObject _dialoguePanel;

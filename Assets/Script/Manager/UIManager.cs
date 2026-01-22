@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI 매니저는 게임 내 모든 UI 요소를 관리하는 싱글톤 클래스
+/// UI의 한개뿐인 전역 진입점 역할을 수행
+/// </summary>
 public class UIManager : MonoBehaviour
 {
 	public static UIManager Instance { get; private set; }
