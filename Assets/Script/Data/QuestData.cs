@@ -6,17 +6,20 @@ using UnityEngine;
 public class QuestData : ScriptableObject
 {
 	[Header("Basic Info")]
-	public string _questId;
+	public string _questID;
+	public string _npcID;
+	
 	public string _title;
 	[TextArea]
 	public string _description;
 
-	[Header("Dialogue Steps")]
-	[TextArea]
-	public string[] steps;
-
+	[Header("QuestDialogue")]
+	public string _startDialogueID;
+	public string _progressDialogueID;
+	public string _completedDialogueID;
+	
 	[Header("Next Quest (optional)")]
-	public int nextQuestId = -1;
+	public string _nextQuestID;
 	[Header("Reward(optional")]
-	public string rewardId;
+	public string _rewardID;
 }

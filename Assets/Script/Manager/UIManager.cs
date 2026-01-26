@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
 	public static UIManager Instance { get; private set; }
 	
 	//NPC 프롬프트 UI
-	[SerializeField] private NPCPromptUI npcPrompt;
+	[SerializeField] private NPCPromptUI _npcPrompt;
 
 	//fade 관련	
 	[SerializeField] private Image fadeImage;
@@ -45,12 +45,12 @@ public class UIManager : MonoBehaviour
 	{
 		InitializeFadeImage();
 
-		if(npcPrompt == null)
+		if(_npcPrompt == null)
 		{
 			//to do : 이 것의 위치 정리 고민 필요..
-			npcPrompt = FindObjectOfType<NPCPromptUI>();
+			_npcPrompt = FindObjectOfType<NPCPromptUI>();
 
-			if(npcPrompt == null)
+			if(_npcPrompt == null)
 			{
 				Debug.LogWarning("NPCPromptUI not found in the scene.");
 			}
@@ -183,17 +183,17 @@ public class UIManager : MonoBehaviour
 
 	public void ShowNPCPrompt(string message, Transform npcTransfomt)
 	{
-		if (npcPrompt != null)
+		if (_npcPrompt != null)
 		{
-			npcPrompt.Show(message, npcTransfomt);
+			_npcPrompt.Show(message, npcTransfomt);
 		}
 	}
 
 	public void HideNPCPrompt()
 	{
-		if (npcPrompt != null)
+		if (_npcPrompt != null)
 		{
-			npcPrompt.Hide();
+			_npcPrompt.Hide();
 		}
 	}
 

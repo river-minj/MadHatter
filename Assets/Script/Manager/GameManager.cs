@@ -136,11 +136,17 @@ public class GameManager : MonoBehaviour
     {
         SetLockInput(true);
 
-        UIManager.Instance?.StartDialogue(dialogueData.name, dialogueData.GetLines(), () => {
+        UIManager.Instance?.StartDialogue(dialogueData._speakerName, dialogueData.GetLines(), () => {
 
             onComplete?.Invoke();
 
-            SetLockInput(false);
+            EndDialogue();
         });
+    }
+
+    public void EndDialogue()
+	{
+
+		SetLockInput(false);
     }
 }

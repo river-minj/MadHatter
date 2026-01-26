@@ -25,9 +25,9 @@ public class QuestState
 public class QuestManager : MonoBehaviour
 {
 
-	public static QuestManager Instance { get; private set; }	
+	public static QuestManager Instance { get; private set; }
 
-	private Dictionary<string, QuestState> _dicActiveQuest = new Dictionary<string, QuestState>(); //<퀘스트ID, 퀘스트상태>
+	private HashSet<string> _setStartedQuest = new HashSet<string>(); //시작한 퀘스트ID
 	private HashSet<string> _setCompletedQuest = new HashSet<string>(); //완료된 퀘스트ID
 
 	private void Awake()
@@ -42,7 +42,50 @@ public class QuestManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
-	//퀘스트 수락
+	//npc와 상호작용 처리
+	public void TryQuestInteraction(string questID)
+	{
+		var questData = QuestDatabase.Instance.GetQuestByID(questID);
+		if(questData == null)
+		{
+			Debug.LogWarning($"[QuestManager] 유효하지 않은 퀘스트ID: {questID}");
+			return;
+		}
+
+		//새로 퀘스트 시작
+		if(_setStartedQuest.Contains(questID) == false)
+		{
+			_setStartedQuest.Add(questID);
+
+			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueID);
+            if (d != null)
+            {
+				GameManager.Instance.StartDialogue(d);
+            }
+			return;
+        }
+
+		//퀘스트 진행 중
+		if(_setCompletedQuest.Contains(questID) == false)
+		{
+			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueID);
+			if (d != null)
+			{
+				GameManager.Instance.StartDialogue(d);
+			}
+			return;
+		}
+
+		//퀘스트 완료
+		DialogueData completedDialogue = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
+		if (completedDialogue != null)
+		{
+			GameManager.Instance.StartDialogue(completedDialogue, () => { CompleteQuset(questData); });
+		}
+			
+    }
+
+	//퀘스트 시작
 	public void StartQuest(QuestData questData )
 	{
 		if(questData == null)
@@ -50,48 +93,21 @@ public class QuestManager : MonoBehaviour
 			return;
 		}
 
-		if(_setCompletedQuest.Contains(questData._questId))
+		string questID = questData._questID;
+		if(_setCompletedQuest.Contains(questID))
 		{
-			Debug.LogWarning($"[QuestManager] 이미 완료된 퀘스트입니다. {questData._questId}");
+			Debug.LogWarning($"[QuestManager] 이미 완료된 퀘스트입니다. {questID}");
 			return;
 		}
 
-		if(_dicActiveQuest.ContainsKey(questData._questId))
+		if(_setStartedQuest.Contains(questID))
 		{
-			Debug.LogWarning($"[QuestManager] 이미 진행중인 퀘스트입니다. {questData._questId}");
+			Debug.LogWarning($"[QuestManager] 이미 진행중인 퀘스트입니다. {questID}");
 			return;
 		}
 
-		QuestState newQuest = new QuestState(questData._questId);
-		_dicActiveQuest.Add(newQuest.questId, newQuest);
-
+		_setStartedQuest.Add(questID);
 		Debug.Log("[QuestManager] 퀘스트 시작");
-	}
-
-	public QuestState GetQuestState(string questId)
-	{
-		_dicActiveQuest.TryGetValue(questId, out QuestState questState);
-		return questState;
-	}
-
-	//퀘스트 진행도 업데이트
-	public void UpdqteQuestProgress(QuestData questData)
-	{
-		if(_dicActiveQuest.TryGetValue(questData._questId, out QuestState questState) == false)
-		{
-			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questId}");
-			return;
-		}
-
-		if(questState.currentStep >= questData.steps.Length - 1)
-		{
-			CompleteQuset(questData._questId);
-			return;
-		}
-
-		questState.currentStep++;
-		
-		Debug.Log($"[QuestManager] 퀘스트 {questData._questId} 진행도 {questState.currentStep} 업데이트");
 	}
 
 	//퀘스트 완료 처리
@@ -102,14 +118,13 @@ public class QuestManager : MonoBehaviour
 			return;
 		}
 
-		if (!_dicActiveQuest.TryGetValue(questData._questId, out QuestState state) == false)
+		if (!_setStartedQuest.Contains(questData._questID))
 		{
-			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questId}");
+			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questID}");
 			return;
 		}
 
-		_dicActiveQuest.Remove(state.questId);
-		_setCompletedQuest.Add(state.questId);
+		_setCompletedQuest.Add(questData._questID);
 
 		Debug.Log("[QuestManager] 퀘스트 완료");
 	}
@@ -119,8 +134,4 @@ public class QuestManager : MonoBehaviour
 		return _setCompletedQuest.Contains(questId);
 	}
 
-	public bool IsQuestActive(string questId)
-	{
-		return _dicActiveQuest.ContainsKey(questId);
-	}
 }

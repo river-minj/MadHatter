@@ -1,41 +1,52 @@
-using System;
 using UnityEngine;
 
 public class NPCInteraction : InteractionController
 {
-	private float lastInteractionTime;
-
 	private string _npcName;
-	[SerializeField] DialogueData _dialogueData;
+	private string _npcID;
 
+	[SerializeField] private NpcData _npcData;
+
+	private void Awake()
+	{
+		Init();
+	}
+
+	private void Init()
+	{
+		if (_npcData != null)
+		{
+			_npcID = _npcData._npcID;
+			_npcName = _npcData._npcName;
+		}
+	}
 
 	protected override void OnInteract()
 	{
-		if(_dialogueData == null)
+		if(_npcData == null)
 		{
+			Debug.LogWarningFormat("[NPCInteraction] NPC Data is null for NPC: {0}", gameObject.name);
 			return;
 		}
 
-		var lines = _dialogueData.GetLines();
-		bool hasAnyLine = false;
-		foreach(var line in lines)
+		if (string.IsNullOrEmpty(_npcData._questID) == false)
 		{
-			hasAnyLine = true;
-			break;
-		}
-		
-		if(hasAnyLine== false)
-		{
-			return;
+			QuestData questData = QuestDatabase.Instance.GetQuestByID(_npcData._questID);
+			if (questData != null)
+			{
+				QuestManager.Instance.TryQuestInteraction(_npcData._questID);
+				return;
+			}
+
+			var dialogue = DialogueDatabase.Instance.GetDialogueByID(_npcData._defaultDialogueID);
+			if(dialogue != null)
+			{
+				//show dialogue
+				GameManager.Instance?.StartDialogue(dialogue);
+			}
+
+
 		}
 
-		
-		ShowDialogue();
-	}
-
-	private void ShowDialogue()
-	{
-		lastInteractionTime = Time.time;
-		GameManager.Instance?.StartDialogue(_dialogueData);
 	}
 }
