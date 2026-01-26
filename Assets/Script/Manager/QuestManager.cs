@@ -2,10 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//독립적인 데이터 구조 이며 여러 시스템에서 참조될 가능성이 높음
+//독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
 public class QuestState
 {
-	public int stage = 0;
+	public string questId;
+	public int currentStep;
+	public bool isCompleted;
+
+	public QuestState(string id)
+	{
+		questId = id;
+		currentStep = 0;
+		isCompleted = false;
+	}
 }
 
 /// <summary>
@@ -34,46 +43,73 @@ public class QuestManager : MonoBehaviour
 	}
 
 	//퀘스트 수락
-	public void StartQuest(string questId)
+	public void StartQuest(QuestData questData )
 	{
-		if(_setCompletedQuest.Contains(questId))
+		if(questData == null)
 		{
 			return;
 		}
 
-		if(_dicActiveQuest.ContainsKey(questId))
+		if(_setCompletedQuest.Contains(questData._questId))
 		{
+			Debug.LogWarning($"[QuestManager] 이미 완료된 퀘스트입니다. {questData._questId}");
 			return;
 		}
 
-		_dicActiveQuest.Add(questId, new QuestState());
+		if(_dicActiveQuest.ContainsKey(questData._questId))
+		{
+			Debug.LogWarning($"[QuestManager] 이미 진행중인 퀘스트입니다. {questData._questId}");
+			return;
+		}
+
+		QuestState newQuest = new QuestState(questData._questId);
+		_dicActiveQuest.Add(newQuest.questId, newQuest);
+
 		Debug.Log("[QuestManager] 퀘스트 시작");
 	}
 
-	//퀘스트 진행도 업데이트
-	public void UpdqteQuestProgress(string questId, int stage)
+	public QuestState GetQuestState(string questId)
 	{
-		if(_dicActiveQuest.ContainsKey(questId) == false)
+		_dicActiveQuest.TryGetValue(questId, out QuestState questState);
+		return questState;
+	}
+
+	//퀘스트 진행도 업데이트
+	public void UpdqteQuestProgress(QuestData questData)
+	{
+		if(_dicActiveQuest.TryGetValue(questData._questId, out QuestState questState) == false)
 		{
-			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questId}");
+			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questId}");
 			return;
 		}
 
-		_dicActiveQuest[questId].stage = stage;
-		Debug.Log($"[QuestManager] 퀘스트 {questId} 진행도 {stage} 업데이트");
+		if(questState.currentStep >= questData.steps.Length - 1)
+		{
+			CompleteQuset(questData._questId);
+			return;
+		}
+
+		questState.currentStep++;
+		
+		Debug.Log($"[QuestManager] 퀘스트 {questData._questId} 진행도 {questState.currentStep} 업데이트");
 	}
 
 	//퀘스트 완료 처리
-	public void CompleteQuset(string questId)
+	public void CompleteQuset(QuestData questData )
 	{
-		if (_dicActiveQuest.ContainsKey(questId) == false)
+		if(questData == null)
 		{
-			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questId}");
 			return;
 		}
 
-		_dicActiveQuest.Remove(questId);
-		_setCompletedQuest.Add(questId);
+		if (!_dicActiveQuest.TryGetValue(questData._questId, out QuestState state) == false)
+		{
+			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questId}");
+			return;
+		}
+
+		_dicActiveQuest.Remove(state.questId);
+		_setCompletedQuest.Add(state.questId);
 
 		Debug.Log("[QuestManager] 퀘스트 완료");
 	}
