@@ -17,9 +17,12 @@ public class QuestData : ScriptableObject
 	public string _startDialogueID;
 	public string _progressDialogueID;
 	public string _completedDialogueID;
-	
+
+	public QuestGoalType _goalType;
+	public int _goalCount;
+
 	[Header("Next Quest (optional)")]
 	public string _nextQuestID;
 	[Header("Reward(optional")]
-	public string _rewardID;
+	public QuestReward _reward;
 }
