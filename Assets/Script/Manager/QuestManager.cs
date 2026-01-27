@@ -119,54 +119,10 @@ public class QuestManager : MonoBehaviour
 		DialogueData completedDialogue = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
 		if (completedDialogue != null)
 		{
-			GameManager.Instance.StartDialogue(completedDialogue, () => { CompleteQuset(questData); });
+			GameManager.Instance.StartDialogue(completedDialogue, () => { OnQuestCompleted(questData); });
 		}
 			
     }
-
-	//퀘스트 시작
-	public void StartQuest(QuestData questData )
-	{
-		if(questData == null)
-		{
-			return;
-		}
-
-		string questID = questData._questID;
-		if(_setCompletedQuest.Contains(questID))
-		{
-			Debug.LogWarning($"[QuestManager] 이미 완료된 퀘스트입니다. {questID}");
-			return;
-		}
-
-		if(_setStartedQuest.Contains(questID))
-		{
-			Debug.LogWarning($"[QuestManager] 이미 진행중인 퀘스트입니다. {questID}");
-			return;
-		}
-
-		_setStartedQuest.Add(questID);
-		Debug.Log("[QuestManager] 퀘스트 시작");
-	}
-
-	//퀘스트 완료 처리
-	public void CompleteQuset(QuestData questData )
-	{
-		if(questData == null)
-		{
-			return;
-		}
-
-		if (!_setStartedQuest.Contains(questData._questID))
-		{
-			Debug.LogWarning($"[QuestManager] 진행중인 퀘스트가 아닙니다. {questData._questID}");
-			return;
-		}
-
-		_setCompletedQuest.Add(questData._questID);
-
-		Debug.Log("[QuestManager] 퀘스트 완료");
-	}
 
 	public bool IsQuestCompleted(string questId)
 	{
@@ -175,19 +131,33 @@ public class QuestManager : MonoBehaviour
 
 	public void ReportTalktoNPC(string npcID)
 	{
-		foreach(var questID in _setStartedQuest)
+		foreach(var quest in _dicActiveQuest)
 		{
-			QuestState qs = _dicActiveQuest[questID];
-			if (qs != null && qs._data._goalType == QuestGoalType.Talk && qs._data._npcID == npcID)
+			QuestState qs = quest.Value;
+			if (qs == null)
+				continue;
+
+			if (qs._isCompleted == true)
+				continue;
+
+			if (qs._data._targetID != npcID)
+				continue;
+
+			if (qs._data._goalType != QuestGoalType.Talk)
+				continue;
+
+			bool completed = qs.AddProgress();
+	
+			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcID}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+
+			if (completed)
 			{
-				bool completed = qs.AddProgress();
-                if (completed)
-                {
-					OnQuestCompleted(qs);
-                }
-            }
+				OnQuestCompleted(qs._data);
+			}
 		}
 	}
+
+	//to do : 추후 개발
 	public void ReportKill(string monsterID)
 	{
 		foreach (var questID in _setStartedQuest)
@@ -199,12 +169,13 @@ public class QuestManager : MonoBehaviour
 
 				if (completed)
 				{
-					OnQuestCompleted(qs);
+					OnQuestCompleted(qs._data);
 				}
 			}
 		}
 	}
 
+	//to do : 추후 개발
 	public void ReportReach(string locationID)
 	{
 		foreach (var questID in _setStartedQuest)
@@ -216,37 +187,56 @@ public class QuestManager : MonoBehaviour
 
 				if (completed)
 				{
-					OnQuestCompleted(qs);
+					OnQuestCompleted(qs._data);
 				}
 			}
 		}
 	}
 
-	private void OnQuestCompleted(QuestState questState)
+	private void OnQuestCompleted(QuestData questData)
 	{
-		_setCompletedQuest.Add(questState._data._questID);
 
-		QuestReward reward = questState._data._reward;
 
-		if(string.IsNullOrEmpty(reward._companionID) == false)
+		_dicActiveQuest.TryGetValue(questData._questID, out QuestState qs);
+		if (qs == null)
+			return;
+
+		Debug.Log($"[QuestManager] 퀘스트 완료: {questData._questID} - {questData._title}");
+		_setCompletedQuest.Add(questData._questID);
+		qs._isCompleted = true;
+
+
+		//다음 퀘스트
+		if(string.IsNullOrEmpty(questData._nextQuestID) == false)
+		{
+			TryQuestInteraction(questData._nextQuestID);
+		}
+	}
+
+	private void GetReward(QuestData qd)
+	{
+		if(qd._reward == null)
+		{
+			Debug.LogWarning("[QuestManager] 보상이 없습니다.");
+			return;
+		}
+			
+		QuestReward reward = qd._reward;
+
+		//보상처리
+		if (string.IsNullOrEmpty(reward._companionID) == false)
 		{
 			Debug.Log($"[QuestManager] 동료 획득: {reward._companionID}");
 		}
 
-		if(reward._gold > 0)
+		if (reward._gold > 0)
 		{
 			Debug.Log($"[QuestManager] 골드 획득: {reward._gold}");
 		}
 
-		if(reward._exp > 0)
+		if (reward._exp > 0)
 		{
 			Debug.Log($"[QuestManager] 경험치 획득: {reward._exp}");
-		}
-
-		if(string.IsNullOrEmpty(questState._data._nextQuestID) == false)
-		{
-			QuestData nextQuestData = QuestDatabase.Instance.GetQuestByID(questState._data._nextQuestID);
-			StartQuest(nextQuestData);
 		}
 	}
 }

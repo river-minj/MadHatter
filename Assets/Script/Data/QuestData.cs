@@ -18,6 +18,7 @@ public class QuestData : ScriptableObject
 	public string _progressDialogueID;
 	public string _completedDialogueID;
 
+	public string _targetID;
 	public QuestGoalType _goalType;
 	public int _goalCount;
 
