@@ -13,11 +13,18 @@ MonoBehaviour:
   m_Name: Quest_1
   m_EditorClassIdentifier: 
   _questID: Quest_1
-  _npcID: Quest_1
-  _title: "\uCCAB\uBC88\uC9F8 \uD018\uC2A4\uD2B8"
-  _description: "\uB2E4\uC74C \uB9F5\uC73C\uB85C \uC774\uB3D9\uD558\uC790"
-  _startDialogueID: D_Quest_1
-  _progressDialogueID: 
-  _completedDialogueID: 
+  _npcID: NPC_ Guide
+  _title: "\uC791\uC5C5 \uBC18\uC7A5 \uB9CC\uB098\uAE30"
+  _description: "\uBAA8\uC790 \uACF5\uC7A5 \uC791\uC5C5 \uBC18\uC7A5\uC744 \uB9CC\uB098\uBCF4\uC790"
+  _startDialogueID: D_Q_1_001
+  _progressDialogueID: D_Q_1_002
+  _completedDialogueID: D_Q_1_003
+  _targetID: NPC_WorkMan
+  _goalType: 3
+  _goalCount: 1
   _nextQuestID: 
-  _rewardID: 
+  _reward:
+    _companionID: C_WorkMan
+    _gold: 0
+    _exp: 0
+    _itemID: 

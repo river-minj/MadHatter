@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29d872845324e504ea2817a96f31474a, type: 3}
-  m_Name: FirstGuide
+  m_Script: {fileID: 11500000, guid: c5191012d212b66409e42000a0fdf831, type: 3}
+  m_Name: D_Q_1_002
   m_EditorClassIdentifier: 
-  _npcID: FirstGuide
-  _npcName: "\uC5EC\uD589\uC790"
-  _defaultDialogueID: guide_1
-  _questID: 
+  _dialogueID: D_Q_1_002
+  _speakerName: "\uC791\uC5C5 \uBC18\uC7A5"
+  _lines:
+  - "\uC694 \uB140\uC11D \uBD10\uB77C? \uAE30\uC220\uC744 \uBC30\uC6B0\uACE0 \uC2F6\uC5B4?"
