@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9ce1927d66ed3647a696c34fc3b4db4, type: 3}
-  m_Name: Quest_1
+  m_Name: Q001
   m_EditorClassIdentifier: 
-  _questID: Quest_1
+  _questID: Q001
   _npcID: NPC_ Guide
   _title: "\uC791\uC5C5 \uBC18\uC7A5 \uB9CC\uB098\uAE30"
   _description: "\uBAA8\uC790 \uACF5\uC7A5 \uC791\uC5C5 \uBC18\uC7A5\uC744 \uB9CC\uB098\uBCF4\uC790"
-  _startDialogueID: D_Q_1_001
-  _progressDialogueID: D_Q_1_002
-  _completedDialogueID: D_Q_1_003
+  _startDialogueID: D_Q001_1
+  _progressDialogueID: D_Q001_2
+  _completedDialogueID: D_Q001_3
   _targetID: NPC_WorkMan
   _goalType: 3
   _goalCount: 1
@@ -27,4 +27,4 @@ MonoBehaviour:
     _companionID: C_WorkMan
     _gold: 0
     _exp: 0
-    _itemID: 
+    _itemID: Item_Key

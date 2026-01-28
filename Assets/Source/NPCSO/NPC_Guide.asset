@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: NPC_Guide
   m_EditorClassIdentifier: 
   _npcID: NPC_Guide
-  _npcName: "\uC5EC\uD589\uC790"
+  _npcName: "\uAD74\uB69D\uC9D1 \uC8FC\uC778"
   _defaultDialogueID: 
-  _questID: Quest_1
+  _questID: Q001

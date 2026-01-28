@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -81,7 +81,7 @@ public class QuestManager : MonoBehaviour
 	}
 
 	//npc와 상호작용 처리
-	public void TryQuestInteraction(string questID)
+	public void TryQuestStart(string questID)
 	{
 		var questData = QuestDatabase.Instance.GetQuestByID(questID);
 		if(questData == null)
@@ -196,20 +196,33 @@ public class QuestManager : MonoBehaviour
 	private void OnQuestCompleted(QuestData questData)
 	{
 
-
 		_dicActiveQuest.TryGetValue(questData._questID, out QuestState qs);
 		if (qs == null)
 			return;
 
 		Debug.Log($"[QuestManager] 퀘스트 완료: {questData._questID} - {questData._title}");
+	
+		_setStartedQuest.Remove(questData._questID);
 		_setCompletedQuest.Add(questData._questID);
 		qs._isCompleted = true;
 
+		//보상지급
+		GetReward(questData);
+
+		//퀘스트 완료 대사
+		if(questData._completedDialogueID != null)
+		{
+			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
+			if (d != null)
+			{
+				GameManager.Instance.StartDialogue(d);
+			}
+		}
 
 		//다음 퀘스트
-		if(string.IsNullOrEmpty(questData._nextQuestID) == false)
+		if (string.IsNullOrEmpty(questData._nextQuestID) == false)
 		{
-			TryQuestInteraction(questData._nextQuestID);
+			TryQuestStart(questData._nextQuestID);
 		}
 	}
 

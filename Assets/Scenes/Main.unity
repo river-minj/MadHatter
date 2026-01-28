@@ -168,6 +168,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dialogueList:
   - {fileID: 11400000, guid: 94f34122bfa3c434fbf52db3c57a7608, type: 2}
+  - {fileID: 11400000, guid: c87d921d17b0bf04a90179f5495b8516, type: 2}
+  - {fileID: 11400000, guid: f01906b2b06e89848b7f5b29a069ccd4, type: 2}
 --- !u!1 &77411636
 GameObject:
   m_ObjectHideFlags: 0

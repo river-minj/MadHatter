@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _npcID: NPC_WorkMan
   _npcName: "\uC791\uC5C5 \uBC18\uC7A5"
-  _defaultDialogueID: 
+  _defaultDialogueID: "\uB9D0\uC744 \uD574\uC918\uB3C4 \uB108\uB294 \uD558\uB098\uB3C4
+    \uBABB\uC54C\uC544 \uB4E4\uC5C7!"
   _questID: 

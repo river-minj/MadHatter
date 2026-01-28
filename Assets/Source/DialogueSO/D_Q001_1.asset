@@ -10,12 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5191012d212b66409e42000a0fdf831, type: 3}
-  m_Name: D_Q_1_003
+  m_Name: D_Q001_1
   m_EditorClassIdentifier: 
-  _dialogueID: D_Q_1_003
-  _speakerName: "\uC791\uC5C5 \uBC18\uC7A5"
+  _dialogueID: D_Q001_1
+  _speakerName: "\uAD74\uB69D\uC9D1 \uC8FC\uC778"
   _lines:
-  - "\uBC30\uC6B0\uACE0 \uC2F6\uC73C\uBA74 \uBC16\uC5D0 \uAC00\uC11C \uB3C8 \uB0B4\uACE0
-    \uBC30\uC6CC\uC640!"
-  - "\uC5EC\uAE30\uC120 \uC2DC\uD0A4\uB294 \uC77C\uC774\uB098 \uD574!"
-  - "\uCF69!"
+  - "\uB10C \uD574\uACE0\uC57C"

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestDatabase : MonoBehaviour
@@ -55,5 +55,23 @@ public class QuestDatabase : MonoBehaviour
 	public IEnumerable<QuestData> GetAllQuests()
 	{
 		return _questList;
+	}
+
+	public QuestData GetQuestData(string questID)
+	{
+		if (string.IsNullOrEmpty(questID))
+		{
+			Debug.LogWarning("[QuestDatabase] GetQuestData called with null or empty questID.");
+			return null;
+		}
+
+		if (_questMap.TryGetValue(questID, out var questData))
+		{
+			return questData;
+		}
+
+		Debug.LogWarningFormat("[QuestDatabase] Quest ID not found: {0}", questID);
+		return null;
+
 	}
 }
