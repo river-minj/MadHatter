@@ -1,0 +1,103 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 언락된 동료 관리
+/// </summary>
+public class CompanionManager : MonoBehaviour
+{
+	public static CompanionManager instance;
+	private List<CompanionData> _ownedCompanions = new(); // 언락된 동료 ID
+	public IEnumerable<CompanionData> OwnedCompanions => _ownedCompanions;
+	
+	private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
+
+	[SerializeField] private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
+
+	private void Awake()
+	{
+		if (instance == null)
+		{
+			instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+
+	}
+
+	private void Start()
+	{
+		if(_player == null)
+		{
+			_player = FindObjectOfType<PlayerController>();
+		}
+	}		
+
+	//동료 획득
+	public void AddCompanion(CompanionData data)
+	{
+		if (_ownedCompanions.Contains(data))
+		{
+			Debug.LogWarningFormat("Companion already unlocked: {0}", data._companionID);
+			return;
+		}
+
+		_ownedCompanions.Add(data);
+		Debug.LogFormat("Companion 획득: {0}", data._companionID);
+
+		//생성
+		SpawnCompanion(data);
+		//follow target 설정
+		UpdateFollowTarget();
+
+	}
+
+	//동료 생성
+	public void SpawnCompanion(CompanionData data)
+	{
+		if(_player == null)
+		{
+			Debug.LogError("PlayerController reference is missing.");
+			return;
+		}
+
+		Vector3 spawnPos = _player.transform.position; //일단 플레이어 위치에 생성
+		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity);
+		CompanionController cc = companionObj.GetComponent<CompanionController>();
+        if (cc!= null)
+        {
+            _followCompanions.Add(cc);
+        }
+    }
+
+	private Vector3 GetFollowTarget(int index)
+	{
+		Transform baseAnchor = (index%2 == 0) ? _player._companionAnchorA : _player._companionAnchorB; //배치해야하는 동료의 기준 앵커 선택
+
+		int row = index / 2; //배치해야하는 동료가 몇번째 줄에 있는지 계산
+
+		Vector3 offset = new Vector3(0, -0.5f * row, 0); //각 줄마다 y축으로 0.5씩 떨어지게 오프셋 계산
+
+		return baseAnchor.position + offset;
+	}
+
+	private void UpdateFollowTarget()
+	{
+		for(int i = 0; i < _followCompanions.Count; i++)
+		{
+			CompanionController cc = _followCompanions[i];
+			if (cc == null)
+				continue;
+
+			Vector3 target = GetFollowTarget(i);
+			if(target != null)
+			{
+				cc.SetFollowTarget(target);
+
+			}
+		}
+	}
+}

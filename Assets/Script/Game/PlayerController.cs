@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
 	private Vector2 _moveDir;
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
 
+	//동료가 따라올 위치 (2열)
+	public Transform _companionAnchorA; 
+	public Transform _companionAnchorB;
 	private void Awake()
 	{
 	}
