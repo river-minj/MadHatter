@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class NPCInteraction : InteractionController
+public class NPCController: InteractionController
 {
 	private string _npcName;
 	private string _npcID;
@@ -26,7 +26,7 @@ public class NPCInteraction : InteractionController
 		
 		if(_npcData == null)
 		{
-			Debug.LogWarningFormat("[NPCInteraction] NPC Data is null for NPC: {0}", gameObject.name);
+			Debug.LogWarningFormat("[NPCController] NPC Data is null for NPC: {0}", gameObject.name);
 			return;
 		}
 
