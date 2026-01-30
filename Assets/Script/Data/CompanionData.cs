@@ -1,6 +1,7 @@
 using UnityEngine;
 [CreateAssetMenu(fileName = "CompanionData", menuName = "Game/Companion Data")]
 
+[System.Serializable]
 public class CompanionData : ScriptableObject
 {
 	[Header("Basic Info")]

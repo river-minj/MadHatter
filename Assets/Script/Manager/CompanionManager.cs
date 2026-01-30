@@ -6,19 +6,19 @@ using UnityEngine;
 /// </summary>
 public class CompanionManager : MonoBehaviour
 {
-	public static CompanionManager instance;
+	public static CompanionManager Instance;
 	private List<CompanionData> _ownedCompanions = new(); // 언락된 동료 ID
 	public IEnumerable<CompanionData> OwnedCompanions => _ownedCompanions;
 	
 	private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
 
-	[SerializeField] private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
+	private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (Instance == null)
 		{
-			instance = this;
+			Instance = this;
 			DontDestroyOnLoad(gameObject);
 		}
 		else
@@ -50,7 +50,7 @@ public class CompanionManager : MonoBehaviour
 
 		//생성
 		SpawnCompanion(data);
-		//follow target 설정
+		//생성 위치 설정
 		UpdateFollowTarget();
 
 	}
@@ -73,7 +73,7 @@ public class CompanionManager : MonoBehaviour
         }
     }
 
-	private Vector3 GetFollowTarget(int index)
+	private Vector3 GetFollowPosition(int index)
 	{
 		Transform baseAnchor = (index%2 == 0) ? _player._companionAnchorA : _player._companionAnchorB; //배치해야하는 동료의 기준 앵커 선택
 
@@ -92,10 +92,10 @@ public class CompanionManager : MonoBehaviour
 			if (cc == null)
 				continue;
 
-			Vector3 target = GetFollowTarget(i);
-			if(target != null)
+			Vector3 pos = GetFollowPosition(i);
+			if(pos != null)
 			{
-				cc.SetFollowTarget(target);
+				cc.SetFollowPosition(pos);
 
 			}
 		}

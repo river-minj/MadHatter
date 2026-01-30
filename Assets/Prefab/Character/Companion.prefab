@@ -99,8 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11803bb75f384674cbc8ad962a0bce18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followDistance: 2
-  moveSpeed: 3
+  _companionData: {fileID: 11400000, guid: 6bbbb29c38c747648891175569cb2bf4, type: 2}
+  _followDistance: 2
+  _moveSpeed: 3
 --- !u!50 &1150837865369001077
 Rigidbody2D:
   serializedVersion: 4
@@ -135,7 +136,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395428206575319003}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

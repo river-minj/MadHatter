@@ -48,6 +48,9 @@ TagManager:
   - name: CharacterObject
     uniqueID: 1511367901
     locked: 0
+  - name: Companion
+    uniqueID: 963329565
+    locked: 0
   - name: Foreground
     uniqueID: 1228885523
     locked: 0

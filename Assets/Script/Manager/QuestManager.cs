@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 //독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
@@ -235,6 +234,21 @@ public class QuestManager : MonoBehaviour
 		}
 			
 		QuestReward reward = qd._reward;
+		if (reward != null)
+		{
+			if(string.IsNullOrEmpty(reward._companionID) == false)
+			{
+				CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionID);
+				if(companionData != null)
+				{
+					CompanionManager.Instance.AddCompanion(companionData);
+				}
+				else
+				{
+					Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionID}");
+				}
+			}
+		}
 
 		//보상처리
 		if (string.IsNullOrEmpty(reward._companionID) == false)

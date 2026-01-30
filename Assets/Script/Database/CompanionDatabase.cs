@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class CompanionDatabase : MonoBehaviour
 {
-	public static CompanionDatabase instance;
+	public static CompanionDatabase Instance;
 
 	[SerializeField] private List<CompanionData> _companionList = new List<CompanionData>();
 
@@ -13,9 +11,9 @@ public class CompanionDatabase : MonoBehaviour
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (Instance == null)
 		{
-			instance = this;
+			Instance = this;
 			DontDestroyOnLoad(gameObject);
 		}
 		else
