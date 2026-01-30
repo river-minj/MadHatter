@@ -51,7 +51,7 @@ public class CompanionManager : MonoBehaviour
 		//생성
 		SpawnCompanion(data);
 		//생성 위치 설정
-		UpdateFollowTarget();
+		UpdateFollowPosition();
 
 	}
 
@@ -84,7 +84,7 @@ public class CompanionManager : MonoBehaviour
 		return baseAnchor.position + offset;
 	}
 
-	private void UpdateFollowTarget()
+	private void UpdateFollowPosition()
 	{
 		for(int i = 0; i < _followCompanions.Count; i++)
 		{
@@ -99,5 +99,11 @@ public class CompanionManager : MonoBehaviour
 
 			}
 		}
+	}
+
+	//to do : companion의 이동을 이렇게 콜하는 것이 최선인지 검토 필요
+	public void RefreshFollowPosition()
+	{
+		UpdateFollowPosition();
 	}
 }

@@ -42,6 +42,26 @@ public class PlayerController : MonoBehaviour
 		Move();
 	}
 
+	private void LateUpdate()
+	{
+		if (CompanionManager.Instance != null)
+		{
+			//동료 위치 갱신
+			CompanionManager.Instance.RefreshFollowPosition();
+			//int index = 0;
+			//foreach(var companion in CompanionManager.Instance.OwnedCompanions)
+			//{
+			//	Transform anchor = index == 0 ? _companionAnchorA : _companionAnchorB;
+			//	CompanionController controller = companion.GetCompanionController();
+			//	if(controller != null && anchor != null)
+			//	{
+			//		controller.SetFollowPosition(anchor.position);
+			//	}
+			//	index++;
+			//}
+		}
+	}
+
 	private void Move()
 	{
 		// 캐릭터 이동

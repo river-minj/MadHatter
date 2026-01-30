@@ -72,17 +72,17 @@ public class GameManager : MonoBehaviour
 
     public void RequestMapTransition(MapController nextMap)
     {
-        Debug.LogError("[GameManager] Map transition requested.");
+        Debug.Log("[GameManager] Map transition requested.");
 
 		if (nextMap == null)
 		{
-			Debug.LogError("[GameManager] Next map prefab is null.");
+			Debug.Log("[GameManager] Next map prefab is null.");
 			return;
 		}
 
 		if (UIManager.Instance == null)
 		{
-			Debug.LogError("[GameManager] UIManager not found.");
+			Debug.Log("[GameManager] UIManager not found.");
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
             //CurrentMapController?.OnMapExit();
 
             Destroy(CurrentMapController.gameObject);
-            Debug.LogErrorFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
+            Debug.LogFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
         }
 
 		//새 맵 로드
