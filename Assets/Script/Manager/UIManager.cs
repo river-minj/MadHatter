@@ -23,6 +23,9 @@ public class UIManager : MonoBehaviour
 	//대화 컨트롤러
 	[SerializeField] private DialogueController _dialogueController;
 
+	//인벤토리 UI
+	[SerializeField] private InventoryUI _inventoryUI;
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -208,4 +211,11 @@ public class UIManager : MonoBehaviour
 		return _dialogueController != null && _dialogueController.IsDialogueRunning;
 	}
 	
+	public void ToggleInventory()
+	{
+		if(_inventoryUI != null)
+		{
+			_inventoryUI.Toggle();
+		}
+	}
 }

@@ -96,6 +96,11 @@ public class PlayerController : MonoBehaviour
 			_lastDir = _moveDir; //마지막 방향 갱신
 		}
 
+		if(Input.GetKeyDown(KeyCode.I))
+		{
+			//인벤토리 토글
+			UIManager.Instance.ToggleInventory();
+		}
 	}
 
 	private void PlaySkeletonAnimation()
