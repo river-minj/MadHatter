@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class CompanionSlotData : InfiniteScrollData
 {
-	public CompanionData companionData;
+	public CompanionData _companionData;
 }
 
 public class CompanionSlotController : InfiniteScrollItem
 {
 	[SerializeField]  private TextMeshProUGUI _nameText;
 
-	private CompanionSlotData _companion;
+	private CompanionSlotData _companion = new CompanionSlotData();
 	public void SetData(CompanionData companion)
 	{
 		if(companion == null)
@@ -20,7 +20,7 @@ public class CompanionSlotController : InfiniteScrollItem
 			return;
 		}
 
-		_companion = _data as CompanionSlotData;
+		_companion._companionData = companion;
 
 		RefreshUI();
 	}
@@ -29,7 +29,7 @@ public class CompanionSlotController : InfiniteScrollItem
 	{
 		if (_nameText != null)
 		{
-			_nameText.text = _companion.companionData._companionName;
+			_nameText.text = _companion._companionData._companionName;
 		}
 	}
 }

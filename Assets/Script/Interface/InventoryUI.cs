@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,12 +45,15 @@ public class InventoryUI : MonoBehaviour
 			Destroy(child.gameObject);
 		}
 
-		// Populate with current companions
-		foreach (var companion in CompanionManager.Instance.OwnedCompanions)
+		for (int i = 0; i < 33; i++)
 		{
-			GameObject slot = Instantiate(_companioanSlot, _content);
-			CompanionSlotController slotUI = slot.GetComponent<CompanionSlotController>();
-			slotUI.SetData(companion);
+			// Populate with current companions
+			foreach (var companion in CompanionManager.Instance.OwnedCompanions)
+			{
+				GameObject slot = Instantiate(_companioanSlot, _content);
+				CompanionSlotController slotUI = slot.GetComponent<CompanionSlotController>();
+				slotUI.SetData(companion);
+			}
 		}
 	}
 }
