@@ -45,15 +45,12 @@ public class InventoryUI : MonoBehaviour
 			Destroy(child.gameObject);
 		}
 
-		for (int i = 0; i < 33; i++)
+		// Populate with current companions
+		foreach (var companion in CompanionManager.Instance.OwnedCompanions)
 		{
-			// Populate with current companions
-			foreach (var companion in CompanionManager.Instance.OwnedCompanions)
-			{
-				GameObject slot = Instantiate(_companioanSlot, _content);
-				CompanionSlotController slotUI = slot.GetComponent<CompanionSlotController>();
-				slotUI.SetData(companion);
-			}
+			GameObject slot = Instantiate(_companioanSlot, _content);
+			CompanionSlotController slotUI = slot.GetComponent<CompanionSlotController>();
+			slotUI.SetData(companion);
 		}
 	}
 }

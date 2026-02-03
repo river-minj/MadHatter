@@ -34,7 +34,15 @@ public class CompanionManager : MonoBehaviour
 		{
 			_player = FindObjectOfType<PlayerController>();
 		}
-	}		
+
+		//테스트용, 나중에 삭제
+		CompanionData data = CompanionDatabase.Instance.GetCompanionByID("C_WorkMan");
+		for(int i = 0; i< 33; i++)
+		{
+			_ownedCompanions.Add(data);
+		}
+
+	}
 
 	//동료 획득
 	public void AddCompanion(CompanionData data)
