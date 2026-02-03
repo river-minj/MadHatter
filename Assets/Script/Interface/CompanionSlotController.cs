@@ -11,25 +11,21 @@ public class CompanionSlotController : InfiniteScrollItem
 {
 	[SerializeField]  private TextMeshProUGUI _nameText;
 
-	private CompanionSlotData _companion = new CompanionSlotData();
-	public void SetData(CompanionData companion)
-	{
-		if(companion == null)
-		{
-			Debug.LogWarning("Companion data is null.");
-			return;
-		}
-
-		_companion._companionData = companion;
-
-		RefreshUI();
-	}
-
 	protected override void RefreshUI()
 	{
-		if (_nameText != null)
+		if(_data is CompanionSlotData companionData)
 		{
-			_nameText.text = _companion._companionData._companionName;
+			if(companionData._companionData == null)
+			{
+				Debug.LogError("CompanionSlotData의 CompanionData가 null입니다.");
+				return;
+			}
+			
+			if (_nameText != null)
+			{
+				_nameText.text = companionData._companionData._companionName;
+			}
+
 		}
 	}
 }

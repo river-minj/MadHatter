@@ -9,6 +9,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Transform _content;
     [SerializeField] private GameObject _companioanSlot;
 
+	[SerializeField] private InfiniteScrollView _scrollView;
+
 	private void Awake()
 	{
         Hide();
@@ -39,18 +41,17 @@ public class InventoryUI : MonoBehaviour
 
 	public void RefreshUI()
 	{
-		// Clear existing slots
-		foreach (Transform child in _content)
+		//무한 스크롤 뷰에 데이터 설정
+		List<InfiniteScrollData> list = new List<InfiniteScrollData>();
+		foreach(var companion in CompanionManager.Instance.OwnedCompanions)
 		{
-			Destroy(child.gameObject);
+			CompanionSlotData data = new CompanionSlotData();
+			data._companionData = companion;
+			list.Add(data);
 		}
 
-		// Populate with current companions
-		foreach (var companion in CompanionManager.Instance.OwnedCompanions)
-		{
-			GameObject slot = Instantiate(_companioanSlot, _content);
-			CompanionSlotController slotUI = slot.GetComponent<CompanionSlotController>();
-			slotUI.SetData(companion);
-		}
+		_scrollView.SetData(list);
+		Debug.Log($"인벤토리 UI 새로고침: {list.Count}개의 동료 슬롯 생성");
+
 	}
 }

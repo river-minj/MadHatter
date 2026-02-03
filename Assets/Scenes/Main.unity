@@ -458,7 +458,13 @@ MonoBehaviour:
   _scrollRect: {fileID: 346688896}
   _content: {fileID: 1667046822}
   _slotPrefab: {fileID: 9211485154185932005, guid: 3a7c8f0943c04434a81aeac5d82dde2c, type: 3}
-  _spawnCount: 10
+  _columns: 5
+  _spacing: {x: 10, y: 10}
+  _padding:
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
 --- !u!1 &452629784
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,6 +522,7 @@ MonoBehaviour:
   _inventoryPanel: {fileID: 0}
   _content: {fileID: 0}
   _companioanSlot: {fileID: 0}
+  _scrollView: {fileID: 0}
 --- !u!114 &452629787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1615,6 +1622,7 @@ MonoBehaviour:
   _inventoryPanel: {fileID: 1532140629}
   _content: {fileID: 1667046822}
   _companioanSlot: {fileID: 5391909536590100138, guid: 3a7c8f0943c04434a81aeac5d82dde2c, type: 3}
+  _scrollView: {fileID: 346688899}
 --- !u!1 &1334923883
 GameObject:
   m_ObjectHideFlags: 0
@@ -1902,7 +1910,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1667046822}
-  - component: {fileID: 1667046823}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1929,30 +1936,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 950}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1667046823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667046821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 20
-    m_Right: 0
-    m_Top: 20
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 200, y: 350}
-  m_Spacing: {x: 10, y: 10}
-  m_Constraint: 1
-  m_ConstraintCount: 5
 --- !u!1 &1760295053
 GameObject:
   m_ObjectHideFlags: 0
