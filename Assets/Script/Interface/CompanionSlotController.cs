@@ -15,7 +15,7 @@ public class CompanionSlotController : InfiniteScrollItem
 	[SerializeField] private SkeletonGraphic _spine;
 
 	[Header("Animation Setting")]
-	[SerializeField] private string _idleAnimationName = "Idle";
+	[SerializeField] private string _idleAnimationName = "idle";
 	[SerializeField] private bool _pauseInvisible = true;//안보일때 애니메이션 정지여부
 
 	private bool _isVisible = false;
@@ -44,14 +44,32 @@ public class CompanionSlotController : InfiniteScrollItem
 
 	private void SetUpSpine(CompanionData data)
 	{
-		//if(_spine == null || data == null || data._skeletonDataAsset == null)
+		if(_spine == null || data == null)
 		{
 			Debug.LogError("스파인 설정에 필요한 데이터가 누락되었습니다.");
 			return;
 		}
 
-		//_spine.skeletonDataAsset = data._skeletonDataAsset;
+		_spine.initialSkinName = data._skinName;
 		_spine.Initialize(true);
 		_spine.AnimationState.SetAnimation(0, _idleAnimationName, true);
+	}
+
+	protected override void OnShow()
+	{
+		if(_spine != null)
+		{
+			_spine.AnimationState.TimeScale = 1f; //애니메이션 재생
+		}
+		Debug.Log($"[SHOW] Slot index = {_data._index}");
+	}
+
+	protected override void OnHide()
+	{
+		if(_spine != null)
+		{
+			_spine.AnimationState.TimeScale = 0f; //애니메이션 정지
+		}
+		Debug.Log($"[HIDE] Slot index = {_data._index}");
 	}
 }

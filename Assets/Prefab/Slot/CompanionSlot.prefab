@@ -27,16 +27,16 @@ RectTransform:
   m_GameObject: {fileID: 881155987093991272}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7685693474710851079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0004921, y: 53.4304}
-  m_SizeDelta: {x: 180, y: 218.4585}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -20, y: -222}
+  m_SizeDelta: {x: 180, y: 218}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7166670800405089142
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -65,11 +65,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  skeletonDataAsset: {fileID: 0}
+  skeletonDataAsset: {fileID: 11400000, guid: b433442e167b65b4fad9fbc7def7bbeb, type: 2}
   additiveMaterial: {fileID: 0}
   multiplyMaterial: {fileID: 0}
   screenMaterial: {fileID: 0}
-  initialSkinName: 
+  initialSkinName: skin_female_037
   initialFlipX: 0
   initialFlipY: 0
   startingAnimation: 
@@ -77,9 +77,9 @@ MonoBehaviour:
   timeScale: 1
   freeze: 0
   layoutScaleMode: 0
-  referenceSize: {x: 180, y: 218.4585}
+  referenceSize: {x: 180, y: 218}
   referenceScale: 1
-  rectTransformSize: {x: 180, y: 218.4585}
+  rectTransformSize: {x: 180, y: 218}
   editReferenceRect: 0
   updateWhenInvisible: 3
   allowMultipleCanvasRenderers: 0
@@ -128,7 +128,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5391909536590100138}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -193,6 +193,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nameText: {fileID: 3386901468004983863}
+  _spine: {fileID: 2631022633336727004}
+  _idleAnimationName: idle
+  _pauseInvisible: 1
 --- !u!1 &6159072815872306213
 GameObject:
   m_ObjectHideFlags: 0

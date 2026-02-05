@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _companionID: C_WorkMan
   _companionName: "\uAC00\uB098\uB2E4"
+  _skinName: skin_female_037
   _companionPrefab: {fileID: 1395428206575319003, guid: c173ff8123e5545429a740c2e841866a, type: 3}
   _followSpeed: 3
   _followDistance: 1.2

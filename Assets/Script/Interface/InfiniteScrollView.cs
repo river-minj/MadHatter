@@ -200,6 +200,7 @@ public class InfiniteScrollView : MonoBehaviour
 			//데이터 인덱스가 범위 밖이면 비활성화
 			if (dataIndex < 0 || dataIndex >= _dataList.Count)
 			{
+				_slotPool[i].Hide();
 				_slotPool[i].gameObject.SetActive(false);
 				continue;
 			}
