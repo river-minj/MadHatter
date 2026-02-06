@@ -14,6 +14,8 @@ public class CompanionManager : MonoBehaviour
 	private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
 
 	private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
+	[SerializeField] float _followDistance = 2.0f; //동료 사이의 거리
+	[SerializeField] Transform _followerParent;
 
 	private void Awake()
 	{
@@ -77,7 +79,7 @@ public class CompanionManager : MonoBehaviour
 		}
 
 		Vector3 spawnPos = _player.transform.position; //일단 플레이어 위치에 생성
-		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity);
+		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity, _followerParent);
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
         if (cc!= null)
         {
@@ -87,13 +89,20 @@ public class CompanionManager : MonoBehaviour
 
 	private Vector3 GetFollowPosition(int index)
 	{
-		Transform baseAnchor = (index%2 == 0) ? _player._companionAnchorA : _player._companionAnchorB; //배치해야하는 동료의 기준 앵커 선택
+		//처음 두명의 동료 위치
+		if (index < 2)
+		{
+			Transform baseAnchor = (index % 2 == 0) ? _player._companionAnchorA : _player._companionAnchorB; //배치해야하는 동료의 기준 앵커 선택
+			return baseAnchor.position;
+		}
+
+		// 두 번째 줄부터는 앞 동료 뒤에서 따라오기
+		CompanionController front = _followCompanions[index - 2];
+		Vector3 frontPos = front.transform.position;
 
 		int row = index / 2; //배치해야하는 동료가 몇번째 줄에 있는지 계산
+		return frontPos + new Vector3(-_followDistance * row, 0, 0); //각 줄마다 x축으로 일정거리만큼 떨어져서 이전 동료 뒤에 위치
 
-		Vector3 offset = new Vector3(0, -3f * row, 0); //각 줄마다 y축으로 0.5씩 떨어지게 오프셋 계산
-
-		return baseAnchor.position + offset;
 	}
 
 	private void UpdateFollowPosition()
