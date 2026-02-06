@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f0a41a24f280224190e5dcd15ff59d0, type: 3}
+  m_Name: C_004
+  m_EditorClassIdentifier: 
+  _companionID: C_WorkMan
+  _companionName: 4
+  _skinName: skin_female_039
+  _companionPrefab: {fileID: 1395428206575319003, guid: c94cdc7f076892a43b3ae56c861bf5e6, type: 3}
+  _followSpeed: 3
+  _followDistance: 1.2

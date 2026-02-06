@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +31,8 @@ public class InfiniteScrollView : MonoBehaviour
 	private int _currentTopRow = 0; //현재 최상단 행 인덱스
 	private bool _isInitialized = false;
 
+	private RectTransform _viewport;
+
 	void Awake()
 	{
 		_padding = new RectOffset(
@@ -38,6 +42,7 @@ public class InfiniteScrollView : MonoBehaviour
 		   _paddingBottom
 	   );
 
+		_viewport = _scrollRect.viewport; 
 		CalculateSlotSize();
 
 	}
@@ -72,8 +77,7 @@ public class InfiniteScrollView : MonoBehaviour
 			return;
 		}
 
-		RectTransform viewport = _scrollRect.viewport;
-		float viewportHeight = viewport.rect.height;
+		float viewportHeight = _viewport.rect.height;
 
 		//0 체크
 		if (viewportHeight <= 0)
@@ -200,12 +204,12 @@ public class InfiniteScrollView : MonoBehaviour
 			//데이터 인덱스가 범위 밖이면 비활성화
 			if (dataIndex < 0 || dataIndex >= _dataList.Count)
 			{
-				_slotPool[i].Hide();
 				_slotPool[i].gameObject.SetActive(false);
-				continue;
 			}
-
-			_slotPool[i].gameObject.SetActive(true);
+			else
+			{
+				_slotPool[i].gameObject.SetActive(true);
+			}
 
 			// 위치 조정
 			RectTransform rt = _slotPool[i].transform as RectTransform;
@@ -214,10 +218,56 @@ public class InfiniteScrollView : MonoBehaviour
 
 			rt.anchoredPosition = new Vector2(xPos, yPos);
 
+			//가시성 계산
+			bool isVisible = IsSlotInViewport(rt);
+
 			// 데이터 설정
 			InfiniteScrollData data = _dataList[dataIndex];
 			data._index = dataIndex;
 			_slotPool[i].SetData(data);
+
+			if(isVisible)
+			{
+				_slotPool[i].Show();
+			}
+			else
+			{
+				_slotPool[i].Hide();
+			}
+			
 		}
+
+	}
+
+	private bool IsSlotInViewport(RectTransform slot)
+	{
+		if(_viewport == null)
+		{
+			Debug.LogWarning("[ScrollDebug] _viewport is NULL → always visible");
+			return true;
+		}
+
+		Vector3[] slotCorners = new Vector3[4];
+		Vector3[] viewportCorners = new Vector3[4];
+
+		slot.GetWorldCorners(slotCorners);
+		_viewport.GetWorldCorners(viewportCorners);
+
+
+		float slotTop = slotCorners[1].y;
+		float slotBottom = slotCorners[0].y;
+
+		float viewTop = viewportCorners[1].y;
+		float viewBottom = viewportCorners[0].y;
+
+
+		bool vertically = slotBottom < viewTop && slotTop > viewBottom;
+
+		Debug.Log(
+		$"[VIS] slotTop={slotTop:F1}, slotBottom={slotBottom:F1}, " +
+		$"viewTop={viewTop:F1}, viewBottom={viewBottom:F1}, isVisible={vertically}"
+	);
+
+		return vertically;
 	}
 }

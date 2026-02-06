@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-		if(GameManager.Instance != null && GameManager.Instance.IsInputLock)
+		if (GameManager.Instance != null && GameManager.Instance.IsInputLock)
 		{
 			_moveDir = Vector2.zero;
 			PlaySkeletonAnimation(); // idle 애니메이션 유지
@@ -35,31 +35,17 @@ public class PlayerController : MonoBehaviour
 		HandleInput();
 		UpdateDirection();
 		PlaySkeletonAnimation();
-	}
 
-	void FixedUpdate()
-	{
-		Move();
-	}
-
-	private void LateUpdate()
-	{
 		if (CompanionManager.Instance != null)
 		{
 			//동료 위치 갱신
 			CompanionManager.Instance.RefreshFollowPosition();
-			//int index = 0;
-			//foreach(var companion in CompanionManager.Instance.OwnedCompanions)
-			//{
-			//	Transform anchor = index == 0 ? _companionAnchorA : _companionAnchorB;
-			//	CompanionController controller = companion.GetCompanionController();
-			//	if(controller != null && anchor != null)
-			//	{
-			//		controller.SetFollowPosition(anchor.position);
-			//	}
-			//	index++;
-			//}
 		}
+	}
+
+	private void FixedUpdate()
+	{
+		Move();
 	}
 
 	private void Move()
@@ -136,8 +122,8 @@ public class PlayerController : MonoBehaviour
 			return;
 
 		_lastDir = _moveDir;
-
-		if (_lastDir.x < 0)
+		bool isRight = _lastDir.x > 0;
+		if (isRight == false)
 		{
 			_skel.skeleton.ScaleX = 1f; //왼쪽 바라보기
 		}
@@ -146,6 +132,8 @@ public class PlayerController : MonoBehaviour
 			_skel.skeleton.ScaleX = -1f; //오른쪽 바라보기
 		}
 
+		MirrorFollowPos(isRight);
+		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
 
 	public void SetPosition(Transform pos)
@@ -153,7 +141,12 @@ public class PlayerController : MonoBehaviour
 		transform.position = pos.position;
 	}
 
+	private void MirrorFollowPos(bool right)
+	{
+		float sign = right ? -1f : 1f;
 
-
+		_companionAnchorA.localPosition = new Vector3(Mathf.Abs(_companionAnchorA.localPosition.x) * sign, _companionAnchorA.localPosition.y, _companionAnchorA.localPosition.z);
+		_companionAnchorB.localPosition = new Vector3(Mathf.Abs(_companionAnchorB.localPosition.x) * sign, _companionAnchorB.localPosition.y, _companionAnchorB.localPosition.z);
+	}
 }
 

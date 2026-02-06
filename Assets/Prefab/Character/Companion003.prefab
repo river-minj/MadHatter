@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6658074409224421868}
   - component: {fileID: 8792398912505875451}
   m_Layer: 0
-  m_Name: Companion
+  m_Name: Companion003
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11803bb75f384674cbc8ad962a0bce18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _companionData: {fileID: 11400000, guid: 6bbbb29c38c747648891175569cb2bf4, type: 2}
+  _companionData: {fileID: 11400000, guid: f5bea13010e79fe4ba0813db08c79957, type: 2}
   _skel: {fileID: 8792398912505875451}
   _moveSmooth: 0.12
   _moveSpeed: 3

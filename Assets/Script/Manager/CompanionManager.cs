@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -37,10 +38,13 @@ public class CompanionManager : MonoBehaviour
 
 		//테스트용, 나중에 삭제
 		CompanionData data = CompanionDatabase.Instance.GetCompanionByID("C_WorkMan");
-		for(int i = 0; i< 33; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			_ownedCompanions.Add(data);
+			SpawnCompanion(data);
 		}
+
+
 
 	}
 
@@ -87,7 +91,7 @@ public class CompanionManager : MonoBehaviour
 
 		int row = index / 2; //배치해야하는 동료가 몇번째 줄에 있는지 계산
 
-		Vector3 offset = new Vector3(0, -0.5f * row, 0); //각 줄마다 y축으로 0.5씩 떨어지게 오프셋 계산
+		Vector3 offset = new Vector3(0, -3f * row, 0); //각 줄마다 y축으로 0.5씩 떨어지게 오프셋 계산
 
 		return baseAnchor.position + offset;
 	}
@@ -101,11 +105,8 @@ public class CompanionManager : MonoBehaviour
 				continue;
 
 			Vector3 pos = GetFollowPosition(i);
-			if(pos != null)
-			{
-				cc.SetFollowPosition(pos);
-
-			}
+			cc.SetFollowPosition(pos);
+			
 		}
 	}
 
@@ -113,5 +114,17 @@ public class CompanionManager : MonoBehaviour
 	public void RefreshFollowPosition()
 	{
 		UpdateFollowPosition();
+	}
+
+	internal void SetFacingDirection(bool isRight)
+	{
+		foreach(var cc in _followCompanions)
+		{
+			if (cc == null)
+				continue;
+
+			//필요시 companion의 방향 전환 처리
+			cc.SetFacingDirection(isRight);			
+		}
 	}
 }

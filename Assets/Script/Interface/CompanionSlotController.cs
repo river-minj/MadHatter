@@ -61,7 +61,6 @@ public class CompanionSlotController : InfiniteScrollItem
 		{
 			_spine.AnimationState.TimeScale = 1f; //애니메이션 재생
 		}
-		Debug.Log($"[SHOW] Slot index = {_data._index}");
 	}
 
 	protected override void OnHide()
@@ -70,6 +69,5 @@ public class CompanionSlotController : InfiniteScrollItem
 		{
 			_spine.AnimationState.TimeScale = 0f; //애니메이션 정지
 		}
-		Debug.Log($"[HIDE] Slot index = {_data._index}");
 	}
 }
