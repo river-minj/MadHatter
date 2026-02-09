@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0a41a24f280224190e5dcd15ff59d0, type: 3}
   m_Name: C_006
   m_EditorClassIdentifier: 
-  _companionID: C_WorkMan
+  _companionID: C_006
   _companionName: 6
   _skinName: skin_female_041
   _companionPrefab: {fileID: 1395428206575319003, guid: 041896fffc3fa884686ddec94079b90a, type: 3}

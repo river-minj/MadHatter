@@ -103,6 +103,7 @@ MonoBehaviour:
   _skel: {fileID: 8792398912505875451}
   _moveSmooth: 0.12
   _moveSpeed: 3
+  _followOffset: 10
 --- !u!50 &1150837865369001077
 Rigidbody2D:
   serializedVersion: 4
@@ -178,7 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: b433442e167b65b4fad9fbc7def7bbeb, type: 2}
-  initialSkinName: skin_female_037
+  initialSkinName: skin_female_045
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0

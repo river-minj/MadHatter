@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0a41a24f280224190e5dcd15ff59d0, type: 3}
   m_Name: C_002
   m_EditorClassIdentifier: 
-  _companionID: C_WorkMan
+  _companionID: C_002
   _companionName: 2
-  _skinName: skin_female_037
+  _skinName: skin_female_045
   _companionPrefab: {fileID: 1395428206575319003, guid: 535fac902be9b01499f6dd5f348e0048, type: 3}
   _followSpeed: 3
   _followDistance: 1.2

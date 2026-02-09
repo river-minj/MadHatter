@@ -18,8 +18,6 @@ public class CompanionSlotController : InfiniteScrollItem
 	[SerializeField] private string _idleAnimationName = "idle";
 	[SerializeField] private bool _pauseInvisible = true;//안보일때 애니메이션 정지여부
 
-	private bool _isVisible = false;
-
 	protected override void RefreshUI()
 	{
 		if(_data is CompanionSlotData slotData)

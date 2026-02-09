@@ -14,7 +14,7 @@ public class CompanionManager : MonoBehaviour
 	private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
 
 	private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
-	[SerializeField] float _followDistance = 2.0f; //동료 사이의 거리
+	[SerializeField] int _followDistance = 2; //동료 사이의 거리
 	[SerializeField] Transform _followerParent;
 
 	private void Awake()
@@ -40,11 +40,21 @@ public class CompanionManager : MonoBehaviour
 
 		//테스트용, 나중에 삭제
 		CompanionData data = CompanionDatabase.Instance.GetCompanionByID("C_WorkMan");
-		for (int i = 0; i < 5; i++)
-		{
-			_ownedCompanions.Add(data);
-			SpawnCompanion(data);
-		}
+		AddCompanion(data);
+
+		//2
+		 data = CompanionDatabase.Instance.GetCompanionByID("C_002");
+		AddCompanion(data);
+
+		//3
+		 data = CompanionDatabase.Instance.GetCompanionByID("C_003");
+		AddCompanion(data);
+		//4
+		 data = CompanionDatabase.Instance.GetCompanionByID("C_004");
+		AddCompanion(data);
+		//5
+		 data = CompanionDatabase.Instance.GetCompanionByID("C_005");
+		AddCompanion(data);
 
 
 
@@ -83,6 +93,8 @@ public class CompanionManager : MonoBehaviour
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
         if (cc!= null)
         {
+			cc._followOffset = _followDistance * _followCompanions.Count;
+
             _followCompanions.Add(cc);
         }
     }

@@ -121,17 +121,18 @@ public class PlayerController : MonoBehaviour
 		if(_skel == null)
 			return;
 
-		_lastDir = _moveDir;
-		bool isRight = _lastDir.x > 0;
-		if (isRight == false)
+		var facing = _moveDir != Vector2.zero ? _moveDir : _lastDir;
+
+		if (facing.x < 0)
 		{
 			_skel.skeleton.ScaleX = 1f; //왼쪽 바라보기
 		}
-		else if (_lastDir.x > 0)
+		else if (facing.x > 0)
 		{
 			_skel.skeleton.ScaleX = -1f; //오른쪽 바라보기
 		}
 
+		bool isRight = facing.x > 0;
 		MirrorFollowPos(isRight);
 		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
