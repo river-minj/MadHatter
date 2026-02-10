@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1216584383474033561}
   - component: {fileID: 5499926497452135295}
   - component: {fileID: 8245899997513333412}
+  - component: {fileID: 7988379729483360778}
   - component: {fileID: 4359377485680811298}
   - component: {fileID: 7179432190166341955}
   - component: {fileID: 2815973901312032410}
@@ -106,6 +107,19 @@ MonoBehaviour:
   _rb: {fileID: 4359377485680811298}
   _companionAnchorA: {fileID: 6882328488469851540}
   _companionAnchorB: {fileID: 5074755399541055344}
+--- !u!114 &7988379729483360778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422509687988307831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5152be28568087408ebab3ae3f55596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordInterval: 0.5
 --- !u!50 &4359377485680811298
 Rigidbody2D:
   serializedVersion: 4
@@ -233,7 +247,7 @@ Transform:
   m_GameObject: {fileID: 5782725426577226422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0.4, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -264,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 6719416692268186741}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 1, z: 0}
+  m_LocalPosition: {x: -0.4, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -7,7 +7,7 @@ public class PlayerTrailRecorder : MonoBehaviour
 	public static PlayerTrailRecorder Instance { get; private set; }
 	public Queue<Vector3> TrailQue { get; private set; } = new Queue<Vector3>();
 
-	[SerializeField] float recordInterval = 0.5f;
+	[SerializeField] float recordInterval = 0.1f;
 	private float _timer = 0f;
 	private Transform _player_;
 

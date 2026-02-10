@@ -16,8 +16,12 @@ public class PlayerController : MonoBehaviour
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
 
 	//동료가 따라올 위치 (2열)
-	public Transform _companionAnchorA; 
-	public Transform _companionAnchorB;
+	[SerializeField] private Transform _companionAnchorA;
+	[SerializeField] private Transform _companionAnchorB;
+
+	public Transform CompanionAnchorA => _companionAnchorA;
+	public Transform CompanionAnchorB => _companionAnchorB;
+
 	private void Awake()
 	{
 	}
@@ -35,12 +39,6 @@ public class PlayerController : MonoBehaviour
 		HandleInput();
 		UpdateDirection();
 		PlaySkeletonAnimation();
-
-		if (CompanionManager.Instance != null)
-		{
-			//동료 위치 갱신
-			CompanionManager.Instance.RefreshFollowPosition();
-		}
 	}
 
 	private void FixedUpdate()

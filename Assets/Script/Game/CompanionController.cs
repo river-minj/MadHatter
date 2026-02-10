@@ -13,87 +13,111 @@ public class CompanionController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 3.0f; // 동료의 이동 속도
 
 	public int _followIndex;
-	public int _followOffset = 10; // trail 에서 얼마나 뒤를 따라갈지
-	public int _stepPerRow = 6;
+	[SerializeField] private int _stepPerRow = 6;
 
+	private PlayerController _player;
     private Vector3 _targetPos;
+	private Queue<Vector3> _trailQue;
 
-	private Queue<Vector3> _trail;
 
 	private void Start()
 	{
-		_trail = PlayerTrailRecorder.Instance?.TrailQue;
+		_trailQue = PlayerTrailRecorder.Instance?.TrailQue;
 	}
 
-	public void Init(CompanionData data)
+	public void SetData(PlayerController player, CompanionData data, int followIndex)
 	{
+		_followIndex = followIndex;
+		_player = player;
 		_companionData = data;
-		_moveSpeed = data._followSpeed;
-	}
-
-	public void SetFollowPosition(Vector3 pos)
-    {
-		_targetPos = pos;
-	}
-
-	internal void SetFacingDirection(bool isRight)
-	{
-		if(_skel == null)
-		{
-			return;
-		}
-
-		var scale = _skel.skeleton.ScaleX;
-		float avsScale = MathF.Abs(scale);
-
-		_skel.skeleton.ScaleX = isRight ? -avsScale : avsScale;
+		//_moveSpeed = data._followSpeed;
 	}
 
 	private void Update()
 	{
-		if (_trail == null)
+		if (_trailQue == null)
 			return;
 
-		if (_trail.Count < 2)
+		if (_trailQue.Count < 2)
 			return;
 
+		if (_player == null)
+			return;
+
+		//quere를 배열로 변환하여 인덱스로 접근
+		Vector3[] trailArray = _trailQue.ToArray();
+		if (trailArray.Length < 2)
+			return;
+		
+		//A라인인지 B라인인지
+		bool isLineA = (_followIndex % 2 == 0);
+		Transform anchor = isLineA ? _player.CompanionAnchorA : _player.CompanionAnchorB;
+		
+		//같은 라인에서 몇번째 동료인지 계산
+		int positionInLine = _followIndex / 2;
+
+		//TrailQue에서 뒤로 몇 칸 이동해야 하는지 계산 (각 줄마다 일정 간격)
+		int stepBack = _stepPerRow * positionInLine;
+		
 		//해당 동료가 따라가야 할 trail index
-		Vector3[] arr = _trail.ToArray();
-		int row = _followIndex / 2; //몇번째 줄에 서는 동료인지
-		int baseOffset = _stepPerRow *(row + 1); //뒤로 떨어질 정도
-		int index = arr.Length - _followOffset - 1;
+		int trailIndex = trailArray.Length - 1 - stepBack;
+		trailIndex = Mathf.Clamp(trailIndex, 1, trailArray.Length - 1);
 
-		int trailIndex = arr.Length - 1 - baseOffset;
-		trailIndex = Mathf.Clamp(trailIndex, 1, arr.Length - 1);
-
-		Vector3 pos = arr[trailIndex];
-		Vector3 prev = arr[trailIndex - 1];
+		//Trail 상의 기준 위치와 이전 위치
+		Vector3 basePosition = trailArray[trailIndex];
+		Vector3 prevPosition = trailArray[trailIndex - 1];
 
 		//경로 진행 방향, 오른쪽, 뒤쪽 벡터 계산
-		Vector3 dir = (pos-prev).normalized;
-		if(dir == Vector3.zero)
+		Vector3 moveDir = (basePosition-prevPosition).normalized;
+		if(moveDir == Vector3.zero)
 		{
-			dir = Vector3.right;
+			moveDir = Vector3.right;
 		}
 
-		Vector3 right = new Vector3(-dir.y, dir.x, 0f); //오른쪽
-		Vector3 back = -dir; //뒤
+		//진행 방향의 오른쪽 (2D 기준 90도 회전)
+		Vector3 right = new Vector3(-moveDir.y, moveDir.x, 0f); //오른쪽
+		//Vector3 back = -moveDir; //뒤
 
-		//해당 동료의 라인 구분 A or B
-		bool isA = (_followIndex % 2 == 0);
-		// --------- 여기서 부터 다시
-		
-
-		if (index >= 0 && index < arr.Length)
-		{
-			_targetPos = arr[index];
-		}
+		//anchor의 로컬 오프셋을 월드 좌표로 적용
+		//x: 좌우 오프셋 (right 뱡향)
+		//y: 앞뒤 오프셋 (moveDir 방향, 음수면 뒤쪽)
+		Vector3 localAnchor = anchor.localPosition;
+		Vector3 side = localAnchor.x * right; //좌우
+		Vector3 head = localAnchor.y * moveDir; //앞뒤
 
 
+		//최종 타겟 위치 (trail 위치 + 오프셋)
+		_targetPos = basePosition + side + head;
 
-		// 타겟 포기션으로 부드럽게 이동
+		// 타겟 포지션으로 부드럽게 이동
 		transform.position = Vector3.MoveTowards(transform.position, _targetPos,  Time.deltaTime * _moveSpeed);
-		
+
 		//방향 전환 (필요시 애니메이션 추가 가능)
+		UpdateFacingDirection(moveDir);
+	}
+
+	public void SetFacingDirection(bool isRight)
+	{
+		if (_skel == null)
+		{
+			return;
+		}
+
+		float absScale = MathF.Abs(_skel.skeleton.ScaleX);
+		_skel.skeleton.ScaleX = isRight ? -absScale : absScale;
+	}
+
+	private void UpdateFacingDirection(Vector3 moveDir)
+	{
+		if (_skel == null)
+			return;
+		if (moveDir.x < 0)
+		{
+			_skel.skeleton.ScaleX = 1f; //왼쪽 바라보기
+		}
+		else if (moveDir.x > 0)
+		{
+			_skel.skeleton.ScaleX = -1f; //오른쪽 바라보기
+		}
 	}
 }

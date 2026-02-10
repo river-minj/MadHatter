@@ -74,8 +74,6 @@ public class CompanionManager : MonoBehaviour
 
 		//생성
 		SpawnCompanion(data);
-		//생성 위치 설정
-		UpdateFollowPosition();
 
 	}
 
@@ -93,49 +91,11 @@ public class CompanionManager : MonoBehaviour
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
         if (cc!= null)
         {
-			cc._followOffset = _followDistance * _followCompanions.Count;
-
             _followCompanions.Add(cc);
+			int followIndex = _followCompanions.IndexOf(cc);
+			cc.SetData(_player, data,followIndex);
         }
     }
-
-	private Vector3 GetFollowPosition(int index)
-	{
-		//처음 두명의 동료 위치
-		if (index < 2)
-		{
-			Transform baseAnchor = (index % 2 == 0) ? _player._companionAnchorA : _player._companionAnchorB; //배치해야하는 동료의 기준 앵커 선택
-			return baseAnchor.position;
-		}
-
-		// 두 번째 줄부터는 앞 동료 뒤에서 따라오기
-		CompanionController front = _followCompanions[index - 2];
-		Vector3 frontPos = front.transform.position;
-
-		int row = index / 2; //배치해야하는 동료가 몇번째 줄에 있는지 계산
-		return frontPos + new Vector3(-_followDistance * row, 0, 0); //각 줄마다 x축으로 일정거리만큼 떨어져서 이전 동료 뒤에 위치
-
-	}
-
-	private void UpdateFollowPosition()
-	{
-		for(int i = 0; i < _followCompanions.Count; i++)
-		{
-			CompanionController cc = _followCompanions[i];
-			if (cc == null)
-				continue;
-
-			Vector3 pos = GetFollowPosition(i);
-			cc.SetFollowPosition(pos);
-			
-		}
-	}
-
-	//to do : companion의 이동을 이렇게 콜하는 것이 최선인지 검토 필요
-	public void RefreshFollowPosition()
-	{
-		UpdateFollowPosition();
-	}
 
 	internal void SetFacingDirection(bool isRight)
 	{

@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
 			() =>
 			{
                 SetLockInput(false);
-				Debug.LogErrorFormat("[GameManager] Map Transition complete");
+				Debug.LogFormat("[GameManager] Map Transition complete");
 			});
 
 	}
