@@ -11,10 +11,11 @@ public class CompanionManager : MonoBehaviour
 	private List<CompanionData> _ownedCompanions = new(); // 언락된 동료 ID
 	public IEnumerable<CompanionData> OwnedCompanions => _ownedCompanions;
 	
-	private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
+	//private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
+	private List<CompanionController> _lineA = new List<CompanionController>();
+	private List<CompanionController> _lineB = new List<CompanionController>();
 
 	private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
-	[SerializeField] int _followDistance = 2; //동료 사이의 거리
 	[SerializeField] Transform _followerParent;
 
 	private void Awake()
@@ -39,24 +40,11 @@ public class CompanionManager : MonoBehaviour
 		}
 
 		//테스트용, 나중에 삭제
-		CompanionData data = CompanionDatabase.Instance.GetCompanionByID("C_WorkMan");
-		AddCompanion(data);
-
-		//2
-		 data = CompanionDatabase.Instance.GetCompanionByID("C_002");
-		AddCompanion(data);
-
-		//3
-		 data = CompanionDatabase.Instance.GetCompanionByID("C_003");
-		AddCompanion(data);
-		//4
-		 data = CompanionDatabase.Instance.GetCompanionByID("C_004");
-		AddCompanion(data);
-		//5
-		 data = CompanionDatabase.Instance.GetCompanionByID("C_005");
-		AddCompanion(data);
-
-
+		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_WorkMan"));
+		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_002"));
+		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_003"));
+		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_004"));
+		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_005"));
 
 	}
 
@@ -88,24 +76,83 @@ public class CompanionManager : MonoBehaviour
 
 		Vector3 spawnPos = _player.transform.position; //일단 플레이어 위치에 생성
 		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity, _followerParent);
+		
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
         if (cc!= null)
         {
-            _followCompanions.Add(cc);
-			int followIndex = _followCompanions.IndexOf(cc);
-			cc.SetData(_player, data,followIndex);
+			int totlaCount = _lineA.Count + _lineB.Count;
+			int followIndex = totlaCount;
+			cc.SetData(_player, data, followIndex);
         }
+		
+		bool addToLineA = _lineA.Count <= _lineB.Count;
+        if (addToLineA)
+        {
+            if(_lineA.Count >0)
+			{
+				//마지막 동료 뒤에 생성
+				CompanionController frontCompanion = _lineA[_lineA.Count - 1];
+				cc.SetFrontCompanion(frontCompanion);
+			}
+
+			_lineA.Add(cc);
+			Debug.LogFormat("Companion added to Line A: {0}", cc._followIndex);
+		}
+		else
+		{
+			if(_lineB.Count > 0)
+			{
+				//마지막 동료 뒤에 생성
+				CompanionController frontCompanion = _lineB[_lineB.Count - 1];
+				cc.SetFrontCompanion(frontCompanion);
+			}
+
+			_lineB.Add(cc);
+			Debug.LogFormat("Companion added to Line B: {0}", cc._followIndex);
+		}
+        
     }
 
-	internal void SetFacingDirection(bool isRight)
+	public void SetFacingDirection(bool isRight)
 	{
-		foreach(var cc in _followCompanions)
+		foreach(var cc in _lineA)
 		{
 			if (cc == null)
 				continue;
-
-			//필요시 companion의 방향 전환 처리
 			cc.SetFacingDirection(isRight);			
+		}
+
+		foreach (var cc in _lineB)
+		{
+			if (cc == null)
+				continue;
+			cc.SetFacingDirection(isRight);
+		}
+	}
+	public int GetTotalCompanionCount()
+	{
+		return _lineA.Count + _lineB.Count;
+	}
+
+	// 디버그: 현재 상태 출력
+	[ContextMenu("Print Companion Status")]
+	public void PrintCompanionStatus()
+	{
+		Debug.Log($"=== Companion Status ===");
+		Debug.Log($"Total: {GetTotalCompanionCount()}");
+		Debug.Log($"Line A: {_lineA.Count}");
+		Debug.Log($"Line B: {_lineB.Count}");
+
+		Debug.Log("--- Line A ---");
+		for (int i = 0; i < _lineA.Count; i++)
+		{
+			Debug.Log($"  [{i}] {_lineA[i].name}");
+		}
+
+		Debug.Log("--- Line B ---");
+		for (int i = 0; i < _lineB.Count; i++)
+		{
+			Debug.Log($"  [{i}] {_lineB[i].name}");
 		}
 	}
 }
