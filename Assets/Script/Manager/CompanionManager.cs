@@ -86,30 +86,21 @@ public class CompanionManager : MonoBehaviour
         }
 		
 		bool addToLineA = _lineA.Count <= _lineB.Count;
+		int indexInLine = 0;
+
+		cc.SetLineInfo(addToLineA, addToLineA ? _lineA.Count : _lineB.Count); // 라인 정보 설정
         if (addToLineA)
         {
-            if(_lineA.Count >0)
-			{
-				//마지막 동료 뒤에 생성
-				CompanionController frontCompanion = _lineA[_lineA.Count - 1];
-				cc.SetFrontCompanion(frontCompanion);
-			}
-
+			indexInLine = _lineA.Count;
 			_lineA.Add(cc);
-			Debug.LogFormat("Companion added to Line A: {0}", cc._followIndex);
 		}
 		else
 		{
-			if(_lineB.Count > 0)
-			{
-				//마지막 동료 뒤에 생성
-				CompanionController frontCompanion = _lineB[_lineB.Count - 1];
-				cc.SetFrontCompanion(frontCompanion);
-			}
-
+			indexInLine = _lineB.Count;
 			_lineB.Add(cc);
-			Debug.LogFormat("Companion added to Line B: {0}", cc._followIndex);
 		}
+
+		Debug.Log($"동료 생성: Index={cc._followIndex}, LineA? = {addToLineA}, Pos={indexInLine}");
         
     }
 

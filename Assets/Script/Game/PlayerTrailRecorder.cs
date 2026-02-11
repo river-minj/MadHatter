@@ -39,7 +39,7 @@ public class PlayerTrailRecorder : MonoBehaviour
 
 			TrailQue.Enqueue(_player_.position); // 현재 플레이어 위치를 기록
 
-			while (TrailQue.Count > 50) // 최대 50개의 위치만 유지 (너무 오래된 것은 삭제)
+			while (TrailQue.Count > 1000) // 최대 1000개의 위치만 유지 (너무 오래된 것은 삭제)
 			{
 				TrailQue.Dequeue();
 			}

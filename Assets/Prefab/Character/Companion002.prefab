@@ -102,8 +102,9 @@ MonoBehaviour:
   _companionData: {fileID: 11400000, guid: bd10b03ae65ffe6459682734a471f1df, type: 2}
   _skel: {fileID: 8792398912505875451}
   _moveSmooth: 0.12
-  _moveSpeed: 3
-  _followOffset: 10
+  _moveSpeed: 5
+  _followIndex: 0
+  _stepPerFollower: 1
 --- !u!50 &1150837865369001077
 Rigidbody2D:
   serializedVersion: 4
