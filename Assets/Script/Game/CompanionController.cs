@@ -6,14 +6,14 @@ using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
+	[Header("Basic Info")]
 	[SerializeField] private CompanionData _companionData;
 	[SerializeField] private SkeletonAnimation _skel;
-
-	[SerializeField] private float _moveSmooth = 0.12f; // 동료의 이동 부드러움
     [SerializeField] private float _moveSpeed = 3.0f; // 동료의 이동 속도
 
+	[Header("Follow Setting")]
 	public int _followIndex;
-	[SerializeField] private int _stepPerFollower = 6;
+	[SerializeField] private int _stepPerFollower = 6; // 한 동료가 몇 스텝 뒤를 따를지 (트레일 인덱스 간격)
 
 	private PlayerController _player;
     private Vector3 _targetPos;
@@ -52,12 +52,8 @@ public class CompanionController : MonoBehaviour
 		if (_trailQue == null)
 			return;
 
-		if (_trailQue.Count < 2)
-			return;
-
 		if (_player == null)
 			return;
-
 
 		//목표 위치 계산
 		CalculateTargetPosition(_trailQue.ToArray());
@@ -91,31 +87,59 @@ public class CompanionController : MonoBehaviour
 		// 1. 이 동료가 참조할 Trail 인덱스 계산
 		int stepsBack = _stepPerFollower * (_indexInLine + 1);
 		int trailIndex = trailArray.Length - 1 - stepsBack;
-		trailIndex = Mathf.Clamp(trailIndex, 1, trailArray.Length - 1);
+		trailIndex = Mathf.Clamp(trailIndex, 0, trailArray.Length - 1);
 
 		// 2. Trail 상의 기준 위치
-		Vector3 basePos = trailArray[trailIndex];
-		Vector3 prevPos = trailArray[trailIndex - 1];
+		Vector3 trailPosition = trailArray[trailIndex];
 
-		// 3. 진행 방향
-		Vector3 moveDirection = (basePos - prevPos).normalized;
-		if (moveDirection.magnitude < 0.01f)
-			moveDirection = Vector3.right;
+		// 3.플레이어의 진행 방향
+		Vector3 playerMoveDir = _player.GetLastDirection();
 
-		// 4. 진행 방향의 오른쪽 벡터 (2D)
-		Vector3 rightVector = new Vector3(-moveDirection.y, moveDirection.x, 0f);
+		//4. 이동 방향에 따라 좌우 오프셋 적용
+		Vector3 offset = GetOffsetByDirection(playerMoveDir);
 
-		// 5. Anchor 오프셋 가져오기
-		Transform anchor = _isLineA ? _player.CompanionAnchorA : _player.CompanionAnchorB;
-		Vector3 anchorLocal = anchor.localPosition;
-
-		// 6. 최종 위치 = Trail 위치 + 좌우 오프셋 + 앞뒤 오프셋
-		Vector3 lateralOffset = rightVector * anchorLocal.x; // 좌우
-		Vector3 longitudinalOffset = moveDirection * anchorLocal.y; // 앞뒤
-
-		_targetPos = basePos + lateralOffset + longitudinalOffset;
+		_targetPos = trailPosition + offset;
 	
 	}
+
+	private Vector3 GetOffsetByDirection(Vector3 playerMoveDir)
+	{
+		float horizontalOffset = _isLineA ? _player.CompanionAnchorA.localPosition.x : _player.CompanionAnchorB.localPosition.x;
+
+		//이동 방향에 따른 오프셋 결정
+		if (Mathf.Abs(playerMoveDir.y) > Mathf.Abs(playerMoveDir.x))
+		{
+			//상하 이동중
+			if(playerMoveDir.y > 0)
+			{
+				Debug.Log($"상 이동 : 동료들은 아래쪽 | horizontalOffset : {horizontalOffset} , offset : {Mathf.Abs(_player.CompanionAnchorA.localPosition.y)}");
+
+				return new Vector3(horizontalOffset, Mathf.Abs(_player.CompanionAnchorA.localPosition.y), 0f);
+			}
+			else
+			{
+				Debug.Log($"하 이동 : 동료들은 위쪽 | horizontalOffset : {horizontalOffset} , offset : {-Mathf.Abs(_player.CompanionAnchorB.localPosition.y)}" );
+
+				return new Vector3(horizontalOffset, -Mathf.Abs(_player.CompanionAnchorB.localPosition.y), 0f);
+			}
+
+		}
+		else
+		{
+			//좌우 이동중
+			if (playerMoveDir.x > 0)
+			{
+				// 우 이동: 동료들은 좌측 (두 줄이상하로 벌어짐)
+				return new Vector3(-0.5f, horizontalOffset, 0);
+			}
+			else
+			{
+				// 좌 이동: 동료들은 우측 (두 줄이 상하로 벌어짐)
+				return new Vector3(0.5f, horizontalOffset, 0);
+			}
+		}
+	}
+
 	private void UpdateFacingDirection(Vector3 moveDir)
 	{
 		if (_skel == null)

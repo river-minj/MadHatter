@@ -1,5 +1,6 @@
 ﻿using Spine;
 using Spine.Unity;
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -131,7 +132,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		bool isRight = facing.x > 0;
-		//MirrorFollowPos(isRight);
+		MirrorFollowPos(isRight);
 		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
 
@@ -146,6 +147,18 @@ public class PlayerController : MonoBehaviour
 
 		_companionAnchorA.localPosition = new Vector3(Mathf.Abs(_companionAnchorA.localPosition.x) * sign, _companionAnchorA.localPosition.y, _companionAnchorA.localPosition.z);
 		_companionAnchorB.localPosition = new Vector3(Mathf.Abs(_companionAnchorB.localPosition.x) * sign, _companionAnchorB.localPosition.y, _companionAnchorB.localPosition.z);
+	}
+
+	public Vector3 GetLastDirection()
+	{
+		if(_moveDir.magnitude > 0.1f)
+		{
+			return new Vector3 (_moveDir.x, _moveDir.y, 0f);
+		}
+		else
+		{
+			return new Vector3(_lastDir.x, _lastDir.y, 0f);
+		}
 	}
 }
 
