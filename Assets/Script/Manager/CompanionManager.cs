@@ -78,25 +78,27 @@ public class CompanionManager : MonoBehaviour
 		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity, _followerParent);
 		
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
-        if (cc!= null)
-        {
-			int totlaCount = _lineA.Count + _lineB.Count;
-			int followIndex = totlaCount;
-			cc.SetData(_player, data, followIndex);
-        }
-		
-		bool addToLineA = _lineA.Count <= _lineB.Count;
-		int indexInLine = 0;
+		if(cc == null)
+		{
+			Debug.LogErrorFormat("Companion prefab missing CompanionController: {0}", data._companionID);
+			return;
+		}
 
-		cc.SetLineInfo(addToLineA, addToLineA ? _lineA.Count : _lineB.Count); // 라인 정보 설정
+		int totlaCount = _lineA.Count + _lineB.Count;
+		cc.SetData(_player, data, totlaCount);
+
+
+		bool addToLineA = _lineA.Count <= _lineB.Count;
+		int indexInLine = addToLineA? _lineA.Count : _lineB.Count;
+
+		cc.SetLineInfo(addToLineA, indexInLine); // 라인 정보 설정
+
         if (addToLineA)
         {
-			indexInLine = _lineA.Count;
 			_lineA.Add(cc);
 		}
 		else
 		{
-			indexInLine = _lineB.Count;
 			_lineB.Add(cc);
 		}
 

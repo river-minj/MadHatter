@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		bool isRight = facing.x > 0;
-		MirrorFollowPos(isRight);
+		//MirrorFollowPos(isRight);
 		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
 
