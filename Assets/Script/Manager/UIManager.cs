@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
 	//인벤토리 UI
 	[SerializeField] private InventoryUI _inventoryUI;
 
+	//퀘스트 UI
+	[SerializeField] private QuestUI _questUI;
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -217,5 +220,13 @@ public class UIManager : MonoBehaviour
 		{
 			_inventoryUI.Toggle();
 		}
+	}
+
+	public void ToggleQuest()
+	{
+		if (_questUI == null)
+			return;
+
+		_questUI.Toggle();
 	}
 }

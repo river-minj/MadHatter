@@ -86,6 +86,12 @@ public class PlayerController : MonoBehaviour
 			//인벤토리 토글
 			UIManager.Instance.ToggleInventory();
 		}
+
+		if(Input.GetKeyDown(KeyCode.Q))
+		{
+			//퀘스트 UI 토글
+			UIManager.Instance.ToggleQuest();
+		}
 	}
 
 	private void PlaySkeletonAnimation()

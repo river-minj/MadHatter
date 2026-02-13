@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 //독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
@@ -67,6 +68,14 @@ public class QuestManager : MonoBehaviour
 	private HashSet<string> _setCompletedQuest = new HashSet<string>(); //완료된 퀘스트ID
 	private Dictionary<string, QuestState> _dicActiveQuest = new Dictionary<string, QuestState>();
 
+	public Dictionary<string, QuestState> DicActiveQuest => _dicActiveQuest;
+
+	private const int MaxQuestCount = 5;
+
+	//이벤트
+	public Action OnQuestListChanged;
+	public Action<QuestState> OnQuestProgressUpdate;
+
 	private void Awake()
 	{
 		if(Instance != null)
@@ -89,11 +98,19 @@ public class QuestManager : MonoBehaviour
 			return;
 		}
 
+		if(_dicActiveQuest.Count >= MaxQuestCount)
+		{
+			Debug.LogWarning("[QuestManager] 최대 퀘스트 수에 도달했습니다.");
+			return;
+		}
+
 		//새로 퀘스트 시작
 		if(_setStartedQuest.Contains(questID) == false)
 		{
 			_setStartedQuest.Add(questID);
 			_dicActiveQuest.Add(questID, new QuestState(questData));
+
+			OnQuestListChanged?.Invoke();
 
 			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueID);
             if (d != null)
@@ -146,12 +163,15 @@ public class QuestManager : MonoBehaviour
 				continue;
 
 			bool completed = qs.AddProgress();
+
+			OnQuestProgressUpdate?.Invoke(qs);
 	
 			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcID}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
 
 			if (completed)
 			{
 				OnQuestCompleted(qs._data);
+				OnQuestListChanged?.Invoke();
 			}
 		}
 	}
