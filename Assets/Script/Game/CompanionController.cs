@@ -12,7 +12,8 @@ public class CompanionController : MonoBehaviour
 	[Header("Follow Setting")]
 	public int _followIndex;
 	[SerializeField] private int _stepPerFollower = 6; // 한 동료가 몇 스텝 뒤를 따를지 (트레일 인덱스 간격)
-
+	[SerializeField] private MeshRenderer _meshRenderer;
+	
 	private PlayerController _player;
     private Vector3 _targetPos;
 
@@ -21,14 +22,25 @@ public class CompanionController : MonoBehaviour
 	private int _indexInLine = 0; // 같은 라인에서 몇 번째 동료인지
 
 	//A,B라인의 횡방향 오프셋 (플레이어 앵커 기준)
-	private float _lateralOffsetA = 0.3f;
-	private float _lateralOffsetB = -0.3f;
+	private Vector3 _lateralOffsetA;
+	private Vector3 _lateralOffsetB;
 
-	public void SetData(PlayerController player, CompanionData data, int followIndex)
+	private void Awake()
+	{
+		if(_meshRenderer == null)
+		{
+			_meshRenderer = GetComponent<MeshRenderer>();
+		}
+	}
+
+	public void Initialize(PlayerController player, CompanionData data, int followIndex, bool isLineA, int lineIndex)
 	{
 		_followIndex = followIndex;
 		_player = player;
 		_companionData = data;
+		_isLineA = isLineA;
+		_indexInLine = lineIndex;
+
 		if (_skel != null)
 		{
 			_skel.initialSkinName = _companionData._skinName;
@@ -37,21 +49,16 @@ public class CompanionController : MonoBehaviour
 
 		if(_player.CompanionAnchorA != null)
 		{
-			_lateralOffsetA = _player.CompanionAnchorA.localPosition.x;
+			_lateralOffsetA = _player.CompanionAnchorA.localPosition;
 		}
 		if(_player.CompanionAnchorB != null)
 		{
-			_lateralOffsetB = _player.CompanionAnchorB.localPosition.x;
+			_lateralOffsetB = _player.CompanionAnchorB.localPosition;
 		}
 
 		//_moveSpeed = data._followSpeed;
 	}
 
-	public void SetLineInfo(bool isLineA, int lineIndex)
-	{
-		_isLineA = isLineA;
-		_indexInLine = lineIndex;
-	}
 
 	private void Update()
 	{
@@ -77,6 +84,14 @@ public class CompanionController : MonoBehaviour
 		//Vector3 moveDir = (_targetPos - transform.position).normalized;
 		//UpdateFacingDirection(moveDir);
 
+	}
+
+	void LateUpdate()
+	{
+		if (_meshRenderer == null)
+			return;
+
+		_meshRenderer.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
 	}
 
 	public void SetFacingDirection(bool isRight)
@@ -115,7 +130,7 @@ public class CompanionController : MonoBehaviour
 
 	private Vector3 CalculateOffset(Vector3 direction)
 	{
-		float lateral = _isLineA ? _lateralOffsetA : _lateralOffsetB;
+		float lateral = _isLineA ? _lateralOffsetA.x : _lateralOffsetB.x;
 
 		// 상하 이동
 		if (Mathf.Abs(direction.y) > Mathf.Abs(direction.x))
@@ -123,30 +138,30 @@ public class CompanionController : MonoBehaviour
 			if (direction.y > 0)
 			{
 				// 상 이동 → 동료는 아래쪽 (y-), A/B는 좌우(x)로 벌어짐
-				return new Vector3(lateral, -Mathf.Abs(_player.CompanionAnchorA.localPosition.y), 0f);
+				return new Vector3(lateral, -Mathf.Abs(_lateralOffsetA.y), 0f);
 			}
 			else
 			{
 				// 하 이동 → 동료는 위쪽 (y+), A/B는 좌우(x)로 벌어짐
-				return new Vector3(lateral, Mathf.Abs(_player.CompanionAnchorA.localPosition.y), 0f);
+				return new Vector3(lateral, Mathf.Abs(_lateralOffsetA.y), 0f);
 			}
 		}
 		// 좌우 이동
 		else
 		{
 			float verticalLateral = _isLineA
-				? Mathf.Abs(_player.CompanionAnchorA.localPosition.y)
-				: -Mathf.Abs(_player.CompanionAnchorB.localPosition.y);
+				? Mathf.Abs(_lateralOffsetA.y)
+				: -Mathf.Abs(_lateralOffsetB.y);
 
 			if (direction.x > 0)
 			{
 				// 우 이동 → 동료는 왼쪽 (x-), A/B는 상하(y)로 벌어짐
-				return new Vector3(-Mathf.Abs(_player.CompanionAnchorA.localPosition.x), verticalLateral, 0f);
+				return new Vector3(-Mathf.Abs(_lateralOffsetA.x), verticalLateral, 0f);
 			}
 			else
 			{
 				// 좌 이동 → 동료는 오른쪽 (x+), A/B는 상하(y)로 벌어짐
-				return new Vector3(Mathf.Abs(_player.CompanionAnchorA.localPosition.x), verticalLateral, 0f);
+				return new Vector3(Mathf.Abs(_lateralOffsetA.x), verticalLateral, 0f);
 			}
 		}
 	}

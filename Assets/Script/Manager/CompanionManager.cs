@@ -85,13 +85,10 @@ public class CompanionManager : MonoBehaviour
 		}
 
 		int totlaCount = _lineA.Count + _lineB.Count;
-		cc.SetData(_player, data, totlaCount);
-
-
 		bool addToLineA = _lineA.Count <= _lineB.Count;
 		int indexInLine = addToLineA? _lineA.Count : _lineB.Count;
 
-		cc.SetLineInfo(addToLineA, indexInLine); // 라인 정보 설정
+		cc.Initialize(_player, data, totlaCount, addToLineA, indexInLine);
 
         if (addToLineA)
         {
