@@ -7,7 +7,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private DialogueUI _dialogueUI;
 
     private string _speakerName;
-    private Queue<string> _lines;
+    private Queue<string> _lines = new Queue<string>();
     private Action _onDialogueComplete;
 
     public bool IsDialogueRunning => _isDialogueRunning;
@@ -22,9 +22,6 @@ public class DialogueController : MonoBehaviour
 				Debug.LogError("DialogueUI component is required for DialogueController.");
 			}
 		}
-
-		_lines = new Queue<string>();
-        _isDialogueRunning = false;
 	}
 	
 

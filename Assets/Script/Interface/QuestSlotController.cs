@@ -13,12 +13,16 @@ public class QuestSlotController : MonoBehaviour
 	public QuestData QuestData => _questData;
 	public void SetQuest(QuestData data, QuestState state)
 	{
+		_questData = data;
 		_questTitle.text = data._title;
 		_questDesc.text = data._description;
 		_questProgress.text = $"{state._currentProgress} / {data._goalCount}";
 	}
 	public void UpdateProgress(QuestState state)
 	{
+		if (_questData == null)
+			return;
+
 		_questProgress.text = $"{state._currentProgress} / {_questData._goalCount}";
 	}
 }

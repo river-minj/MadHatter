@@ -12,7 +12,6 @@ public class CompanionController : MonoBehaviour
 	[Header("Follow Setting")]
 	public int _followIndex;
 	[SerializeField] private int _stepPerFollower = 6; // 한 동료가 몇 스텝 뒤를 따를지 (트레일 인덱스 간격)
-	[SerializeField] private MeshRenderer _meshRenderer;
 	
 	private PlayerController _player;
     private Vector3 _targetPos;
@@ -25,13 +24,6 @@ public class CompanionController : MonoBehaviour
 	private Vector3 _lateralOffsetA;
 	private Vector3 _lateralOffsetB;
 
-	private void Awake()
-	{
-		if(_meshRenderer == null)
-		{
-			_meshRenderer = GetComponent<MeshRenderer>();
-		}
-	}
 
 	public void Initialize(PlayerController player, CompanionData data, int followIndex, bool isLineA, int lineIndex)
 	{
@@ -84,14 +76,6 @@ public class CompanionController : MonoBehaviour
 		//Vector3 moveDir = (_targetPos - transform.position).normalized;
 		//UpdateFacingDirection(moveDir);
 
-	}
-
-	void LateUpdate()
-	{
-		if (_meshRenderer == null)
-			return;
-
-		_meshRenderer.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
 	}
 
 	public void SetFacingDirection(bool isRight)

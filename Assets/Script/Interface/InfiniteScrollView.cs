@@ -35,15 +35,23 @@ public class InfiniteScrollView : MonoBehaviour
 
 	void Awake()
 	{
-		_padding = new RectOffset(
-		   _paddingLeft,
-		   _paddingRight,
-		   _paddingTop,
-		   _paddingBottom
-	   );
+		InitPadding();
 
 		_viewport = _scrollRect.viewport; 
 		CalculateSlotSize();
+
+	}
+
+	private void InitPadding()
+	{
+		if ( _padding != null ) { return; }
+
+		_padding = new RectOffset(
+	   _paddingLeft,
+	   _paddingRight,
+	   _paddingTop,
+	   _paddingBottom
+	   );
 
 	}
 
@@ -100,6 +108,7 @@ public class InfiniteScrollView : MonoBehaviour
 		}	
 
 		_dataList = dataList;
+		InitPadding();
 
 		//content 높이 계산
 		CalculateContentHeight();
@@ -205,6 +214,7 @@ public class InfiniteScrollView : MonoBehaviour
 			if (dataIndex < 0 || dataIndex >= _dataList.Count)
 			{
 				_slotPool[i].gameObject.SetActive(false);
+				continue;
 			}
 			else
 			{

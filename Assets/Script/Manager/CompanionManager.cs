@@ -11,7 +11,6 @@ public class CompanionManager : MonoBehaviour
 	private List<CompanionData> _ownedCompanions = new(); // 언락된 동료 ID
 	public IEnumerable<CompanionData> OwnedCompanions => _ownedCompanions;
 	
-	//private List<CompanionController> _followCompanions = new List<CompanionController>(); // 따라오는 동료 리스트
 	private List<CompanionController> _lineA = new List<CompanionController>();
 	private List<CompanionController> _lineB = new List<CompanionController>();
 
@@ -38,14 +37,6 @@ public class CompanionManager : MonoBehaviour
 		{
 			_player = FindObjectOfType<PlayerController>();
 		}
-
-		//테스트용, 나중에 삭제
-		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_WorkMan"));
-		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_002"));
-		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_003"));
-		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_004"));
-		AddCompanion(CompanionDatabase.Instance.GetCompanionByID("C_005"));
-
 	}
 
 	//동료 획득

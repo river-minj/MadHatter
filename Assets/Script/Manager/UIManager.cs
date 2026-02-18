@@ -29,6 +29,9 @@ public class UIManager : MonoBehaviour
 	//퀘스트 UI
 	[SerializeField] private QuestUI _questUI;
 
+	//popup root
+	[SerializeField] private Transform _popupRoot;
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -228,5 +231,19 @@ public class UIManager : MonoBehaviour
 			return;
 
 		_questUI.Toggle();
+	}
+
+	public void ShowConfirmPopup(string prefabName, string message, string confirm, string cancel,
+	CommonConfirmPopup.ConfirmType type, Action confirmAction, Action cancelAction = null)
+	{
+		GameObject prefab = Resources.Load<GameObject>($"Prefab/Popup/{prefabName}");
+		if (prefab == null)
+		{
+			Debug.LogError($"[UIManager] 팝업 프리팹을 찾을 수 없습니다: Prefab/Popup/{prefabName}");
+			return;
+		}
+		GameObject popupObj = Instantiate(prefab, _popupRoot);
+		CommonConfirmPopup popup = popupObj.GetComponent<CommonConfirmPopup>();
+		popup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
 	}
 }

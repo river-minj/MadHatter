@@ -10,7 +10,7 @@ public class QuestUI : MonoBehaviour
 
 	private List<QuestSlotController> _listQuest = new List<QuestSlotController>();
 
-	private void OnEnable()
+	private void Start()
 	{
 		if(QuestManager.Instance == null)
 			return;
@@ -19,7 +19,7 @@ public class QuestUI : MonoBehaviour
 		QuestManager.Instance.OnQuestProgressUpdate += OnQuestProgressUpdate;
 	}
 
-	private void OnDisable()
+	private void OnDestroy()
 	{
 		if(QuestManager.Instance == null)
 			return;

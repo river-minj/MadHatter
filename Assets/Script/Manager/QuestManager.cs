@@ -271,16 +271,6 @@ public class QuestManager : MonoBehaviour
 		}
 
 		//보상처리
-		if (string.IsNullOrEmpty(reward._companionID) == false)
-		{
-			Debug.Log($"[QuestManager] 동료 획득: {reward._companionID}");
-			CompanionData cd = CompanionDatabase.Instance.GetCompanionByID(reward._companionID);
-			if(cd != null)
-			{
-				CompanionManager.Instance.AddCompanion(cd);
-			}
-		}
-
 		if (reward._gold > 0)
 		{
 			Debug.Log($"[QuestManager] 골드 획득: {reward._gold}");

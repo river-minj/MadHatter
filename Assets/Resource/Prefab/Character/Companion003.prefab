@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 5706254732304846406}
   - component: {fileID: 6033368443236299937}
   - component: {fileID: 4638468710993862340}
+  - component: {fileID: -6638223193561380645}
   - component: {fileID: 655084849742965260}
   - component: {fileID: 1150837865369001077}
   - component: {fileID: 6658074409224421868}
   - component: {fileID: 8792398912505875451}
   m_Layer: 0
-  m_Name: Companion002
+  m_Name: Companion003
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,6 +88,21 @@ MeshRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6638223193561380645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395428206575319003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 4638468710993862340}
+  _sortPrecision: 100
+  _sortOffset: 0
 --- !u!114 &655084849742965260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11803bb75f384674cbc8ad962a0bce18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _companionData: {fileID: 11400000, guid: bd10b03ae65ffe6459682734a471f1df, type: 2}
+  _companionData: {fileID: 11400000, guid: f5bea13010e79fe4ba0813db08c79957, type: 2}
   _skel: {fileID: 8792398912505875451}
   _moveSpeed: 5.8
   _followIndex: 0
@@ -179,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: b433442e167b65b4fad9fbc7def7bbeb, type: 2}
-  initialSkinName: skin_female_045
+  initialSkinName: skin_female_038
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
