@@ -98,47 +98,82 @@ public class QuestManager : MonoBehaviour
 			return;
 		}
 
-		if(_dicActiveQuest.Count >= MaxQuestCount)
+		//완료된 퀘스트
+		if(_setCompletedQuest.Contains(questID))
+		{
+			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
+			if (completedD != null)
+			{
+				GameManager.Instance.StartDialogue(completedD);
+			}
+			return;
+		}
+
+		//진행중인 퀘스트
+		if(_dicActiveQuest.ContainsKey(questID))
+		{
+			DialogueData progressD = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueID);
+			if (progressD != null)
+			{
+				GameManager.Instance.StartDialogue(progressD);
+			}
+			return;
+		}
+
+		//새 퀘스트
+		if (_dicActiveQuest.Count >= MaxQuestCount)
 		{
 			Debug.LogWarning("[QuestManager] 최대 퀘스트 수에 도달했습니다.");
 			return;
 		}
 
 		//새로 퀘스트 시작
-		if(_setStartedQuest.Contains(questID) == false)
+		DialogueData startD = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueID);
+		if (startD != null)
 		{
-			_setStartedQuest.Add(questID);
-			_dicActiveQuest.Add(questID, new QuestState(questData));
-
-			OnQuestListChanged?.Invoke();
-
-			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueID);
-            if (d != null)
-            {
-				GameManager.Instance.StartDialogue(d);
-            }
-			return;
-        }
-
-		//퀘스트 진행 중
-		if(_setCompletedQuest.Contains(questID) == false)
-		{
-			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueID);
-			if (d != null)
+			GameManager.Instance.StartDialogue(startD, () =>
 			{
-				GameManager.Instance.StartDialogue(d);
-			}
-			return;
+				ShowQuestAcceptPopup(questData);
+			});
 		}
-
-		//퀘스트 완료
-		DialogueData completedDialogue = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
-		if (completedDialogue != null)
+		else
 		{
-			GameManager.Instance.StartDialogue(completedDialogue, () => { OnQuestCompleted(questData); });
+			ShowQuestAcceptPopup(questData);
 		}
 			
     }
+
+	private void ShowQuestAcceptPopup(QuestData questData)
+	{
+		UIManager.Instance.ShowConfirmPopup("CommonConfirmPopup", questData._description, "수락", "거절", CommonConfirmPopup.ConfirmType.OKCancel, () =>
+		{
+			//수락 선택시
+			StartQuest(questData);
+			GameManager.Instance.EndDialogue();
+		}, () =>
+		{
+			//거절 선택시
+			GameManager.Instance.EndDialogue();
+			Debug.Log($"[QuestManager] 퀘스트 거절: {questData._questID}");
+		});
+	}	
+
+	private void StartQuest(QuestData questData)
+	{
+		if (questData == null)
+			return;
+
+		if (_setStartedQuest.Contains(questData._questID))
+			return;
+
+		_setStartedQuest.Add(questData._questID);
+		_dicActiveQuest.Add(questData._questID, new QuestState(questData));
+
+		Debug.Log($"[QuestManager] 퀘스트 시작: {questData._questID} - {questData._title}");
+
+		OnQuestListChanged?.Invoke();
+	}	
+
 
 	public bool IsQuestCompleted(string questId)
 	{

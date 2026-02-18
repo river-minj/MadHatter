@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6066734956071620095}
   - component: {fileID: 2147832928784088872}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 1895215687656799141}
   - component: {fileID: 5294743930894727634}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Button_Cancel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -597,7 +597,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1895215687656799141}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5380638173969494415}
+        m_TargetAssemblyTypeName: CommonConfirmPopup, Assembly-CSharp
+        m_MethodName: OnClickCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5869270691186487643
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +620,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6870496729557281050}
   - component: {fileID: 879997305338190551}
+  - component: {fileID: 5380638173969494415}
   m_Layer: 5
   m_Name: CommonConfirmPopup
   m_TagString: Untagged
@@ -646,6 +659,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5869270691186487643}
   m_CullTransparentMesh: 1
+--- !u!114 &5380638173969494415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5869270691186487643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b1ae29d2108e09428d824c3228c3d66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _messageText: {fileID: 2147832928784088872}
+  _confirmText: {fileID: 399341921067985510}
+  _cancelText: {fileID: 3761590530759266564}
+  _confirmButton: {fileID: 6491921612307752703}
+  _cancelButton: {fileID: 3131247367321473564}
 --- !u!1 &6491921612307752703
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +689,7 @@ GameObject:
   - component: {fileID: 5070487767032459890}
   - component: {fileID: 2558752107851442143}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Button_Confirm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,4 +796,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5070487767032459890}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5380638173969494415}
+        m_TargetAssemblyTypeName: CommonConfirmPopup, Assembly-CSharp
+        m_MethodName: OnClickConfirm
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
