@@ -63,7 +63,7 @@ public class QuestUI : MonoBehaviour
 	{
 		foreach(var slot in _listQuest)
 		{
-			if(slot.QuestData._questID == state._data._questID)
+			if(slot.QuestData._questId == state._data._questId)
 			{
 				slot.UpdateProgress(state);
 				break;

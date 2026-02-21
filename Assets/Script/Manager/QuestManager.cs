@@ -34,6 +34,7 @@ public class QuestState
 		return false;
 	}
 }
+[System.Serializable]
 
 public enum QuestGoalType
 {
@@ -48,10 +49,14 @@ public enum QuestGoalType
 [System.Serializable]
 public class QuestReward
 {
-	public string _companionID;
+	public string _companionId; //무조건 1명만 보상에 넣는다
+	
 	public int _gold;
+
 	public int _exp;
-	public string _itemID;
+
+	public string _itemId;
+	public int _itemCount;
 }
 
 /// <summary>
@@ -101,7 +106,7 @@ public class QuestManager : MonoBehaviour
 		//완료된 퀘스트
 		if(_setCompletedQuest.Contains(questID))
 		{
-			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
+			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
 			if (completedD != null)
 			{
 				GameManager.Instance.StartDialogue(completedD);
@@ -112,7 +117,7 @@ public class QuestManager : MonoBehaviour
 		//진행중인 퀘스트
 		if(_dicActiveQuest.ContainsKey(questID))
 		{
-			DialogueData progressD = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueID);
+			DialogueData progressD = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueId);
 			if (progressD != null)
 			{
 				GameManager.Instance.StartDialogue(progressD);
@@ -128,7 +133,7 @@ public class QuestManager : MonoBehaviour
 		}
 
 		//새로 퀘스트 시작
-		DialogueData startD = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueID);
+		DialogueData startD = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueId);
 		if (startD != null)
 		{
 			GameManager.Instance.StartDialogue(startD, () =>
@@ -154,7 +159,7 @@ public class QuestManager : MonoBehaviour
 		{
 			//거절 선택시
 			GameManager.Instance.EndDialogue();
-			Debug.Log($"[QuestManager] 퀘스트 거절: {questData._questID}");
+			Debug.Log($"[QuestManager] 퀘스트 거절: {questData._questId}");
 		});
 	}	
 
@@ -163,13 +168,13 @@ public class QuestManager : MonoBehaviour
 		if (questData == null)
 			return;
 
-		if (_setStartedQuest.Contains(questData._questID))
+		if (_setStartedQuest.Contains(questData._questId))
 			return;
 
-		_setStartedQuest.Add(questData._questID);
-		_dicActiveQuest.Add(questData._questID, new QuestState(questData));
+		_setStartedQuest.Add(questData._questId);
+		_dicActiveQuest.Add(questData._questId, new QuestState(questData));
 
-		Debug.Log($"[QuestManager] 퀘스트 시작: {questData._questID} - {questData._title}");
+		Debug.Log($"[QuestManager] 퀘스트 시작: {questData._questId} - {questData._title}");
 
 		OnQuestListChanged?.Invoke();
 	}	
@@ -250,23 +255,23 @@ public class QuestManager : MonoBehaviour
 	private void OnQuestCompleted(QuestData questData)
 	{
 
-		_dicActiveQuest.TryGetValue(questData._questID, out QuestState qs);
+		_dicActiveQuest.TryGetValue(questData._questId, out QuestState qs);
 		if (qs == null)
 			return;
 
-		Debug.Log($"[QuestManager] 퀘스트 완료: {questData._questID} - {questData._title}");
+		Debug.Log($"[QuestManager] 퀘스트 완료: {questData._questId} - {questData._title}");
 	
-		_setStartedQuest.Remove(questData._questID);
-		_setCompletedQuest.Add(questData._questID);
+		_setStartedQuest.Remove(questData._questId);
+		_setCompletedQuest.Add(questData._questId);
 		qs._isCompleted = true;
 
 		//보상지급
 		GetReward(questData);
 
 		//퀘스트 완료 대사
-		if(questData._completedDialogueID != null)
+		if(questData._completedDialogueId != null)
 		{
-			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueID);
+			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
 			if (d != null)
 			{
 				GameManager.Instance.StartDialogue(d);
@@ -274,9 +279,9 @@ public class QuestManager : MonoBehaviour
 		}
 
 		//다음 퀘스트
-		if (string.IsNullOrEmpty(questData._nextQuestID) == false)
+		if (string.IsNullOrEmpty(questData._nextQuestId) == false)
 		{
-			TryQuestStart(questData._nextQuestID);
+			TryQuestStart(questData._nextQuestId);
 		}
 	}
 
@@ -291,16 +296,16 @@ public class QuestManager : MonoBehaviour
 		QuestReward reward = qd._reward;
 		if (reward != null)
 		{
-			if(string.IsNullOrEmpty(reward._companionID) == false)
+			if(string.IsNullOrEmpty(reward._companionId) == false)
 			{
-				CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionID);
+				CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionId);
 				if(companionData != null)
 				{
 					CompanionManager.Instance.AddCompanion(companionData);
 				}
 				else
 				{
-					Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionID}");
+					Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionId}");
 				}
 			}
 		}

@@ -1,15 +1,18 @@
 using System;
+using System.Net.Http;
 using UnityEngine;
 
 public struct PlayerInfo
 {
+	public string _name;
 	public int _level; //레벨에 따라서 뒤에 매달고 다니는 동료 숫자에 제한이 있음
 	public int _exp;
 	public int _gold;
 
 
-	public PlayerInfo(int level, int experience, int gold)
+	public PlayerInfo(string name, int level, int experience, int gold)
 	{
+		_name = name;
 		_level = level;
 		_exp = experience;
 		_gold = gold;
@@ -17,6 +20,9 @@ public struct PlayerInfo
 
 }
 
+/// <summary>
+/// 플레이어 정보 관리 싱글톤
+/// </summary>
 public class PlayerInfoManager : MonoBehaviour
 {
     public static PlayerInfoManager Instance { get; private set; }
@@ -25,8 +31,11 @@ public class PlayerInfoManager : MonoBehaviour
 	public Action<int> OnLevelChanged;
 	public Action<int> OnExpChanged;
 
-	private PlayerInfo _playerInfo = new PlayerInfo(1, 0, 0);
+	private PlayerInfo _playerInfo = new PlayerInfo("Noah", 1, 0, 0);
 
+	public PlayerInfo PlayerInfo => _playerInfo;
+
+	public int RequestExp => 100 * _playerInfo._level; //레벨에 따른 필요한 경험치 계산 (임시)
 
 	private void Awake()
 	{
@@ -48,12 +57,22 @@ public class PlayerInfoManager : MonoBehaviour
 
 	public void AddGold(int amount)
 	{
+		if(amount <= 0)
+		{
+			return;
+		}
+
 		_playerInfo._gold += amount;
 		OnGoldChanged?.Invoke(_playerInfo._gold);
 	}
 
 	public void AddExp(int amount)
 	{
+		if(amount <= 0)
+		{
+			return;
+		}
+
 		_playerInfo._exp += amount;
 		OnExpChanged?.Invoke(_playerInfo._exp);
 
@@ -62,9 +81,24 @@ public class PlayerInfoManager : MonoBehaviour
 
 	public void AddLevel(int amount)
 	{
+		if(amount <= 0)
+		{
+			return;
+		}
+
 		_playerInfo._level += amount;
 		OnLevelChanged?.Invoke(_playerInfo._level);
 	}
 
-	public void CheckLevelUp() { }
+	public void CheckLevelUp() {
+
+		int level = _playerInfo._level;
+		while (_playerInfo._exp >= RequestExp)
+		{
+			_playerInfo._exp -= RequestExp;
+			level++;
+		}
+
+		AddLevel(level);
+	}
 }

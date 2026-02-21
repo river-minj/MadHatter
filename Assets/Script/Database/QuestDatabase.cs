@@ -22,18 +22,18 @@ public class QuestDatabase : MonoBehaviour
 
 		foreach(var q in _questList)
 		{
-			if(q == null || string.IsNullOrEmpty(q._questID))
+			if(q == null || string.IsNullOrEmpty(q._questId))
 			{
 				continue;
 			}
 
-			if(_questMap.ContainsKey(q._questID))
+			if(_questMap.ContainsKey(q._questId))
 			{
-				Debug.LogWarningFormat("[QuestDatabase] Duplicate Quest ID: {0}", q._questID);
+				Debug.LogWarningFormat("[QuestDatabase] Duplicate Quest ID: {0}", q._questId);
 				continue;
 			}
 			
-			_questMap.Add(q._questID, q);
+			_questMap.Add(q._questId, q);
 		}
 	}
 

@@ -25,4 +25,13 @@ public class QuestSlotController : MonoBehaviour
 
 		_questProgress.text = $"{state._currentProgress} / {_questData._goalCount}";
 	}
+
+	public void OnGetReward()
+	{
+	}
+
+	public void OnCancel()
+	{
+
+	}
 }
