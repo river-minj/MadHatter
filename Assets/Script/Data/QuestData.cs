@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "QuestData", menuName = "Game/Quest/Quest Data")]
 public class QuestData : ScriptableObject
@@ -135,4 +135,4 @@ public class QuestData : ScriptableObject
 		}
 	}
 }
-}
+

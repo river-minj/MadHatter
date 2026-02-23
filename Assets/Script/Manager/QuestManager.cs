@@ -80,6 +80,7 @@ public class QuestManager : MonoBehaviour
 	//이벤트
 	public Action OnQuestListChanged;
 	public Action<QuestState> OnQuestProgressUpdate;
+	public Action<string> OnQuestRewardClaimed;
 
 	private void Awake()
 	{
@@ -196,7 +197,7 @@ public class QuestManager : MonoBehaviour
 			if (qs._isCompleted == true)
 				continue;
 
-			if (qs._data._targetID != npcID)
+			if (qs._data._questCompleterNpcId != npcID)
 				continue;
 
 			if (qs._data._goalType != QuestGoalType.Talk)
@@ -210,7 +211,6 @@ public class QuestManager : MonoBehaviour
 
 			if (completed)
 			{
-				OnQuestCompleted(qs._data);
 				OnQuestListChanged?.Invoke();
 			}
 		}
@@ -228,7 +228,8 @@ public class QuestManager : MonoBehaviour
 
 				if (completed)
 				{
-					OnQuestCompleted(qs._data);
+					OnQuestListChanged?.Invoke();
+					Debug.Log($"[QuestManager] ReportKill: {monsterID}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
 				}
 			}
 		}
@@ -240,45 +241,57 @@ public class QuestManager : MonoBehaviour
 		foreach (var questID in _setStartedQuest)
 		{
 			QuestState qs = _dicActiveQuest[questID];
-			if (qs._data._goalType == QuestGoalType.Explore && qs._data._npcID == locationID)
+			if (qs._data._goalType == QuestGoalType.Explore && qs._data._completedDialogueId == locationID)
 			{
 				bool completed = qs.AddProgress();
 
 				if (completed)
 				{
-					OnQuestCompleted(qs._data);
+					OnQuestListChanged?.Invoke();
 				}
 			}
 		}
 	}
 
-	private void OnQuestCompleted(QuestData questData)
+	public void ClaimReward(string questId)
 	{
-
-		_dicActiveQuest.TryGetValue(questData._questId, out QuestState qs);
-		if (qs == null)
+		if (_dicActiveQuest.TryGetValue(questId, out QuestState qs) == false)
 			return;
 
-		Debug.Log($"[QuestManager] 퀘스트 완료: {questData._questId} - {questData._title}");
-	
-		_setStartedQuest.Remove(questData._questId);
-		_setCompletedQuest.Add(questData._questId);
-		qs._isCompleted = true;
+		if (qs._isCompleted == false)
+		{
+			Debug.LogWarning($"[QuestManager] 퀘스트가 완료되지 않았습니다: {questId}");
+			return;
+		}
 
-		//보상지급
+		var questData = qs._data;
+		if (questData == null)
+		{
+			Debug.LogWarning($"[QuestManager] 유효하지 않은 퀘스트ID: {questId}");
+			return;
+		}
+
 		GetReward(questData);
 
-		//퀘스트 완료 대사
-		if(questData._completedDialogueId != null)
+		//퀘스트 리스트에서 제거
+		_dicActiveQuest.Remove(questId);
+		_setCompletedQuest.Add(questId);
+		
+		qs._isCompleted = true;
+
+		OnQuestRewardClaimed?.Invoke(questId);
+
+		//완료 대사
+		if (string.IsNullOrEmpty(questData._completedDialogueId) == false)
 		{
-			DialogueData d = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
-			if (d != null)
+			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
+			if (completedD != null)
 			{
-				GameManager.Instance.StartDialogue(d);
+				GameManager.Instance.StartDialogue(completedD);
 			}
 		}
 
-		//다음 퀘스트
+		//다음 퀘스트 연결
 		if (string.IsNullOrEmpty(questData._nextQuestId) == false)
 		{
 			TryQuestStart(questData._nextQuestId);
@@ -294,31 +307,44 @@ public class QuestManager : MonoBehaviour
 		}
 			
 		QuestReward reward = qd._reward;
-		if (reward != null)
+
+		if (string.IsNullOrEmpty(reward._companionId) == false)
 		{
-			if(string.IsNullOrEmpty(reward._companionId) == false)
+			CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionId);
+			if (companionData != null)
 			{
-				CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionId);
-				if(companionData != null)
-				{
-					CompanionManager.Instance.AddCompanion(companionData);
-				}
-				else
-				{
-					Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionId}");
-				}
+				CompanionManager.Instance.AddCompanion(companionData);
+			}
+			else
+			{
+				Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionId}");
 			}
 		}
+
 
 		//보상처리
 		if (reward._gold > 0)
 		{
+			PlayerInfoManager.Instance.AddGold(reward._gold);
 			Debug.Log($"[QuestManager] 골드 획득: {reward._gold}");
 		}
 
 		if (reward._exp > 0)
 		{
+			PlayerInfoManager.Instance.AddExp(reward._exp);
 			Debug.Log($"[QuestManager] 경험치 획득: {reward._exp}");
 		}
+	}
+
+	public void CancelQuest(string questId)
+	{
+		if (_dicActiveQuest.ContainsKey(questId) == false)
+			return;
+
+		_dicActiveQuest.Remove(questId);
+		_setStartedQuest.Remove(questId);
+		
+		OnQuestListChanged?.Invoke();
+		Debug.Log($"[QuestManager] 퀘스트 포기: {questId}");
 	}
 }

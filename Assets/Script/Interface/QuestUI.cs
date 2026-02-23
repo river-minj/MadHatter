@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestUI : MonoBehaviour
@@ -17,6 +16,7 @@ public class QuestUI : MonoBehaviour
 
 		QuestManager.Instance.OnQuestListChanged += RefreshQuestList;
 		QuestManager.Instance.OnQuestProgressUpdate += OnQuestProgressUpdate;
+		QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
 	}
 
 	private void OnDestroy()
@@ -26,6 +26,7 @@ public class QuestUI : MonoBehaviour
 
 		QuestManager.Instance.OnQuestListChanged -= RefreshQuestList;
 		QuestManager.Instance.OnQuestProgressUpdate -= OnQuestProgressUpdate;
+		QuestManager.Instance.OnQuestRewardClaimed -= OnQuestRewardClaimed;
 	}
 
 	public void Toggle()
@@ -54,7 +55,8 @@ public class QuestUI : MonoBehaviour
 		{
 			var slot = Instantiate(_questSlotPrefab, _listParent);
 			var controller = slot.GetComponent<QuestSlotController>();
-			controller.SetQuest(quest.Value._data, quest.Value);
+			controller.SetQuest(quest.Value._data, quest.Value, OnSlotClaimClicked, OnSlotCancelClicked);
+
 			_listQuest.Add(controller);
 		}
 	}
@@ -68,6 +70,28 @@ public class QuestUI : MonoBehaviour
 				slot.UpdateProgress(state);
 				break;
 			}
+		}
+	}
+		
+private void OnSlotClaimClicked(string questID)
+	{
+		QuestManager.Instance.ClaimReward(questID);
+	}
+
+	private void OnSlotCancelClicked(string questID)
+	{
+		QuestManager.Instance.CancelQuest(questID);
+	}
+
+	private void OnQuestRewardClaimed(string questID)
+	{
+		var slot = _listQuest.Find(s => s.QuestData._questId == questID);
+		if (slot != null)
+		{
+			_listQuest.Remove(slot);
+
+			//to do : Destroy를 하지 않는 방법으로 개선 필요
+			Destroy(slot.gameObject);
 		}
 	}
 }

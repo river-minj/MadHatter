@@ -397,6 +397,8 @@ MonoBehaviour:
   _questTitle: {fileID: 3386901468004983863}
   _questDesc: {fileID: 8823386346285408371}
   _questProgress: {fileID: 1680200413086913041}
+  _rewardButton: {fileID: 4580187470441220496}
+  _cancelButton: {fileID: 7902290078118297384}
 --- !u!114 &4152348337901221756
 MonoBehaviour:
   m_ObjectHideFlags: 0
