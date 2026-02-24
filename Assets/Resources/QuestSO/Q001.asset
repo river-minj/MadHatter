@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9ce1927d66ed3647a696c34fc3b4db4, type: 3}
   m_Name: Q001
   m_EditorClassIdentifier: 
-  _questID: Q001
-  _npcID: NPC_ Guide
+  _questId: Q001
+  _questGiverNpcId: NPC_Guide
   _title: "\uC791\uC5C5 \uBC18\uC7A5 \uB9CC\uB098\uAE30"
   _description: "\uBAA8\uC790 \uACF5\uC7A5 \uC791\uC5C5 \uBC18\uC7A5\uC744 \uB9CC\uB098\uBCF4\uC790"
-  _startDialogueID: D_Q001_1
-  _progressDialogueID: D_Q001_2
-  _completedDialogueID: D_Q001_3
-  _targetID: NPC_WorkMan
+  _startDialogueId: D_Q001_1
+  _progressDialogueId: D_Q001_2
+  _completedDialogueId: D_Q001_3
+  _questCompleterNpcId: NPC_WorkMan
   _goalType: 3
   _goalCount: 1
-  _nextQuestID: 
   _reward:
-    _companionID: C_WorkMan
+    _companionId: C_WorkMan
     _gold: 0
     _exp: 0
-    _itemID: Item_Key
+    _itemId: 
+    _itemCount: 0
+  _nextQuestId: 
