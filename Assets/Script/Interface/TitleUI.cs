@@ -6,10 +6,10 @@ public class TitleUI : MonoBehaviour
 	[SerializeField] Button _continueButton;
 	private void Start()
 	{
-		// to do : 세이브 데이터 존재 여부에 따라 이어하기 버튼 활성화/비활성화
+		//세이브 데이터 존재 여부에 따라 이어하기 버튼 활성화/비활성화
 		if(_continueButton != null)
 		{
-			_continueButton.interactable = false; // 아직 세이브 시스템 없음
+			_continueButton.interactable = GameSystem.Exists();
 		}
 	}
 

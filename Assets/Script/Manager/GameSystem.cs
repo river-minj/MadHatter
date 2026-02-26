@@ -40,7 +40,7 @@ public class GameSystem : MonoBehaviour
 {
 	private static string SavePath => Path.Combine(Application.persistentDataPath, "saveData.json");
 
-	private static bool Exists() => File.Exists(SavePath);
+	public static bool Exists() => File.Exists(SavePath);
 
 	public static void Save(SaveData data)
 	{

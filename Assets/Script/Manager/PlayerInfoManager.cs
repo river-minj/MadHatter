@@ -49,6 +49,30 @@ public class PlayerInfoManager : MonoBehaviour
 
 	}
 
+	public PlayerInfoSaveData GetSaveData()
+	{
+		return new PlayerInfoSaveData
+		{
+			name = _playerInfo._name,
+			level = _playerInfo._level,
+			exp = _playerInfo._exp,
+			gold = _playerInfo._gold
+		};
+	}
+
+	public void ApplyData(PlayerInfoSaveData data)
+	{
+		_playerInfo._name = data.name;
+		_playerInfo._level = data.level;	
+		_playerInfo._exp = data.exp;	
+		_playerInfo._gold = data.gold;
+
+		//적용
+		OnGoldChanged?.Invoke(_playerInfo._gold);
+		OnLevelChanged?.Invoke(_playerInfo._level);
+		OnExpChanged?.Invoke(_playerInfo._exp);
+	}
+
 	public int GetMaxCompanionCount()
 	{
 		//레벨에 따른 최대 동료 수 계산

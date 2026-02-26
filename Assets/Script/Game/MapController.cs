@@ -1,7 +1,26 @@
 ﻿
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum SpawnPointId
+{
+	Default,
+	Left,
+	Right,
+	Up,
+	Down
+
+}
+
+[Serializable]
+public class SpawnPointEntry
+{
+	public SpawnPointId id;
+	public Transform point;
+}
 /// <summary>
 /// 현재 활성화 된 맵을 관리
 /// 카메라, 플레이어, 전환 흐름을 조율하는 컨트롤러
@@ -9,8 +28,10 @@ using UnityEngine;
 public class MapController : MonoBehaviour
 {
 	[SerializeField] private MapController _nextMapMc;
-	[SerializeField] private Transform _playerSpawnPos;
 	[SerializeField] private MapBounds _mapBounds;
+
+	[SerializeField] private List<SpawnPointEntry> _listSpawnPoint;
+	private Dictionary<SpawnPointId, Transform> _dicSpawnPoints = new Dictionary<SpawnPointId, Transform>();
 
 	public MapBounds MapBounds => _mapBounds;
 
@@ -20,6 +41,15 @@ public class MapController : MonoBehaviour
 		{
 			_mapBounds = GetComponentInChildren<MapBounds>();
 		}
+
+		_dicSpawnPoints = new Dictionary<SpawnPointId, Transform>();
+		foreach (var entry in _listSpawnPoint)
+		{
+			if (!_dicSpawnPoints.ContainsKey(entry.id))
+			{
+				_dicSpawnPoints.Add(entry.id, entry.point);
+			}
+		}	
 
 	}
 	private void Start()
@@ -60,9 +90,9 @@ public class MapController : MonoBehaviour
 		GameManager.Instance?.RequestMapTransition(_nextMapMc);
 	}
 
-	public Transform GetPlayerSpawnPoisition()
-	{ 		
-		return _playerSpawnPos;
+	public Transform GetSpawnPoint(SpawnPointId id)
+	{
+		return null;
 	}	
 
 	//for debugging

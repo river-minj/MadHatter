@@ -94,6 +94,54 @@ public class QuestManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
+	public QuestSaveData GetSaveData()
+	{
+		QuestSaveData data = new QuestSaveData
+		{
+			startedQuests = new List<string>(_setStartedQuest),
+			completedQuests = new List<string>(_setCompletedQuest),
+		};
+
+		foreach (var kv in _dicActiveQuest)
+		{
+			QuestState qs = kv.Value;
+
+			data.activeQuests.Add(new ActiveQuestEntry
+			{
+				questID = kv.Key,
+				currentProgress = qs._currentProgress,
+				isCompleted = qs._isCompleted
+			});
+		}
+
+		return data;
+	}
+
+	public void ApplyData(QuestSaveData data)
+	{
+		_setStartedQuest = new HashSet<string>(data.startedQuests);
+		_setCompletedQuest = new HashSet<string>(data.completedQuests);
+		_dicActiveQuest.Clear();
+		
+		foreach(var entry in data.activeQuests)
+		{
+			QuestData questData = QuestDatabase.Instance.GetQuestByID(entry.questID);
+			if (questData == null)
+				continue;
+
+			QuestState qs = new QuestState(questData)
+			{
+				_currentProgress = entry.currentProgress,
+				_isCompleted = entry.isCompleted
+			};
+
+			_dicActiveQuest.Add(entry.questID, qs);
+		}
+
+		//적용 
+		OnQuestListChanged?.Invoke();
+	}
+
 	//npc와 상호작용 처리
 	public void TryQuestStart(string questID)
 	{

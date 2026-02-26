@@ -56,7 +56,8 @@ public class SceneLoader : MonoBehaviour
 		{
 			_loadingUI.SetProgress(0.1f, "세이브 데이터 로드 중...");
 
-			// to do : GameManager.Instance.LoadGame() 또는 SaveSystem.Load()
+			SaveData data = GameSystem.Load();
+			GameManager.Instance.LoadGame(data);
 			yield return null;
 		}
 

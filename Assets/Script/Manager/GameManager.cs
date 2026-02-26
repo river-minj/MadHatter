@@ -53,10 +53,43 @@ public class GameManager : MonoBehaviour
         }
 	}
 
+	private void OnDestroy()
+	{
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnQuestRewardClaimed -= OnQuestRewardClaimed;
+        }
+    }
+
+	public void SaveGame()
+    {
+        SaveData data = new SaveData
+        {
+            playerInfo = PlayerInfoManager.Instance.GetSaveData(),
+            questInfo = QuestManager.Instance.GetSaveData()
+        };
+
+        GameSystem.Save(data);
+    }
+
+    public void LoadGame(SaveData data)
+    {
+        if (data == null) return;
+
+        PlayerInfoManager.Instance.ApplyData(data.playerInfo);
+        QuestManager.Instance.ApplyData(data.questInfo);
+	}
+
 	public void Start()
 	{
+        QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
 		LoadFristMap();
 	}
+
+    private void OnQuestRewardClaimed(string questId)
+    {
+        SaveGame();
+    }
 
     private void LoadFristMap()
     {
