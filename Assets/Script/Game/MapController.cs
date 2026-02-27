@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -79,7 +78,7 @@ public class MapController : MonoBehaviour
 	}
 
 	//맵 전환 요청
-	public void RequestMapTransition()
+	public void RequestMapTransition(SpawnPointId id)
 	{
 		if(_nextMapMc == null)
 		{
@@ -87,13 +86,8 @@ public class MapController : MonoBehaviour
 			return;
 		}
 
-		GameManager.Instance?.RequestMapTransition(_nextMapMc);
+		GameManager.Instance?.RequestMapTransition(_nextMapMc, id);
 	}
-
-	public Transform GetSpawnPoint(SpawnPointId id)
-	{
-		return null;
-	}	
 
 	//for debugging
 	public Bounds GetCurrentMapBounds()
@@ -107,5 +101,23 @@ public class MapController : MonoBehaviour
 			Debug.LogWarning("Current MapBounds is not assigned.");
 			return default;
 		}
+	}
+
+	public Transform GetSpawnPoint(SpawnPointId id)
+	{
+		if (_dicSpawnPoints.TryGetValue(id, out Transform spawnPoint))
+		{
+			return spawnPoint;
+		}
+		
+		Debug.LogWarningFormat("[MapController] Spawn point with ID {0} not found. => Default", id);
+
+		if(_dicSpawnPoints.TryGetValue(SpawnPointId.Default, out Transform fallback))
+		{
+			return fallback;
+		}
+
+		Debug.LogError("[MapController] Default spawn point not found.");
+		return null;
 	}
 }

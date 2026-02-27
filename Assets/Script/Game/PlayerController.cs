@@ -58,30 +58,39 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleInput()
 	{
-		// 키보드 입력 받기
-		float horizontal = Input.GetAxisRaw("Horizontal"); // A, D 또는 ←, →
-		float vertical = Input.GetAxisRaw("Vertical");   // W, S 또는 ↑, ↓
 
-		//대각선 이동 제어
-		if (vertical != 0)
+		if (_isjoystickActive)
 		{
-			_moveDir = new Vector2(0, vertical).normalized;
-		}
-		else if (horizontal != 0)
-		{
-			_moveDir = new Vector2(horizontal, 0).normalized;
+			_moveDir = _joysticInput;
+			Debug.Log($"[PlayerContorller] HandleInput - moveDir: {_moveDir}");
 		}
 		else
 		{
-			_moveDir = Vector2.zero;
+			// 키보드 입력 받기
+			float horizontal = Input.GetAxisRaw("Horizontal"); // A, D 또는 ←, →
+			float vertical = Input.GetAxisRaw("Vertical");   // W, S 또는 ↑, ↓
+
+			//대각선 이동 제어
+			if (vertical != 0)
+			{
+				_moveDir = new Vector2(0, vertical).normalized;
+			}
+			else if (horizontal != 0)
+			{
+				_moveDir = new Vector2(horizontal, 0).normalized;
+			}
+			else
+			{
+				_moveDir = Vector2.zero;
+			}
 		}
 
-		if(_moveDir.magnitude > 0.1f) //일정 거리 이상 움직였다면
+		if (_moveDir.magnitude > 0.1f) //일정 거리 이상 움직였다면
 		{
 			_lastDir = _moveDir; //마지막 방향 갱신
 		}
 
-		if(Input.GetKeyDown(KeyCode.I))
+		if (Input.GetKeyDown(KeyCode.I))
 		{
 			//인벤토리 토글
 			UIManager.Instance.ToggleInventory();
@@ -92,6 +101,15 @@ public class PlayerController : MonoBehaviour
 			//퀘스트 UI 토글
 			UIManager.Instance.ToggleQuest();
 		}
+	}
+
+	private Vector2 _joysticInput = Vector2.zero;
+	private bool _isjoystickActive = false;
+	public void SetJoystickInput(Vector2 direction)
+	{
+		_joysticInput = direction;
+		_isjoystickActive = direction.magnitude > 0.1f;
+		Debug.Log($"[PlayerController] SetJoystickInput - input: {_joysticInput}, isActive: {_isjoystickActive}");
 	}
 
 	private void PlaySkeletonAnimation()

@@ -71,9 +71,12 @@ public class QuestUI : MonoBehaviour
 				break;
 			}
 		}
-	}
 		
-private void OnSlotClaimClicked(string questID)
+		GameManager.Instance.SaveGame();
+
+	}
+
+	private void OnSlotClaimClicked(string questID)
 	{
 		QuestManager.Instance.ClaimReward(questID);
 	}

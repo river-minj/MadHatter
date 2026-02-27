@@ -226,6 +226,7 @@ public class QuestManager : MonoBehaviour
 		Debug.Log($"[QuestManager] 퀘스트 시작: {questData._questId} - {questData._title}");
 
 		OnQuestListChanged?.Invoke();
+		GameManager.Instance.SaveGame();
 	}	
 
 
@@ -394,5 +395,6 @@ public class QuestManager : MonoBehaviour
 		
 		OnQuestListChanged?.Invoke();
 		Debug.Log($"[QuestManager] 퀘스트 포기: {questId}");
+		GameManager.Instance.SaveGame();
 	}
 }

@@ -5001,8 +5001,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextMapMc: {fileID: 1275650001781604006, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
-  _playerSpawnPos: {fileID: 5725344234577433733}
   _mapBounds: {fileID: 4054690544027043557}
+  _listSpawnPoint:
+  - id: 0
+    point: {fileID: 5725344234577433733}
+  - id: 4
+    point: {fileID: 1800269696886113044}
 --- !u!1 &6061451857838149836
 GameObject:
   m_ObjectHideFlags: 0
@@ -5030,7 +5034,7 @@ Transform:
   m_GameObject: {fileID: 6061451857838149836}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.51, y: 1.47, z: 0}
+  m_LocalPosition: {x: 0.46, y: -4.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5093,6 +5097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2805340085ea409448f37fd531de4826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnPointId: 4
 --- !u!1 &7103969055009204828
 GameObject:
   m_ObjectHideFlags: 0

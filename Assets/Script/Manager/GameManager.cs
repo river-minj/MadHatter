@@ -63,7 +63,11 @@ public class GameManager : MonoBehaviour
 
 	public void SaveGame()
     {
-        SaveData data = new SaveData
+
+		Debug.Log($"[GameManager] PlayerInfoManager: {PlayerInfoManager.Instance}");
+		Debug.Log($"[GameManager] QuestManager: {QuestManager.Instance}");
+
+		SaveData data = new SaveData
         {
             playerInfo = PlayerInfoManager.Instance.GetSaveData(),
             questInfo = QuestManager.Instance.GetSaveData()
@@ -83,6 +87,13 @@ public class GameManager : MonoBehaviour
 	public void Start()
 	{
         QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
+
+		if (GameSystem.Exists())
+		{
+			SaveData data = GameSystem.Load();
+			LoadGame(data);
+		}
+
 		LoadFristMap();
 	}
 
@@ -98,12 +109,12 @@ public class GameManager : MonoBehaviour
 			Debug.LogError("[GameManager] First map controller is not assigned.");
 			return;
 		}
-        
-        ChangeMap(_firstMapMc);
+
+        ChangeMap(_firstMapMc, SpawnPointId.Default, save: false);
     
     }
 
-    public void RequestMapTransition(MapController nextMap)
+    public void RequestMapTransition(MapController nextMap, SpawnPointId spawnPointId)
     {
         Debug.Log("[GameManager] Map transition requested.");
 
@@ -121,7 +132,7 @@ public class GameManager : MonoBehaviour
 
         SetLockInput(true);
 
-        UIManager.Instance?.RequestFadeTransition(0, () => ChangeMap(nextMap),
+        UIManager.Instance?.RequestFadeTransition(0, () => ChangeMap(nextMap, spawnPointId),
 			() =>
 			{
                 SetLockInput(false);
@@ -130,7 +141,7 @@ public class GameManager : MonoBehaviour
 
 	}
 
-    private void ChangeMap(MapController nextMap)
+    private void ChangeMap(MapController nextMap, SpawnPointId spawnPointId = SpawnPointId.Default, bool save = true)
     {
         //기존 맵 언로드
         if (CurrentMapController != null)
@@ -148,14 +159,18 @@ public class GameManager : MonoBehaviour
         _cameraController.SetBounds(_currentMapController.GetCurrentMapBounds());
 
         //플레이어 위치 설정
-        Transform playerSpawnPos = _currentMapController.GetPlayerSpawnPoisition();
+        Transform playerSpawnPos = _currentMapController.GetSpawnPoint(spawnPointId);
         if(_playerController != null && playerSpawnPos != null)
         {
             _playerController.SetPosition(playerSpawnPos);
         }
     
         Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
-        
+    
+        if(save)
+        {
+            SaveGame();
+        }
 	}
 
     public void SetLockInput(bool locked)
@@ -180,4 +195,9 @@ public class GameManager : MonoBehaviour
 
 		SetLockInput(false);
     }
+
+    public PlayerController GetPlayerController()
+    {
+        return _playerController;
+	}
 }

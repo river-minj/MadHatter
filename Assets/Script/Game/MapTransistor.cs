@@ -9,6 +9,7 @@ using UnityEngine;
 public class MapTransistor : MonoBehaviour
 { 
 	private MapController _mapController;
+	[SerializeField] private SpawnPointId _spawnPointId;
 
 	//맵 변경 플로우 : MapTransistor -> MapController -> GameManager
 
@@ -35,6 +36,6 @@ public class MapTransistor : MonoBehaviour
 			return;
 		}
 	
-		_mapController.RequestMapTransition();
+		_mapController.RequestMapTransition(_spawnPointId);
 	}
 }
