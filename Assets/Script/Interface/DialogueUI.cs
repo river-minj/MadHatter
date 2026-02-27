@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +9,7 @@ public class DialogueUI : MonoBehaviour
 	[SerializeField] private GameObject _dialoguePanel;
 	[SerializeField] private TextMeshProUGUI _dialogueText;
 	[SerializeField] private TextMeshProUGUI _name;
-
+	[SerializeField] private GameObject _nameRoot;
 	
 	public bool IsVisible { get; private set; }
 	
@@ -33,7 +33,7 @@ public class DialogueUI : MonoBehaviour
 		IsVisible = false;
 	}
 
-	public void Show(string name, string lines)
+	public void Show(string name, string lines, DialogueType dialogueType)
 	{
 
 		if(_dialogueText != null)
@@ -41,7 +41,14 @@ public class DialogueUI : MonoBehaviour
 			_dialogueText.text = lines;
 		}
 
-		if(_name != null)
+		//이름 영역 분기
+		bool showName = dialogueType != DialogueType.System;
+		if(_nameRoot!= null)
+		{
+			_nameRoot.SetActive(showName);
+		}
+
+		if (showName && _name != null)
 		{
 			_name.text = name;
 		}

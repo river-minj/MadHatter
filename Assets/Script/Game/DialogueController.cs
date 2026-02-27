@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +6,9 @@ public class DialogueController : MonoBehaviour
 {
     [SerializeField] private DialogueUI _dialogueUI;
 
-    private string _speakerName;
-    private Queue<string> _lines = new Queue<string>();
+    private Queue<DialogueLine> _lines = new Queue<DialogueLine>();    
     private Action _onDialogueComplete;
+
 
     public bool IsDialogueRunning => _isDialogueRunning;
     bool _isDialogueRunning = false;
@@ -41,20 +41,19 @@ public class DialogueController : MonoBehaviour
     /// <summary>
     /// 대화 시작
     /// </summary>
-    public void StartDialogue(string name, IEnumerable<string> lines, Action onComplete = null)
+    public void StartDialogue(IEnumerable<DialogueLine> lines, Action onComplete = null)
     {
         if (IsDialogueRunning == true)
             return;
 
 
-		_isDialogueRunning = true;
-        
-        _speakerName = name;
-		_onDialogueComplete = onComplete;
+        _isDialogueRunning = true;
+        _onDialogueComplete = onComplete;
+
         _lines.Clear();
         foreach (var line in lines)
         {
-            if (string.IsNullOrEmpty(line) == true)
+            if (line == null || string.IsNullOrEmpty(line._line) == true)
                 continue;
 
 			_lines.Enqueue(line); //큐에 대화 줄들을 추가
@@ -76,8 +75,8 @@ public class DialogueController : MonoBehaviour
 			return;
 		}
 
-		string line = _lines.Dequeue(); //큐 안에서 다음 대화를 꺼내오기
-		_dialogueUI.Show(_speakerName, line);
+		DialogueLine line = _lines.Dequeue(); //큐 안에서 다음 대화를 꺼내오기
+		_dialogueUI.Show(line._speakerName, line._line, line._dialogueType);
 	}
 
     /// <summary>

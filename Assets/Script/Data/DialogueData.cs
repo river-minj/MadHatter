@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +7,20 @@ using UnityEngine;
 public class DialogueData : ScriptableObject
 {
 	public string _dialogueID;
-	public string _speakerName;
-	public List<string> _lines = new List<string>();
+	public List<DialogueLine> _lines = new List<DialogueLine>();
+}
 
-	public IEnumerable<string> GetLines()
-	{
-		return _lines;
-	}	
+[Serializable]
+public class DialogueLine
+{
+	public string _speakerName;
+	public DialogueType _dialogueType;
+	[TextArea] public string _line;
+}
+
+public enum DialogueType
+{
+	NPC,
+	Monologue,
+	System
 }
