@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
 	private Coroutine _fadeCoroutine;
 
 	//대화 컨트롤러
-	[SerializeField] private DialogueController _dialogueController;
+	[SerializeField] private DialogueUI _dialogueUI;
 
 	//인벤토리 UI
 	[SerializeField] private InventoryUI _inventoryUI;
@@ -206,15 +206,15 @@ public class UIManager : MonoBehaviour
 
 	public void StartDialogue(List<DialogueLine> lines, Action onComplete = null)
 	{
-		if(_dialogueController != null)
+		if(_dialogueUI != null)
 		{
-			_dialogueController.StartDialogue(lines, onComplete);
+			_dialogueUI.StartDialogue(lines, onComplete);
 		}
 	}
 
 	public bool IsDialogueOpen()
 	{
-		return _dialogueController != null && _dialogueController.IsDialogueRunning;
+		return _dialogueUI != null && _dialogueUI.IsDialogueRunning;
 	}
 	
 	public void ToggleInventory()

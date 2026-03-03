@@ -38,7 +38,7 @@
   - `ChangeMap(MapController nextMap, SpawnPointID spawnPointID = Default)` → 기존맵 Destroy → 새맵 Instantiate → 카메라 바운드 적용 → 스폰포인트 적용 → SaveGame
   - `LoadFirstMap()` → ChangeMap(_firstMapMc) 호출 (spawnPointID Default)
   - `SetLockInput(bool locked)`
-  - `StartDialogue(DialogueData data, Action onComplete)` → 입력잠금 + UIManager.StartDialogue
+  - `StartDialogue(DialogueData data, Action onComplete)` → 입력잠금 + UIManager.StartDialogue(data._lines, onComplete)
   - `EndDialogue()` → 입력잠금 해제
   - `SaveGame()` → 각 매니저 GetSaveData 수집 → GameSystem.Save
   - `LoadGame(SaveData data)` → 각 매니저 ApplyData 호출
@@ -54,13 +54,14 @@
 - 역할: 모든 UI 관리 진입점
 - 필드:
   - `NPCPromptUI _npcPromptUI`
-  - `DialogueController _dialogueController`
+  - `DialogueUI _dialogueUI`
   - `InventoryUI _inventoryUI`
   - `QuestUI _questUI`
   - `Image _fadeImage`
 - 주요 메서드:
   - `RequestFadeTransition(float targetAlpha, Action onFadeComplete, Action onComplete)`
-  - `StartDialogue(string speakerName, string[] lines, Action onComplete)`
+  - `StartDialogue(List<DialogueLine> lines, Action onComplete)` → DialogueUI.StartDialogue 호출
+  - `IsDialogueOpen()` → bool (DialogueUI.IsDialogueRunning)
   - `ShowConfirmPopup(string message, Action onConfirm)`
   - `ToggleInventory()`
   - `ToggleQuest()`
@@ -172,6 +173,84 @@
 
 ---
 
+## 다이얼로그 시스템
+
+### DialogueType (enum) - DialogueData.cs 상단 정의
+- NPC: NPC 대화 (이름 표시)
+- Monologue: 독백 (이름 표시, 플레이어 이름 등)
+- System: 시스템 메시지 (이름 영역 숨김)
+
+### DialogueLine (class) - DialogueData.cs 상단 정의
+- `string _speakerName` (화자 이름)
+- `DialogueType _dialogueType` (줄 단위 타입)
+- `string _line` ([TextArea] 대사 텍스트)
+- 역할: 한 줄의 대사 데이터, 줄마다 화자/타입 변경 가능 (NPC↔플레이어 교차 대화 지원)
+
+### DialogueData (ScriptableObject) - DialogueData.cs
+- `string _dialogueID`
+- `List<DialogueLine> _lines`
+- CreateAssetMenu: Game/Dialogue/Dialogue Data
+
+### DialogueUI - DialogueUI.cs
+- 역할: 대화 UI 표시/숨김 + 대화 진행 제어 (줄 큐 관리, 타이핑 연출, 입력 처리) 통합
+- 필드:
+  - `GameObject _dialoguePanel` (SerializeField, 대화창 패널)
+  - `TextMeshProUGUI _dialogueText` (SerializeField, 대사 텍스트)
+  - `TextMeshProUGUI _name` (SerializeField, 화자 이름 텍스트)
+  - `GameObject _nameRoot` (SerializeField, 이름 영역 루트 — 없으면 _name.gameObject 폴백)
+  - `Button _touchButton` (SerializeField, 전체화면 투명 버튼 — 터치/클릭 대화 넘기기용)
+  - `float _typingSpeed = 0.05f` (SerializeField, 한 글자 출력 간격)
+  - `Queue<DialogueLine> _lines` (대사 큐)
+  - `Coroutine _typingCoroutine` (타이핑 코루틴 참조)
+  - `string _fullText` (현재 줄 전체 텍스트)
+  - `bool _isTyping` (타이핑 연출 진행 중 여부)
+  - `bool _isDialogueRunning` (읽기전용 프로퍼티 IsDialogueRunning)
+  - `bool IsVisible` (읽기전용 프로퍼티)
+- 주요 메서드:
+  - `StartDialogue(IEnumerable<DialogueLine> lines, Action onComplete)` → 큐 적재 → ShowNextLine
+  - `ShowNextLine()` → 큐에서 DialogueLine Dequeue → Show(빈 텍스트) → TypeLine 코루틴 시작
+  - `Show(string name, string line, DialogueType dialogueType)` → 패널/터치버튼 활성화, System이면 이름 영역 숨김 (private)
+  - `TypeLine(string fullText)` → 코루틴, 한 글자씩 _dialogueText 갱신 (WaitForSeconds)
+  - `HandleAdvance()` → _isTyping이면 CompleteTyping, 아니면 ShowNextLine
+  - `CompleteTyping()` → 코루틴 중단 → _fullText로 즉시 전체 표시
+  - `OnDialogueClicked()` → 터치 버튼 onClick에서 호출 → HandleAdvance (private)
+  - `EndDialogue()` → 코루틴 정리 → Hide → onComplete 콜백 (private)
+  - `Hide()` → 패널/터치버튼 비활성화 (private)
+- Awake에서 _touchButton.onClick에 OnDialogueClicked 리스너 등록 + Hide
+- Update에서 키보드 입력(Space/E) → HandleAdvance
+- 대화 넘기기 흐름:
+  - 타이핑 중 입력 → 즉시 전체 표시 (CompleteTyping)
+  - 타이핑 완료 후 입력 → 다음 줄 (ShowNextLine)
+  - 마지막 줄 이후 입력 → 대화 종료 (EndDialogue)
+- Inspector 설정:
+  - _touchButton: Image(alpha=0), Raycast Target=ON, Stretch 전체화면, Button Transition=None
+  - _touchButton은 _dialoguePanel과 함께 활성화/비활성화
+  - DialogueUI가 속한 Canvas의 Sort Order를 조이스틱 Canvas보다 높게 설정
+
+### DialogueDatabase (싱글톤) - DialogueDatabase.cs
+- 역할: DialogueData 조회
+- 필드:
+  - `List<DialogueData> _dialogueList` (SerializeField, Inspector 등록)
+  - `Dictionary<string, DialogueData> _dicDialogue` (Awake에서 List → Dictionary 변환)
+- 주요 메서드:
+  - `GetDialogueByID(string dialogueID)` → DialogueData (Dictionary 조회, 없으면 LogWarning + null)
+
+### 대화 호출 흐름
+```
+GameManager.StartDialogue(DialogueData, onComplete)
+  → SetLockInput(true)
+  → UIManager.StartDialogue(data._lines, onComplete)
+    → DialogueUI.StartDialogue(lines, onComplete)
+      → ShowNextLine() → Show() → TypeLine 코루틴
+        → 입력(터치/키보드) → HandleAdvance()
+          → 타이핑 중 → CompleteTyping()
+          → 타이핑 완료 → ShowNextLine() 또는 EndDialogue()
+            → EndDialogue() → Hide() → onComplete
+              → GameManager.EndDialogue() → SetLockInput(false)
+```
+
+---
+
 ## UI 클래스
 
 ### JoystickUI
@@ -185,7 +264,7 @@
 - 인터페이스: `IPointerDownHandler`, `IDragHandler`, `IPointerUpHandler`
 - 동작 방식: Floating (터치한 위치에 _joystickRoot 생성, 평소 숨김)
 - 주요 메서드:
-  - `OnPointerDown` → 터치 위치에 _joystickRoot 배치 후 활성화
+  - `OnPointerDown` → IsInputLock 체크 → 터치 위치에 _joystickRoot 배치 후 활성화
   - `OnDrag` → 핸들 위치 계산(ClampMagnitude) → 방향값 정규화 → SetJoystickInput 호출
   - `OnPointerUp` → _joystickRoot 비활성화, 핸들 초기화, SetJoystickInput(Vector2.zero)
 - 플랫폼 처리: `#if !UNITY_WEBGL && !UNITY_ANDROID && !UNITY_IOS` → gameObject.SetActive(false)
@@ -193,6 +272,7 @@
   - JoystickArea: Image(alpha=0), Raycast Target=ON, 전체화면 RectTransform
   - JoystickRoot: 기본 비활성, Background(반투명 원) + Handle(작은 원) 자식으로 구성
 - 주의: 부모 Canvas의 Render Mode가 반드시 **Screen Space - Overlay**여야 함. Screen Space - Camera 사용 시 좌표계가 뒤집혀 조이스틱 방향과 캐릭터 이동 방향이 불일치함
+- 주의: 대화 중 조이스틱 비주얼이 뜨지 않도록 OnPointerDown에서 `GameManager.Instance.IsInputLock` 체크 추가 권장
 
 ### QuestUI
 - 역할: 퀘스트 패널 (슬롯 리스트 관리)
@@ -229,10 +309,6 @@
 - `GetAllQuests()` → IEnumerable<QuestData>
 - Inspector에서 List<QuestData> 등록, Awake에서 Dictionary로 변환
 
-### DialogueDatabase
-- `GetDialogueByID(string dialogueID)` → DialogueData
-- Inspector에서 List<DialogueData> 등록
-
 ### CompanionDatabase (코드 미공유)
 - `GetCompanionByID(string companionID)` → CompanionData
 
@@ -259,9 +335,6 @@
 
 ### PlayerInfo (struct)
 - `string _name`, `int _level`, `int _exp`, `int _gold`
-
-### DialogueData (코드 미공유)
-- `string _dialogueID`, `string _speakerName`, `GetLines()` → string[]
 
 ---
 
@@ -308,11 +381,12 @@
 | 13 | WebGL 빌드하여 웹에 배포 | 보류 |
 | 14 | 모바일/WebGL 가상 조이스틱 입력 | ✅ 완료 |
 | 15 | 엑셀 → 게임 데이터 파싱 시스템 | 미구현 |
-| 16 | 다이얼로그 시스템 확장 (독백/시스템 메시지) | 미구현 |
+| 16 | 다이얼로그 시스템 확장 (독백/시스템 메시지/타이핑 연출/터치 입력) | ✅ 완료 |
 | 17 | ReportKill/ReportReach 완성 + 전투 시스템 기초 | 미구현 |
 | 18 | ReportCollect/AcquireItem 추가 | 미구현 |
 | 19 | AudioManager (BGM/SFX) + 옵션 UI 연동 | 미구현 |
 | 20 | 인벤토리 아이템 획득/사용/장착 + _itemID 보상 지급 | 미구현 |
+| 21 | Resource.Load 방식을 Addressable 시스템으로 변경 | 미구현 |
 
 ---
 

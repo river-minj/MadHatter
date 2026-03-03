@@ -155,7 +155,7 @@ public class QuestManager : MonoBehaviour
 		//완료된 퀘스트
 		if(_setCompletedQuest.Contains(questID))
 		{
-			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
+			DialogueData completedD = DialogueDatabase.Instance.GetDialogueById(questData._completedDialogueId);
 			if (completedD != null)
 			{
 				GameManager.Instance.StartDialogue(completedD);
@@ -166,7 +166,7 @@ public class QuestManager : MonoBehaviour
 		//진행중인 퀘스트
 		if(_dicActiveQuest.ContainsKey(questID))
 		{
-			DialogueData progressD = DialogueDatabase.Instance.GetDialogueByID(questData._progressDialogueId);
+			DialogueData progressD = DialogueDatabase.Instance.GetDialogueById(questData._progressDialogueId);
 			if (progressD != null)
 			{
 				GameManager.Instance.StartDialogue(progressD);
@@ -182,7 +182,7 @@ public class QuestManager : MonoBehaviour
 		}
 
 		//새로 퀘스트 시작
-		DialogueData startD = DialogueDatabase.Instance.GetDialogueByID(questData._startDialogueId);
+		DialogueData startD = DialogueDatabase.Instance.GetDialogueById(questData._startDialogueId);
 		if (startD != null)
 		{
 			GameManager.Instance.StartDialogue(startD, () =>
@@ -333,7 +333,7 @@ public class QuestManager : MonoBehaviour
 		//완료 대사
 		if (string.IsNullOrEmpty(questData._completedDialogueId) == false)
 		{
-			DialogueData completedD = DialogueDatabase.Instance.GetDialogueByID(questData._completedDialogueId);
+			DialogueData completedD = DialogueDatabase.Instance.GetDialogueById(questData._completedDialogueId);
 			if (completedD != null)
 			{
 				GameManager.Instance.StartDialogue(completedD);

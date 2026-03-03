@@ -6,16 +6,40 @@ public class DialogueDatabase : MonoBehaviour
 {
 	public static DialogueDatabase Instance { get; private set; }
 
-	public List<DialogueData> _dialogueList;
+	[SerializeField] private List<DialogueData> _dialogueList;
 	private Dictionary<string, DialogueData> _dicDialogue;
 
 	private void Awake()
 	{
 		Instance = this;
+
+		MakeDic();
 	}
 
-	public DialogueData GetDialogueByID(string dialogueID)
+	private void MakeDic()
 	{
-		return _dialogueList.FirstOrDefault(d => d._dialogueID == dialogueID);
+		_dicDialogue = new Dictionary<string, DialogueData>();
+		foreach (var dialogue in _dialogueList)
+		{ 
+			if (dialogue == null || string.IsNullOrEmpty(dialogue._dialogueID))
+				continue;
+			
+			_dicDialogue[dialogue._dialogueID] = dialogue;
+		}
+	}
+
+	public DialogueData GetDialogueById(string dialogueId)
+	{
+		if (string.IsNullOrEmpty(dialogueId))
+			return null;
+
+		if (_dicDialogue.TryGetValue(dialogueId, out DialogueData dialogue))
+		{
+			return dialogue;
+		}
+
+		Debug.LogWarning($"Dialogue with ID '{dialogueId}' not found in the database.");
+		return null;
+
 	}
 }
