@@ -224,6 +224,14 @@ public class UIManager : MonoBehaviour
 			_inventoryUI.Toggle();
 		}
 	}
+	
+	public void AdvanceDialogue()
+	{
+		if(_dialogueUI != null)
+		{
+			_dialogueUI.AdvanceDialogue();
+		}
+	}
 
 	public void ToggleQuest()
 	{

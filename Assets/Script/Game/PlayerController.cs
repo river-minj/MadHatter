@@ -33,7 +33,11 @@ public class PlayerController : MonoBehaviour
 		{
 			_moveDir = Vector2.zero;
 			PlaySkeletonAnimation(); // idle 애니메이션 유지
-			return;
+
+			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
+			{
+				UIManager.Instance.AdvanceDialogue();
+			}
 		}
 
 		// 키보드 입력 받기

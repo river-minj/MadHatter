@@ -39,17 +39,12 @@ public class DialogueUI : MonoBehaviour
 		Hide();
 	}
 
-
-	//to do : 키 입력의 판단이 이 위치에 있는 것이 맞는지 고민해볼 것
-	private void Update()
+	public void AdvanceDialogue()
 	{
 		if (!_isDialogueRunning)
 			return;
 
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
-		{
-			HandleAdvance();
-		}
+		HandleAdvance();
 	}
 	public void StartDialogue(IEnumerable<DialogueLine> lines, Action onComplete = null)
 	{
@@ -141,12 +136,9 @@ public class DialogueUI : MonoBehaviour
 		_typingCoroutine = null;
 	}
 
-	private void OnDialogueClicked()
+	public void OnDialogueClicked()
 	{
-		if (!_isDialogueRunning)
-			return;
-
-		HandleAdvance();
+		AdvanceDialogue();
 	}
 
 	private void HandleAdvance()
