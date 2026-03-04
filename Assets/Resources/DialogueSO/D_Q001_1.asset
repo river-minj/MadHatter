@@ -18,14 +18,14 @@ MonoBehaviour:
     _dialogueType: 0
     _line: "\uB10C \uD574\uACE0\uB2E4"
   - _speakerName: "\uB178\uC544"
-    _dialogueType: 1
+    _dialogueType: 0
     _line: "\uB124? \uC800 \uC544\uC9C1 \uC77C \uD560 \uC218 \uC788\uB294\uB370"
   - _speakerName: "\uAD74\uB69D\uC9D1 \uC8FC\uC778"
     _dialogueType: 0
     _line: "\uB10C \uAD74\uB69D \uCCAD\uC18C\uB97C \uD558\uAE30\uC5D4 \uB108\uBB34
       \uCEF8\uC5B4"
   - _speakerName: "\uB178\uC544"
-    _dialogueType: 1
+    _dialogueType: 0
     _line: "\uADF8\uB7FC \uC81C\uAC00 \uC5EC\uD0DC\uAE4C\uC9C0 \uC77C\uD55C \uB3C8\uC740\uC694?"
   - _speakerName: "\uAD74\uB69D\uC9D1 \uC8FC\uC778"
     _dialogueType: 0

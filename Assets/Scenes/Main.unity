@@ -464,6 +464,17 @@ MonoBehaviour:
   _paddingRight: 10
   _paddingTop: 10
   _paddingBottom: 10
+--- !u!114 &429505116 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8245899997513333412, guid: 804748f32e0a37141ad6a756bd15f177, type: 3}
+  m_PrefabInstance: {fileID: 1988906559469421187}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b11b14ed43b3c4bb311667dcf36f93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &443370926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1949,7 +1960,7 @@ MonoBehaviour:
   _npcPrompt: {fileID: 2071686925}
   fadeImage: {fileID: 1760295055}
   fadeDuration: 3
-  _dialogueUI: {fileID: 0}
+  _dialogueUI: {fileID: 1931960180}
   _inventoryUI: {fileID: 1255639694}
   _questUI: {fileID: 732075179}
   _popupRoot: {fileID: 1045627222}
@@ -1985,7 +1996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraController: {fileID: 519420033}
-  _playerController: {fileID: 0}
+  _playerController: {fileID: 429505116}
   _mapRoot: {fileID: 298487635}
   _firstMapMc: {fileID: 8137850298729097503, guid: 0498579d6cce93e41b00120cdc11281e, type: 3}
 --- !u!114 &1253460101
