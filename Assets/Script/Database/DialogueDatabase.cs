@@ -1,30 +1,41 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class DialogueDatabase : MonoBehaviour
+public class DialogueDatabase
 {
 	public static DialogueDatabase Instance { get; private set; }
 
-	[SerializeField] private List<DialogueData> _dialogueList;
-	private Dictionary<string, DialogueData> _dicDialogue;
-
-	private void Awake()
+	private Dictionary<string, DialogueData> _dicDialogue = new Dictionary<string, DialogueData>();
+	
+	public static void CreateInstance()
 	{
-		Instance = this;
-
-		MakeDic();
+		Instance = new DialogueDatabase();
 	}
 
-	private void MakeDic()
+	public void ApplyData(List<DialogueTableData> tableDataList)
 	{
-		_dicDialogue = new Dictionary<string, DialogueData>();
-		foreach (var dialogue in _dialogueList)
-		{ 
-			if (dialogue == null || string.IsNullOrEmpty(dialogue._dialogueID))
+		_dicDialogue.Clear();
+
+		foreach (var row in tableDataList)
+		{
+			if (string.IsNullOrEmpty(row.uniqueId) || string.IsNullOrEmpty(row.dialogueId))
 				continue;
-			
-			_dicDialogue[dialogue._dialogueID] = dialogue;
+
+			if (!_dicDialogue.TryGetValue(row.dialogueId, out var dialogueData))
+			{
+				dialogueData = new DialogueData
+				{
+					_dialogueId = row.dialogueId
+				};
+				_dicDialogue.Add(row.dialogueId, dialogueData);
+			}
+
+			dialogueData._lines.Add(new DialogueLine
+			{
+				_speakerName = row.speakerName,
+				_dialogueType = row.dialogueType,
+				_line = row.line
+			});
 		}
 	}
 
@@ -33,13 +44,10 @@ public class DialogueDatabase : MonoBehaviour
 		if (string.IsNullOrEmpty(dialogueId))
 			return null;
 
-		if (_dicDialogue.TryGetValue(dialogueId, out DialogueData dialogue))
-		{
-			return dialogue;
-		}
+		if (_dicDialogue.TryGetValue(dialogueId, out var data))
+			return data;
 
-		Debug.LogWarning($"Dialogue with ID '{dialogueId}' not found in the database.");
+		Debug.LogWarning($"[DialogueDatabase] ID [{dialogueId}]를 찾을 수 없습니다.");
 		return null;
-
 	}
 }

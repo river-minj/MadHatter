@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -88,6 +88,16 @@ public class SceneLoader : MonoBehaviour
 
 		// 5. 매니저 Awake/Start 완료 대기
 		yield return null;
+
+		// 5-1. 게임 데이터 로드 (JSON → Database 적재)
+		if (DataManager.Instance != null)
+		{
+			yield return DataManager.Instance.LoadAllDataAsync((progress, message) =>
+			{
+				float totalProgress = 0.9f + (progress * 0.05f);
+				_loadingUI.SetProgress(totalProgress, message);
+			});
+		}
 
 		// 6. 세이브 데이터 매니저에 주입
 		if (!isNewGame)

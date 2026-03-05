@@ -1,0 +1,30 @@
+[
+  {
+    "uniqueId": "QST_001",
+    "title": "이장의 부탁",
+    "description": "마을 이장의 이야기를 듣고 대장장이를 찾아가자.",
+    "goalType": "Talk",
+    "goalCount": 1,
+    "questGiverNpcId": "NPC_001",
+    "questCompleterNpcId": "NPC_002",
+    "startDialogueId": "DLG_002",
+    "progressDialogueId": "DLG_003",
+    "completedDialogueId": "DLG_004",
+    "nextQuestId": "QST_002",
+    "rewardGroupId": "RWD_001"
+  },
+  {
+    "uniqueId": "QST_002",
+    "title": "대장장이의 고민",
+    "description": "대장장이의 고민을 듣고 마을 이장에게 전달하자.",
+    "goalType": "Talk",
+    "goalCount": 1,
+    "questGiverNpcId": "NPC_002",
+    "questCompleterNpcId": "NPC_001",
+    "startDialogueId": "DLG_005",
+    "progressDialogueId": "DLG_006",
+    "completedDialogueId": "DLG_007",
+    "nextQuestId": "",
+    "rewardGroupId": "RWD_002"
+  }
+]

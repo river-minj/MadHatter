@@ -44,12 +44,12 @@ public class CompanionManager : MonoBehaviour
 	{
 		if (_ownedCompanions.Contains(data))
 		{
-			Debug.LogWarningFormat("Companion already unlocked: {0}", data._companionID);
+			Debug.LogWarningFormat("Companion already unlocked: {0}", data._companionId);
 			return;
 		}
 
 		_ownedCompanions.Add(data);
-		Debug.LogFormat("Companion 획득: {0}", data._companionID);
+		Debug.LogFormat("Companion 획득: {0}", data._companionId);
 
 		//생성
 		SpawnCompanion(data);
@@ -66,12 +66,20 @@ public class CompanionManager : MonoBehaviour
 		}
 
 		Vector3 spawnPos = _player.transform.position; //일단 플레이어 위치에 생성
-		GameObject companionObj = Instantiate(data._companionPrefab, spawnPos, Quaternion.identity, _followerParent);
-		
+
+		GameObject prefab = Resources.Load<GameObject>(data._companionPrefabPath);
+		if (prefab == null)
+		{
+			Debug.LogError($"[CompanionManager] 프리팹을 찾을 수 없습니다: {data._companionPrefabPath}");
+			return;
+		}
+
+		GameObject companionObj = Instantiate(prefab, spawnPos, Quaternion.identity, _followerParent);
+
 		CompanionController cc = companionObj.GetComponent<CompanionController>();
 		if(cc == null)
 		{
-			Debug.LogErrorFormat("Companion prefab missing CompanionController: {0}", data._companionID);
+			Debug.LogErrorFormat("Companion prefab missing CompanionController: {0}", data._companionId);
 			return;
 		}
 

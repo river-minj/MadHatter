@@ -1,39 +1,49 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CompanionDatabase : MonoBehaviour
+public class CompanionDatabase
 {
-	public static CompanionDatabase Instance;
+	public static CompanionDatabase Instance { get; private set; }
 
 	[SerializeField] private List<CompanionData> _companionList = new List<CompanionData>();
 
 	private Dictionary<string, CompanionData> _dicCompanion = new Dictionary<string, CompanionData>();
 
-	private void Awake()
+	public static void CreateInstance()
 	{
-		if (Instance == null)
-		{
-			Instance = this;
-			DontDestroyOnLoad(gameObject);
-		}
-		else
-		{
-			Destroy(gameObject);
-		}
-
-		BuildMap();
-	
+		Instance = new CompanionDatabase();
 	}
 
-	private void BuildMap()
+	public void ApplyData(List<CompanionTableData> tableDataList)
 	{
-		foreach (CompanionData companion in _companionList)
+		_dicCompanion.Clear();
+
+		foreach (var row in tableDataList)
 		{
-			_dicCompanion.Add(companion._companionID, companion);
+			if (string.IsNullOrEmpty(row.uniqueId))
+				continue;
+
+			if (_dicCompanion.ContainsKey(row.uniqueId))
+			{
+				Debug.LogWarning($"[CompanionDatabase] 중복 Companion ID: {row.uniqueId}");
+				continue;
+			}
+
+			var data = new CompanionData
+			{
+				_companionId = row.uniqueId,
+				_companionName = row.companionName,
+				_skinName = row.skinName,
+				_companionPrefabPath = row.companionPrefabPath,
+				_followSpeed = row.followSpeed,
+				_followDistance = row.followDistance
+			};
+
+			_dicCompanion.Add(row.uniqueId, data);
 		}
 	}
 
-	public CompanionData GetCompanionByID(string companionID)
+	public CompanionData GetCompanionById(string companionID)
 	{
 		if (_dicCompanion.TryGetValue(companionID, out CompanionData companionData))
 		{

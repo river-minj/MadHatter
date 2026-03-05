@@ -1,0 +1,149 @@
+[
+  {
+    "uniqueId": "DLG_001_01",
+    "dialogueId": "DLG_001",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "오, 여행자인가? 잘 왔네."
+  },
+  {
+    "uniqueId": "DLG_001_02",
+    "dialogueId": "DLG_001",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "안녕하세요. 이곳이 어디인가요?"
+  },
+  {
+    "uniqueId": "DLG_001_03",
+    "dialogueId": "DLG_001",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "여기는 바람개비 마을이라네."
+  },
+  {
+    "uniqueId": "DLG_001_04",
+    "dialogueId": "DLG_001",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마침 부탁할 일이 있는데, 들어주겠나?"
+  },
+  {
+    "uniqueId": "DLG_002_01",
+    "dialogueId": "DLG_002",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마을 대장장이에게 전할 말이 있다네."
+  },
+  {
+    "uniqueId": "DLG_002_02",
+    "dialogueId": "DLG_002",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "대장장이를 찾아가서 안부를 전해주게."
+  },
+  {
+    "uniqueId": "DLG_002_03",
+    "dialogueId": "DLG_002",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "알겠습니다. 대장장이를 찾아가 볼게요."
+  },
+  {
+    "uniqueId": "DLG_003_01",
+    "dialogueId": "DLG_003",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "아직 대장장이를 만나지 못한 건가?"
+  },
+  {
+    "uniqueId": "DLG_003_02",
+    "dialogueId": "DLG_003",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마을 동쪽에 있으니 찾아가 보게."
+  },
+  {
+    "uniqueId": "DLG_004_01",
+    "dialogueId": "DLG_004",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "오, 이장님이 보내셨군. 반갑네!"
+  },
+  {
+    "uniqueId": "DLG_004_02",
+    "dialogueId": "DLG_004",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "고맙네. 이건 수고비일세."
+  },
+  {
+    "uniqueId": "DLG_004_03",
+    "dialogueId": "DLG_004",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "감사합니다."
+  },
+  {
+    "uniqueId": "DLG_005_01",
+    "dialogueId": "DLG_005",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "사실 요즘 고민이 있다네."
+  },
+  {
+    "uniqueId": "DLG_005_02",
+    "dialogueId": "DLG_005",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "이장님께 이 이야기를 전해줄 수 있겠나?"
+  },
+  {
+    "uniqueId": "DLG_005_03",
+    "dialogueId": "DLG_005",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "물론이죠. 이장님께 전해드릴게요."
+  },
+  {
+    "uniqueId": "DLG_006_01",
+    "dialogueId": "DLG_006",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "이장님께 아직 전하지 못했나? 부탁하네."
+  },
+  {
+    "uniqueId": "DLG_007_01",
+    "dialogueId": "DLG_007",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "대장장이에게 그런 고민이 있었구만."
+  },
+  {
+    "uniqueId": "DLG_007_02",
+    "dialogueId": "DLG_007",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "알려줘서 고맙네. 이건 답례일세."
+  },
+  {
+    "uniqueId": "DLG_007_03",
+    "dialogueId": "DLG_007",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "도움이 되었다니 다행이에요."
+  },
+  {
+    "uniqueId": "DLG_008_01",
+    "dialogueId": "DLG_008",
+    "speakerName": "",
+    "dialogueType": "System",
+    "line": "바람개비 마을에 도착했습니다."
+  },
+  {
+    "uniqueId": "DLG_009_01",
+    "dialogueId": "DLG_009",
+    "speakerName": "",
+    "dialogueType": "System",
+    "line": "어두운 숲에 들어섰습니다. 조심하세요."
+  }
+]

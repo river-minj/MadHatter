@@ -1,0 +1,18 @@
+[
+  {
+    "uniqueId": "comp_001",
+    "companionName": "꼬마 기사",
+    "skinName": "knight_skin",
+    "companionPrefabPath": "Prefabs/Companion/Knight",
+    "followSpeed": 3.0,
+    "followDistance": 1.2
+  },
+  {
+    "uniqueId": "comp_002",
+    "companionName": "숲의 정령",
+    "skinName": "spirit_skin",
+    "companionPrefabPath": "Prefabs/Companion/Spirit",
+    "followSpeed": 3.5,
+    "followDistance": 1.5
+  }
+]

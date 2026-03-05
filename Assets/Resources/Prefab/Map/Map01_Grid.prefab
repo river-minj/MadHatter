@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: 
 --- !u!58 &5475304324131572069
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: NPC_001
 --- !u!58 &6420309224614454802
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4036,7 +4036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: 
 --- !u!58 &1692139987286178670
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4225,7 +4225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: 76bf26ca45270d949aeb550111562624, type: 2}
+  _npcId: NPC_002
 --- !u!58 &2208996860039501130
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4414,7 +4414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: 
 --- !u!58 &4447043242002543400
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4603,7 +4603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: 
 --- !u!58 &3351709454342742423
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4792,7 +4792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   interactionMessage: Press 'E' to interact
-  _npcData: {fileID: 11400000, guid: da8db1d2d0bc1f04b9d27c3f6bb3ced6, type: 2}
+  _npcId: 
 --- !u!58 &6054116514009606474
 CircleCollider2D:
   m_ObjectHideFlags: 0

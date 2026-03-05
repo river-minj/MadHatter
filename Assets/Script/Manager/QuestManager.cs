@@ -34,17 +34,6 @@ public class QuestState
 		return false;
 	}
 }
-[System.Serializable]
-
-public enum QuestGoalType
-{
-	None,
-	Kill,
-	Collect,
-	Talk,
-	Explore,
-	AcquireItem,
-}
 
 [System.Serializable]
 public class QuestReward
@@ -125,7 +114,7 @@ public class QuestManager : MonoBehaviour
 		
 		foreach(var entry in data.activeQuests)
 		{
-			QuestData questData = QuestDatabase.Instance.GetQuestByID(entry.questID);
+			QuestData questData = QuestDatabase.Instance.GetQuestById(entry.questID);
 			if (questData == null)
 				continue;
 
@@ -145,7 +134,7 @@ public class QuestManager : MonoBehaviour
 	//npc와 상호작용 처리
 	public void TryQuestStart(string questID)
 	{
-		var questData = QuestDatabase.Instance.GetQuestByID(questID);
+		var questData = QuestDatabase.Instance.GetQuestById(questID);
 		if(questData == null)
 		{
 			Debug.LogWarning($"[QuestManager] 유효하지 않은 퀘스트ID: {questID}");
@@ -349,39 +338,40 @@ public class QuestManager : MonoBehaviour
 
 	private void GetReward(QuestData qd)
 	{
-		if(qd._reward == null)
+		if (qd._rewards == null || qd._rewards.Count == 0)
 		{
 			Debug.LogWarning("[QuestManager] 보상이 없습니다.");
 			return;
 		}
-			
-		QuestReward reward = qd._reward;
 
-		if (string.IsNullOrEmpty(reward._companionId) == false)
+		foreach (var reward in qd._rewards)
 		{
-			CompanionData companionData = CompanionDatabase.Instance.GetCompanionByID(reward._companionId);
-			if (companionData != null)
+			if (reward._gold > 0)
 			{
-				CompanionManager.Instance.AddCompanion(companionData);
+				PlayerInfoManager.Instance.AddGold(reward._gold);
 			}
-			else
+
+			if (reward._exp > 0)
 			{
-				Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionId}");
+				PlayerInfoManager.Instance.AddExp(reward._exp);
 			}
-		}
+
+			if (!string.IsNullOrEmpty(reward._companionId))
+			{
+				CompanionData companionData = CompanionDatabase.Instance.GetCompanionById(reward._companionId);
+				if (companionData != null)
+				{
+					CompanionManager.Instance.AddCompanion(companionData);
+				}
+				else
+				{
+					Debug.LogWarning($"[QuestManager] 보상 동료ID가 유효하지 않습니다: {reward._companionId}");
+				}
+			}
 
 
-		//보상처리
-		if (reward._gold > 0)
-		{
-			PlayerInfoManager.Instance.AddGold(reward._gold);
-			Debug.Log($"[QuestManager] 골드 획득: {reward._gold}");
-		}
+			//to do : 아이템 보상 처리
 
-		if (reward._exp > 0)
-		{
-			PlayerInfoManager.Instance.AddExp(reward._exp);
-			Debug.Log($"[QuestManager] 경험치 획득: {reward._exp}");
 		}
 	}
 

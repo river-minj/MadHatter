@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DialogueData",	menuName = "Game/Dialogue/Dialogue Data")]
-public class DialogueData : ScriptableObject
+public class DialogueData
 {
-	public string _dialogueID;
+	public string _dialogueId;
 	public List<DialogueLine> _lines = new List<DialogueLine>();
 }
 
