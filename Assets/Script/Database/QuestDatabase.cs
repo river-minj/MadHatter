@@ -61,11 +61,11 @@ public class QuestDatabase
 				_startDialogueId = row.startDialogueId,
 				_progressDialogueId = row.progressDialogueId,
 				_completedDialogueId = row.completedDialogueId,
-				_questCompleterNpcId = row.questCompleterNpcId,
 				_goalType = row.goalType,
 				_goalCount = row.goalCount,
 				_rewardGroupId = row.rewardGroupId,
-				_nextQuestId = row.nextQuestId
+				_nextQuestId = row.nextQuestId,
+				_targetId = row.targetId
 			};
 
 			// 보상 매칭

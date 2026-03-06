@@ -61,6 +61,7 @@
 - 주요 메서드:
   - `RequestFadeTransition(float targetAlpha, Action onFadeComplete, Action onComplete)`
   - `StartDialogue(List<DialogueLine> lines, Action onComplete)` → DialogueUI.StartDialogue 호출
+  - `AdvanceDialogue()` → DialogueUI.AdvanceDialogue 호출 (PlayerController에서 중개용)
   - `IsDialogueOpen()` → bool (DialogueUI.IsDialogueRunning)
   - `ShowConfirmPopup(string message, Action onConfirm)`
   - `ToggleInventory()`
@@ -74,16 +75,16 @@
   - `HashSet<string> _setCompletedQuest` (완료된 모든 퀘스트 ID)
 - 주요 메서드:
   - `TryQuestStart(string questID)` → 퀘스트 시작 조건 확인 후 등록
-  - `ClaimReward(string questID)` → 완료 확인 → GiveReward → 이벤트 발행
-  - `GiveReward(QuestReward reward)` → PlayerInfoManager.AddGold/AddExp + CompanionManager.AddCompanion
-  - `ReportTalktoNPC(string npcID)` → Talk 타입 퀘스트 진행
-  - `ReportKill(string targetID)` → Kill 타입 퀘스트 진행 (미구현)
-  - `ReportReach(string targetID)` → Explore 타입 퀘스트 진행 (미구현)
+  - `ClaimReward(string questID)` → 완료 확인 → GetReward → 이벤트 발행
+  - `GetReward(QuestData qd)` → _rewards 리스트 순회하며 gold/exp/companion/item 지급
+  - `ReportTalktoNPC(string npcID)` → Talk 타입 퀘스트 진행 (_targetId로 매칭)
+  - `ReportKill(string enemyID)` → Kill 타입 퀘스트 진행 (_targetId로 매칭)
+  - `ReportReach(string locationID)` → Explore 타입 퀘스트 진행 (_targetId로 매칭)
   - `GetSaveData()` → QuestSaveData
   - `ApplyData(QuestSaveData data)` → 세이브 데이터로 상태 복원 후 OnQuestListChanged 발행
 - 이벤트:
   - `Action OnQuestListChanged`
-  - `Action<string, int> OnQuestProgressUpdate` (questID, currentProgress)
+  - `Action<QuestState> OnQuestProgressUpdate` (QuestState)
   - `Action<string> OnQuestRewardClaimed` (questID)
 
 ### PlayerInfoManager
@@ -108,9 +109,20 @@
   - `List<string> _ownedCompanions` (언락된 동료 ID 목록)
   - `List<Transform> _lineA`, `List<Transform> _lineB` (줄 배치 위치)
 - 주요 메서드:
-  - `AddCompanion(string companionID)` → 동료 언락 + SpawnCompanion
-  - `SpawnCompanion(string companionID)` → CompanionDatabase에서 데이터 조회 후 Instantiate
+  - `AddCompanion(CompanionData data)` → 동료 언락 + SpawnCompanion
+  - `SpawnCompanion(CompanionData data)` → Resources.Load(data._companionPrefabPath)로 프리팹 로드 후 Instantiate
   - `SetFacingDirection(Vector2 direction)` → 동료들 방향 전환
+
+### DataManager (싱글톤, MonoBehaviour) - DataManager.cs
+- 역할: JSON 로드 + 역직렬화 + Database 인스턴스 생성 + 데이터 분배
+- Main 씬 Hierarchy에 배치
+- 필드:
+  - `bool IsLoaded` (읽기전용 프로퍼티)
+- 주요 메서드:
+  - `LoadAllDataAsync(Action<float, string> onProgress)` → 코루틴, Database 인스턴스 생성 → JSON 로드 → ApplyData → 프로그레스 콜백
+  - `LoadTable<T>(string tableName)` → Resources.Load로 JSON 로드 → Newtonsoft로 List<T> 역직렬화
+- 로드 순서: DialogueTable → QuestTable → RewardTable → NpcTable → CompanionTable
+- 라이브러리: Newtonsoft Json.NET (com.unity.nuget.newtonsoft-json)
 
 ---
 
@@ -135,6 +147,74 @@
   - `_isJoystickActive == false` → `Input.GetAxisRaw("Horizontal/Vertical")`로 4방향 이동
   - 수직 입력 우선 (vertical != 0이면 horizontal 무시)
 - 단축키: `KeyCode.I` → ToggleInventory, `KeyCode.Q` → ToggleQuest
+- 대화 중 입력: IsInputLock 상태에서 Space/E → `UIManager.AdvanceDialogue()` 호출
+- 전투: AutoAttack 컴포넌트를 Inspector에서 추가 (코드 수정 불필요)
+
+---
+
+## 전투 시스템
+
+### 전투 방식
+- 근접 자동공격: 범위 내 가장 가까운 적을 쿨타임 기반으로 자동 타격
+- 플레이어 + 동료 모두 동일한 AutoAttack 컴포넌트로 전투 참여
+- 적 사망 시 QuestManager.ReportKill(enemyId) 호출로 Kill 퀘스트 연동
+
+### IDamageable (인터페이스) - IDamageable.cs
+- `void TakeDamage(int damage)`
+- `bool IsDead { get; }`
+- 역할: HP를 가진 모든 대상의 공통 인터페이스 (확장 시 플레이어 피격에도 사용 가능)
+
+### EnemyController - EnemyController.cs
+- 역할: 적 HP, 피격, 사망 처리
+- 구현: IDamageable
+- 필드:
+  - `string _enemyId` (SerializeField, 퀘스트 _targetId와 매칭)
+  - `int _maxHp` (SerializeField)
+  - `int _currentHp` (런타임)
+- 프로퍼티:
+  - `string EnemyId` (읽기전용)
+  - `bool IsDead` (읽기전용, _currentHp <= 0)
+- 이벤트:
+  - `Action<EnemyController> OnDeath`
+- 주요 메서드:
+  - `TakeDamage(int damage)` → HP 감소 → 0 이하 시 Die 호출
+  - `Die()` → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy
+- 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp 설정
+- 레이어: "Enemy" 레이어 필수 (AutoAttack 탐지용)
+
+### AutoAttack - AutoAttack.cs
+- 역할: 범위 내 적 자동 탐지 + 쿨타임 공격 (플레이어/동료 공용 컴포넌트)
+- 필드:
+  - `float _attackRange` (SerializeField, 기본 1.5f)
+  - `int _attackDamage` (SerializeField, 기본 3)
+  - `float _attackCooldown` (SerializeField, 기본 1.0f)
+  - `LayerMask _enemyLayer` (SerializeField)
+  - `float _lastAttackTime` (런타임)
+- 주요 메서드:
+  - `Update()` → InputLock 체크 → 쿨타임 체크 → FindClosestEnemy → Attack
+  - `FindClosestEnemy()` → Physics2D.OverlapCircleAll로 범위 내 적 탐색 → 가장 가까운 적 반환
+  - `Attack(EnemyController target)` → 쿨타임 갱신 → TakeDamage 호출
+- Inspector 설정:
+  - Player 오브젝트에 AutoAttack 추가 → _enemyLayer에 "Enemy" 레이어 지정
+  - Companion 프리팹에 AutoAttack 추가 → 동일 설정
+- IsInputLock 상태에서 공격 중단
+
+---
+
+## NPC 시스템
+
+### NPCController - NPCController.cs
+- 역할: 맵에 배치된 NPC의 상호작용 처리
+- 상속: InteractionController
+- 필드:
+  - `string _npcId` (SerializeField, Inspector에서 ID 입력)
+  - `NpcData _npcData` (런타임에 NpcDatabase에서 조회)
+  - `string _npcName`
+- 주요 메서드:
+  - `Init()` → NpcDatabase.Instance.GetNpcById(_npcId)로 데이터 조회
+  - `OnInteract()` → _npcData가 null이면 Init 호출 (지연 초기화) → 퀘스트 시작/대화 처리
+- NPC 배치 방식: 맵 프리팹에 NPC 오브젝트 직접 배치, Inspector에서 _npcId만 입력
+- 데이터(이름, 대화, 퀘스트)는 엑셀/NpcDatabase에서 관리
 
 ---
 
@@ -186,13 +266,12 @@
 - `string _line` ([TextArea] 대사 텍스트)
 - 역할: 한 줄의 대사 데이터, 줄마다 화자/타입 변경 가능 (NPC↔플레이어 교차 대화 지원)
 
-### DialogueData (ScriptableObject) - DialogueData.cs
-- `string _dialogueID`
+### DialogueData (일반 클래스) - DialogueData.cs
+- `string _dialogueId`
 - `List<DialogueLine> _lines`
-- CreateAssetMenu: Game/Dialogue/Dialogue Data
 
 ### DialogueUI - DialogueUI.cs
-- 역할: 대화 UI 표시/숨김 + 대화 진행 제어 (줄 큐 관리, 타이핑 연출, 입력 처리) 통합
+- 역할: 대화 UI 표시/숨김 + 대화 진행 제어 (줄 큐 관리, 타이핑 연출) 통합
 - 필드:
   - `GameObject _dialoguePanel` (SerializeField, 대화창 패널)
   - `TextMeshProUGUI _dialogueText` (SerializeField, 대사 텍스트)
@@ -208,16 +287,17 @@
   - `bool IsVisible` (읽기전용 프로퍼티)
 - 주요 메서드:
   - `StartDialogue(IEnumerable<DialogueLine> lines, Action onComplete)` → 큐 적재 → ShowNextLine
+  - `AdvanceDialogue()` → 외부 입력 진입점 (PlayerController 키보드, 터치 버튼 공용) → HandleAdvance 호출
   - `ShowNextLine()` → 큐에서 DialogueLine Dequeue → Show(빈 텍스트) → TypeLine 코루틴 시작
   - `Show(string name, string line, DialogueType dialogueType)` → 패널/터치버튼 활성화, System이면 이름 영역 숨김 (private)
   - `TypeLine(string fullText)` → 코루틴, 한 글자씩 _dialogueText 갱신 (WaitForSeconds)
-  - `HandleAdvance()` → _isTyping이면 CompleteTyping, 아니면 ShowNextLine
-  - `CompleteTyping()` → 코루틴 중단 → _fullText로 즉시 전체 표시
-  - `OnDialogueClicked()` → 터치 버튼 onClick에서 호출 → HandleAdvance (private)
+  - `HandleAdvance()` → _isTyping이면 CompleteTyping, 아니면 ShowNextLine (private)
+  - `CompleteTyping()` → 코루틴 중단 → _fullText로 즉시 전체 표시 (private)
+  - `OnDialogueClicked()` → 터치 버튼 onClick에서 호출 → AdvanceDialogue (private)
   - `EndDialogue()` → 코루틴 정리 → Hide → onComplete 콜백 (private)
   - `Hide()` → 패널/터치버튼 비활성화 (private)
 - Awake에서 _touchButton.onClick에 OnDialogueClicked 리스너 등록 + Hide
-- Update에서 키보드 입력(Space/E) → HandleAdvance
+- Update 없음 — 키보드 입력은 PlayerController가 담당, 터치 입력은 _touchButton이 담당
 - 대화 넘기기 흐름:
   - 타이핑 중 입력 → 즉시 전체 표시 (CompleteTyping)
   - 타이핑 완료 후 입력 → 다음 줄 (ShowNextLine)
@@ -226,14 +306,6 @@
   - _touchButton: Image(alpha=0), Raycast Target=ON, Stretch 전체화면, Button Transition=None
   - _touchButton은 _dialoguePanel과 함께 활성화/비활성화
   - DialogueUI가 속한 Canvas의 Sort Order를 조이스틱 Canvas보다 높게 설정
-
-### DialogueDatabase (싱글톤) - DialogueDatabase.cs
-- 역할: DialogueData 조회
-- 필드:
-  - `List<DialogueData> _dialogueList` (SerializeField, Inspector 등록)
-  - `Dictionary<string, DialogueData> _dicDialogue` (Awake에서 List → Dictionary 변환)
-- 주요 메서드:
-  - `GetDialogueByID(string dialogueID)` → DialogueData (Dictionary 조회, 없으면 LogWarning + null)
 
 ### 대화 호출 흐름
 ```
@@ -248,6 +320,142 @@ GameManager.StartDialogue(DialogueData, onComplete)
             → EndDialogue() → Hide() → onComplete
               → GameManager.EndDialogue() → SetLockInput(false)
 ```
+
+---
+
+## 데이터 파싱 시스템 (엑셀 → JSON → 게임 데이터)
+
+### 파일 구조
+```
+Assets/
+├── Data/
+│   └── Excel/                    ← 엑셀 원본 (.xlsx, 에디터 전용)
+│       ├── DialogueTable.xlsx
+│       ├── QuestTable.xlsx
+│       ├── RewardTable.xlsx
+│       ├── NpcTable.xlsx
+│       └── CompanionTable.xlsx
+├── Resources/
+│   └── Json/                     ← 자동 생성되는 JSON (빌드 포함)
+├── Plugins/
+│   └── Editor/
+│       └── EPPlus.dll            ← 엑셀 파싱 라이브러리 (Editor Only, v4.5.3.3 LGPL)
+└── Scripts/
+    ├── Data/
+    │   ├── TableData.cs          ← 모든 테이블 데이터 클래스 통합
+    │   └── DataManager.cs        ← JSON 로드 + Database 생성/분배
+    └── Editor/
+        ├── ExcelToJsonConverter.cs  ← 엑셀 → JSON 변환 + 필드명 검증
+        └── ExcelPostprocessor.cs    ← 엑셀 변경 감지 → 자동 변환
+```
+
+### 에디터 타임 흐름
+```
+엑셀 수정 → Unity로 돌아옴
+  → ExcelPostprocessor(AssetPostprocessor)가 Excel/ 폴더 변경 감지
+    → ExcelToJsonConverter.ConvertAll() 자동 실행
+      → 첫 행 변수명과 C# TableData 클래스 필드명 리플렉션 비교 검증
+      → 불일치 시 Console에 경고
+      → JSON 파일 생성 (Resources/Json/ 폴더에 저장)
+      → enum 값은 StringEnumConverter로 문자열 저장 ("NPC", "Talk" 등)
+수동 변환: Unity 메뉴 → Tools → Convert All Excel to JSON
+```
+
+### 런타임 흐름
+```
+로딩 씬 (SceneLoader.LoadSceneRoutine)
+  → 매니저 Awake/Start 완료 대기
+  → DataManager.LoadAllDataAsync() 호출
+    → Database 인스턴스 생성 (CreateInstance)
+    → JSON 파일 로드 (Resources.Load<TextAsset>)
+    → Newtonsoft JsonConvert로 List<TableData> 역직렬화
+    → 각 Database에 ApplyData로 전달
+      → Database가 자체 가공 (그룹핑, 매칭 등) → Dictionary 적재
+  → Main 씬 진입
+```
+
+### TableData 클래스 (TableData.cs 통합 파일)
+- `DialogueTableData`: uniqueId, dialogueId, speakerName, dialogueType(enum), line
+- `QuestTableData`: uniqueId, title, description, goalType(enum), goalCount, questGiverNpcId, targetId, startDialogueId, progressDialogueId, completedDialogueId, nextQuestId, rewardGroupId
+- `RewardTableData`: uniqueId, rewardGroupId, gold, exp, companionId, itemId, itemCount
+- `NpcTableData`: uniqueId, npcName, defaultDialogueId, questId
+- `CompanionTableData`: uniqueId, companionName, skinName, companionPrefabPath, followSpeed, followDistance
+
+### ExcelToJsonConverter - ExcelToJsonConverter.cs (#if UNITY_EDITOR)
+- 역할: 엑셀 → JSON 변환 + 필드명 검증
+- `TableTypeMap`: Dictionary<string, Type> — 엑셀 파일명과 TableData 클래스 매핑, 새 테이블 추가 시 여기에 등록
+- `ConvertAll()` → [MenuItem("Tools/Convert All Excel to JSON")], Excel 폴더 순회 → ConvertExcel 호출
+- `ConvertExcel()` → EPPlus로 엑셀 로드 → 첫 행 변수명 추출 → ValidateHeaders → 행 단위 파싱 → JSON 저장
+- `ConvertValue()` → 셀 값을 C# 필드 타입(string/int/float/bool/enum)에 맞게 변환, enum은 대소문자 무시
+- `ValidateHeaders()` → 엑셀 칼럼명 ↔ C# 클래스 필드명 양방향 검증, 불일치 시 경고
+- 라이브러리: EPPlus 4.5.3.3 (LGPL, 에디터 전용, 빌드 미포함)
+
+### ExcelPostprocessor - ExcelPostprocessor.cs (#if UNITY_EDITOR)
+- 역할: Assets/Data/Excel/ 폴더의 .xlsx 변경 감지 → ConvertAll 자동 실행
+- AssetPostprocessor 상속, Unity Editor 시작 시 자동 등록
+
+---
+
+## 데이터베이스 (일반 C# 클래스 싱글톤)
+
+Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필요. DataManager가 CreateInstance로 생성.
+
+### DialogueDatabase - DialogueDatabase.cs
+- 역할: DialogueData 조회
+- `CreateInstance()` → static, Instance 생성
+- `ApplyData(List<DialogueTableData>)` → dialogueId로 그룹핑 → DialogueData 생성 → Dictionary 적재
+- `GetDialogueById(string dialogueId)` → DialogueData
+
+### QuestDatabase - QuestDatabase.cs
+- 역할: QuestData 조회
+- `CreateInstance()` → static, Instance 생성
+- `ApplyData(List<QuestTableData>, List<RewardTableData>)` → rewardGroupId로 보상 그룹핑 → QuestData 생성 + 보상 매칭 → Dictionary 적재
+- `GetQuestByID(string questId)` → QuestData
+- `GetAllQuests()` → IEnumerable<QuestData>
+
+### NpcDatabase - NpcDatabase.cs
+- 역할: NpcData 조회
+- `CreateInstance()` → static, Instance 생성
+- `ApplyData(List<NpcTableData>)` → NpcData 생성 → Dictionary 적재
+- `GetNpcById(string npcId)` → NpcData
+
+### CompanionDatabase - CompanionDatabase.cs
+- 역할: CompanionData 조회
+- `CreateInstance()` → static, Instance 생성
+- `ApplyData(List<CompanionTableData>)` → CompanionData 생성 → Dictionary 적재
+- `GetCompanionById(string companionId)` → CompanionData
+
+---
+
+## 데이터 클래스 (일반 C# 클래스)
+
+### QuestData - QuestData.cs
+- `string _questId`, `string _questGiverNpcId`, `string _title`, `string _description`
+- `string _startDialogueId`, `string _progressDialogueId`, `string _completedDialogueId`
+- `string _targetId`, `QuestGoalType _goalType`, `int _goalCount`
+- `string _rewardGroupId`, `List<QuestReward> _rewards`
+- `string _nextQuestId`
+
+### QuestState (런타임 상태)
+- `QuestData _data`, `int _currentProgress`, `bool _isCompleted`
+- `AddProgress(int amount = 1)` → bool (완료 여부 반환, 이미 완료면 false)
+
+### QuestReward - QuestManager.cs 내부 정의
+- `int _gold`, `int _exp`, `string _companionId`, `string _itemId`, `int _itemCount`
+
+### QuestGoalType (enum) - QuestData.cs 상단 정의
+- None, Kill, Collect, Talk, Explore, AcquireItem
+
+### NpcData - NpcData.cs
+- `string _npcId`, `string _npcName`, `string _defaultDialogueId`, `string _questId`
+
+### CompanionData - CompanionData.cs
+- `string _companionId`, `string _companionName`, `string _skinName`
+- `string _companionPrefabPath` (Resources 기준 경로, 런타임에 Resources.Load로 프리팹 로드)
+- `float _followSpeed`, `float _followDistance`
+
+### PlayerInfo (struct)
+- `string _name`, `int _level`, `int _exp`, `int _gold`
 
 ---
 
@@ -271,7 +479,7 @@ GameManager.StartDialogue(DialogueData, onComplete)
 - Inspector 설정:
   - JoystickArea: Image(alpha=0), Raycast Target=ON, 전체화면 RectTransform
   - JoystickRoot: 기본 비활성, Background(반투명 원) + Handle(작은 원) 자식으로 구성
-- 주의: 부모 Canvas의 Render Mode가 반드시 **Screen Space - Overlay**여야 함. Screen Space - Camera 사용 시 좌표계가 뒤집혀 조이스틱 방향과 캐릭터 이동 방향이 불일치함
+- 주의: 부모 Canvas의 Render Mode가 반드시 **Screen Space - Overlay**여야 함
 - 주의: 대화 중 조이스틱 비주얼이 뜨지 않도록 OnPointerDown에서 `GameManager.Instance.IsInputLock` 체크 추가 권장
 
 ### QuestUI
@@ -288,8 +496,9 @@ GameManager.StartDialogue(DialogueData, onComplete)
 ### SceneLoader
 - 역할: 씬 전환 + 로딩 오버레이 총괄
 - DontDestroyOnLoad, Start 씬에 배치
-- 새 게임 시: Main 씬 로드 → GameManager.Start()에서 LoadFirstMap
-- 이어하기 시: `GameSystem.Load()` → Main 씬 로드 → `GameManager.LoadGame(data)` 호출
+- 새 게임 시: Main 씬 로드 → 매니저 Awake 대기 → DataManager.LoadAllDataAsync → LoadFirstMap
+- 이어하기 시: `GameSystem.Load()` → Main 씬 로드 → DataManager.LoadAllDataAsync → `GameManager.LoadGame(data)` 호출
+- 로딩 순서: 로딩UI 표시 → 세이브 로드(이어하기) → 씬 비동기 로드 → 씬 활성화 → 매니저 대기 → **게임 데이터 로드 (DataManager)** → 세이브 적용(이어하기) → 완료
 
 ### LoadingUI
 - 역할: 로딩바 + 퍼센트 텍스트 + 상태 텍스트
@@ -299,42 +508,6 @@ GameManager.StartDialogue(DialogueData, onComplete)
 - 역할: 시작화면 버튼 (시작/이어하기/옵션/끝내기)
 - Start()에서 `GameSystem.Exists()`로 이어하기 버튼 interactable 결정
 - OnQuit() → GameManager.SaveGame() → Application.Quit()
-
----
-
-## 데이터베이스 (싱글톤)
-
-### QuestDatabase
-- `GetQuestByID(string questID)` → QuestData
-- `GetAllQuests()` → IEnumerable<QuestData>
-- Inspector에서 List<QuestData> 등록, Awake에서 Dictionary로 변환
-
-### CompanionDatabase (코드 미공유)
-- `GetCompanionByID(string companionID)` → CompanionData
-
----
-
-## 데이터 클래스
-
-### QuestData (ScriptableObject 예정, 현재 일반 클래스)
-- `string _questID`, `string _title`, `string _description`, `int _goalCount`
-- `QuestGoalType _goalType`, `string _targetID`, `string _npcID`
-- `string _startDialogueID`, `string _progressDialogueID`, `string _completedDialogueID`
-- `string _nextQuestID`
-- `QuestReward _reward`
-
-### QuestState (런타임 상태)
-- `QuestData _data`, `int _currentProgress`, `bool _isCompleted`
-- `AddProgress(int amount = 1)` → bool (완료 여부 반환, 이미 완료면 false)
-
-### QuestReward
-- `int _gold`, `int _exp`, `string _companionID`, `string _itemID`
-
-### QuestGoalType (enum)
-- None, Kill, Collect, Talk, Explore, AcquireItem
-
-### PlayerInfo (struct)
-- `string _name`, `int _level`, `int _exp`, `int _gold`
 
 ---
 
@@ -380,9 +553,9 @@ GameManager.StartDialogue(DialogueData, onComplete)
 | 12 | 게임 진행 정보 저장/종료 (JSON) | ✅ 완료 |
 | 13 | WebGL 빌드하여 웹에 배포 | 보류 |
 | 14 | 모바일/WebGL 가상 조이스틱 입력 | ✅ 완료 |
-| 15 | 엑셀 → 게임 데이터 파싱 시스템 | 미구현 |
+| 15 | 엑셀 → 게임 데이터 파싱 시스템 | ✅ 완료 |
 | 16 | 다이얼로그 시스템 확장 (독백/시스템 메시지/타이핑 연출/터치 입력) | ✅ 완료 |
-| 17 | ReportKill/ReportReach 완성 + 전투 시스템 기초 | 미구현 |
+| 17 | ReportKill/ReportReach 완성 + 전투 시스템 기초 | ✅ 완료 |
 | 18 | ReportCollect/AcquireItem 추가 | 미구현 |
 | 19 | AudioManager (BGM/SFX) + 옵션 UI 연동 | 미구현 |
 | 20 | 인벤토리 아이템 획득/사용/장착 + _itemID 보상 지급 | 미구현 |
@@ -394,10 +567,19 @@ GameManager.StartDialogue(DialogueData, onComplete)
 - 이벤트는 매니저에 선언, UI가 구독
 - UI 슬롯은 매니저 직접 참조 안 함 → 부모 UI가 콜백으로 중개
 - DontDestroyOnLoad 매니저는 현재 Main 씬에 배치 (나중에 Boot 씬 분리 가능)
-- **모든 매니저는 Main 씬 Hierarchy에 오브젝트로 배치되어야 함** (누락 시 Instance null 에러 발생)
+- **DataManager만 Main 씬 Hierarchy에 배치** (MonoBehaviour, 코루틴 사용)
+- **Database는 일반 C# 클래스 싱글톤** — DataManager가 CreateInstance로 생성, Hierarchy 배치 불필요
+- MonoBehaviour 사용 기준: Unity 엔진 기능(렌더링, 물리, 코루틴, Inspector)이 필요한 경우만
 - Save/Load 진입점은 GameManager, 실제 파일 I/O는 GameSystem(static 유틸)에 위임
 - 저장 대상 클래스는 필드명과 타입을 MD에 기록 (파일 재요청 방지)
 - 런타임 클래스(QuestState 등)는 직렬화 전용 클래스로 분리 (QuestData 등 참조 타입 제거)
-- Inspector에서 Dictionary 직렬화 불가 → List로 등록 후 Awake에서 Dictionary 변환
+- 게임 데이터(불변)는 엑셀 → JSON → Database 경로로 관리, ScriptableObject 미사용
+- TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 클래스는 Database가 가공하여 생성
+- 새 테이블 추가 시: TableData.cs에 클래스 추가 → ExcelToJsonConverter.TableTypeMap에 등록 → DataManager.LoadAllDataAsync에 로드 코드 추가 → Database 구현
 - 플랫폼 분기는 #if 전처리기 사용, 조이스틱은 PC에서 자동 비활성화
-- 매니저 간 단순 메서드 호출은 허용 (ex. GameManager.Instance.SaveGame()), 내부 데이터 직접 조작은 금지 (ex. GameManager.Instance._someData = value)
+- 매니저 간 단순 메서드 호출은 허용, 내부 데이터 직접 조작은 금지
+- NPC는 맵 프리팹에 직접 배치, Inspector에서 _npcId만 입력, 데이터는 NpcDatabase에서 지연 초기화로 조회
+- 프리팹 참조가 필요한 경우 Resources 경로 문자열로 관리 (CompanionData._companionPrefabPath)
+- 전투는 AutoAttack 컴포넌트 기반 — 플레이어/동료 코드 수정 없이 Inspector에서 추가
+- 퀘스트 목표 대상 매칭은 _targetId 필드로 통일 (Talk=NPC ID, Kill=Enemy ID, Explore=Location ID)
+- 적은 맵 프리팹에 직접 배치, "Enemy" 레이어 필수

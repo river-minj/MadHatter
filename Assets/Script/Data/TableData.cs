@@ -20,6 +20,7 @@ public class QuestTableData
 	public int goalCount;
 	public string questGiverNpcId;
 	public string questCompleterNpcId;
+	public string targetId;
 	public string rewardGroupId;
 	public string startDialogueId;
 	public string progressDialogueId;

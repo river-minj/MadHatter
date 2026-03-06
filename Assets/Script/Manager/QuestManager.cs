@@ -224,7 +224,7 @@ public class QuestManager : MonoBehaviour
 		return _setCompletedQuest.Contains(questId);
 	}
 
-	public void ReportTalktoNPC(string npcID)
+	public void ReportTalktoNPC(string npcId)
 	{
 		foreach(var quest in _dicActiveQuest)
 		{
@@ -235,7 +235,7 @@ public class QuestManager : MonoBehaviour
 			if (qs._isCompleted == true)
 				continue;
 
-			if (qs._data._questCompleterNpcId != npcID)
+			if (qs._data._targetId != npcId)
 				continue;
 
 			if (qs._data._goalType != QuestGoalType.Talk)
@@ -245,7 +245,7 @@ public class QuestManager : MonoBehaviour
 
 			OnQuestProgressUpdate?.Invoke(qs);
 	
-			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcID}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
 
 			if (completed)
 			{
@@ -254,23 +254,32 @@ public class QuestManager : MonoBehaviour
 		}
 	}
 
-	//to do : 추후 개발
-	public void ReportKill(string monsterID)
+	public void ReportKill(string enemyId)
 	{
-		foreach (var questID in _setStartedQuest)
-		{
-			QuestState qs = _dicActiveQuest[questID];
-			if (qs != null && qs._data._goalType == QuestGoalType.Kill)
-			{
-				bool completed = qs.AddProgress();
 
-				if (completed)
-				{
-					OnQuestListChanged?.Invoke();
-					Debug.Log($"[QuestManager] ReportKill: {monsterID}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
-				}
+		foreach (var quest in _dicActiveQuest)
+		{
+			QuestState qs = quest.Value;
+			if (qs == null || qs._isCompleted)
+				continue;
+
+			if (qs._data._goalType != QuestGoalType.Kill)
+				continue;
+
+			if (qs._data._targetId != enemyId)
+				continue;
+
+			bool completed = qs.AddProgress();
+			OnQuestProgressUpdate?.Invoke(qs);
+
+			Debug.Log($"[QuestManager] ReportKill: {enemyId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+
+			if (completed)
+			{
+				OnQuestListChanged?.Invoke();
 			}
 		}
+
 	}
 
 	//to do : 추후 개발

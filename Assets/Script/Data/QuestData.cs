@@ -23,7 +23,7 @@ public class QuestData
 	public string _progressDialogueId;
 	public string _completedDialogueId;
 
-	public string _questCompleterNpcId;
+	public string _targetId; //몬스터 or 파밍 아이템 or 대화 npc
 	public QuestGoalType _goalType;
 	public int _goalCount;
 
