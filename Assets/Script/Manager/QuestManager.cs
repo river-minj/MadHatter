@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 //독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
 public class QuestState
@@ -283,21 +284,30 @@ public class QuestManager : MonoBehaviour
 	}
 
 	//to do : 추후 개발
-	public void ReportReach(string locationID)
+	public void ReportReach(string locationId)
 	{
-		foreach (var questID in _setStartedQuest)
+		foreach (var quest in _dicActiveQuest)
 		{
-			QuestState qs = _dicActiveQuest[questID];
-			if (qs._data._goalType == QuestGoalType.Explore && qs._data._completedDialogueId == locationID)
-			{
-				bool completed = qs.AddProgress();
+			QuestState qs = quest.Value;
+			if (qs == null || qs._isCompleted)
+				continue;
+			if (qs._data._targetId != locationId)
+				continue;
 
-				if (completed)
-				{
-					OnQuestListChanged?.Invoke();
-				}
+			if (qs._data._goalType != QuestGoalType.Explore)
+				continue;
+
+			bool completed = qs.AddProgress();
+			OnQuestProgressUpdate?.Invoke(qs);
+
+			Debug.Log($"[QuestManager] ReportReach: {locationId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+
+			if (completed)
+			{
+				OnQuestListChanged?.Invoke();
 			}
 		}
+	
 	}
 
 	public void ClaimReward(string questId)

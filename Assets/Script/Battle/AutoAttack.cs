@@ -7,7 +7,7 @@ public class AutoAttack : MonoBehaviour
 	[SerializeField] private float _attackCooldown = 1.0f;
 	[SerializeField] private LayerMask _enemyLayer;
 
-	private float _lastAttackTime;
+	private float _lastAttackTime; //마지막 공격 시간 - 쿨타임 계산용
 
 	private void Update()
 	{
@@ -26,6 +26,7 @@ public class AutoAttack : MonoBehaviour
 
 	private EnemyController FindClosestEnemy()
 	{
+		//자신 위치 중심으로 반경 원형 탐색 + 마스크로 enemy 레이어만 탐색 + 범위 내의 모든 적 collider을 반환
 		Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _attackRange, _enemyLayer);
 
 		EnemyController closest = null;
