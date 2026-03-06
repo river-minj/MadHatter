@@ -165,22 +165,106 @@
 - 역할: HP를 가진 모든 대상의 공통 인터페이스 (확장 시 플레이어 피격에도 사용 가능)
 
 ### EnemyController - EnemyController.cs
-- 역할: 적 HP, 피격, 사망 처리
+- 역할: 적 데이터 보유 + 실행 담당 (HP, 이동, 공격, 사망)
 - 구현: IDamageable
 - 필드:
   - `string _enemyId` (SerializeField, 퀘스트 _targetId와 매칭)
   - `int _maxHp` (SerializeField)
   - `int _currentHp` (런타임)
+  - `EnemyFSM _fsm` (GetComponent)
+  - `Rigidbody2D _rb` (GetComponent)
+  - `Animator _animator` (GetComponent)
 - 프로퍼티:
   - `string EnemyId` (읽기전용)
   - `bool IsDead` (읽기전용, _currentHp <= 0)
 - 이벤트:
   - `Action<EnemyController> OnDeath`
 - 주요 메서드:
-  - `TakeDamage(int damage)` → HP 감소 → 0 이하 시 Die 호출
+  - `TakeDamage(int damage)` → HP 감소 → 0 이하 시 Die 직접 호출, 아니면 FSM.OnDamaged(currentHp)
+  - `MoveTo(Vector2 direction)` → Rigidbody2D.velocity로 이동 (State에서 호출)
+  - `StopMove()` → velocity 초기화 (State에서 호출)
+  - `ApplyKnockback(Vector2 direction, float force)` → Impulse 넉백 (HitState에서 호출)
+  - `Attack(Transform target)` → 공격 실행 (AttackState에서 호출, TODO: IDamageable.TakeDamage)
   - `Die()` → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy
+- 초기화: Awake에서 컴포넌트 참조, Start에서 FSM.Init(this) 호출
 - 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp 설정
-- 레이어: "Enemy" 레이어 필수 (AutoAttack 탐지용)
+- 필수 컴포넌트: EnemyFSM, Rigidbody2D (Gravity Scale 0), "Enemy" 레이어
+
+### EnemyFSM - EnemyFSM.cs
+- 역할: FSM 상태 전환 관리자, 공유 데이터 보유 (MonoBehaviour)
+- 필드:
+  - `float _detectRange = 7f` (SerializeField, 감지 범위)
+  - `float _attackRange = 1.5f` (SerializeField, 공격 범위)
+  - `float _moveSpeed = 2f` (SerializeField)
+  - `int _attackDamage = 3` (SerializeField)
+  - `float _attackCooldown = 1.0f` (SerializeField)
+  - `float _knockbackForce = 3f` (SerializeField)
+  - `float _hitStunDuration = 0.3f` (SerializeField)
+  - `List<Transform> _patrolPoints` (SerializeField, 선택적 순찰 경로)
+  - `Vector3 OriginPosition` (Awake에서 저장, 읽기전용 프로퍼티)
+  - `Transform Target` (플레이어, 읽기전용 프로퍼티)
+  - `IEnemyState _currentState` (현재 활성 상태)
+- 상태 인스턴스 (읽기전용 프로퍼티):
+  - `IdleState`, `ChaseState`, `AttackState`, `HitState`, `ReturnState`
+- 주요 메서드:
+  - `Init(EnemyController controller)` → State 인스턴스 생성 (FSM+Controller 참조 전달), 플레이어 태그 Find, 초기 상태 Idle
+  - `ChangeState(IEnemyState newState)` → Exit → 교체 → Enter
+  - `OnDamaged(int currentHp)` → HP 0 이하면 무시(Controller가 Die 처리), 아니면 HitState 전환
+  - `GetDistanceToTarget()` → 타겟과의 거리 반환 (State 공용)
+- Update에서 `_currentState?.Update()` 호출 (switch문 없음)
+
+### IEnemyState (인터페이스) - IEnemyState.cs
+- `void Enter()` — 상태 진입 시 1회 호출
+- `void Update()` — 상태 활성 중 매 프레임 호출
+- `void Exit()` — 상태 퇴장 시 1회 호출
+
+### EnemyStates - EnemyStates.cs (5개 상태 클래스 통합)
+- 모든 State는 일반 C# 클래스 (MonoBehaviour 아님)
+- 생성자에서 EnemyFSM + EnemyController 참조를 받음
+- 참조 방향: State → FSM (ChangeState 요청, 공유 데이터 읽기), State → Controller (실행 요청)
+
+#### EnemyIdleState (Idle + Patrol 통합)
+- 순찰 포인트가 있으면 웨이포인트 순회, 없으면 제자리 대기
+- 감지 범위에 플레이어 진입 시 → ChaseState 전환
+- 순찰: 웨이포인트 도착 → 대기(1초) → 다음 포인트 (순환)
+
+#### EnemyChaseState
+- 플레이어 방향으로 이동
+- 공격 범위 도달 시 → AttackState 전환
+- 감지 범위 이탈 시 → ReturnState 전환
+
+#### EnemyAttackState
+- 쿨타임 기반 공격, 진입 즉시 첫 공격 가능
+- Controller.Attack(target) 호출 (TODO: IDamageable 데미지 적용)
+- 공격 범위 이탈 시 → ChaseState, 감지 이탈 시 → ReturnState
+
+#### EnemyHitState
+- Enter에서 넉백 적용 (플레이어 반대 방향)
+- 경직 시간(_hitStunDuration) 동안 행동 불가
+- 경직 해제 후 감지 범위 내면 → ChaseState, 밖이면 → ReturnState
+
+#### EnemyReturnState
+- 원래 위치(OriginPosition)로 이동
+- 도착 시 → IdleState 전환
+- 복귀 중 플레이어 재감지 시 → ChaseState 전환
+
+### 적 AI 상태 흐름도
+```
+Idle/Patrol ──감지 범위 진입──→ Chase ──공격 범위 도달──→ Attack
+    ↑                            ↓                         ↓
+    └──── Return ←──감지 범위 이탈──┴─────감지 범위 이탈────┘
+              ↑
+        Hit (어떤 상태에서든 피격 시 진입) → 경직 해제 후 Chase 또는 Return
+```
+
+### 참조 방향 정리
+```
+EnemyController → EnemyFSM : OnDamaged 알림, Init 호출
+EnemyFSM → EnemyStates : 현재 상태 Update 호출
+EnemyStates → EnemyFSM : ChangeState 요청, 공유 데이터 읽기
+EnemyStates → EnemyController : MoveTo, StopMove, Attack, ApplyKnockback 실행 요청
+```
+- FSM → Controller 직접 참조 없음 (피격 알림은 Controller→FSM 방향, 사망은 Controller가 직접 처리)
 
 ### AutoAttack - AutoAttack.cs
 - 역할: 범위 내 적 자동 탐지 + 쿨타임 공격 (플레이어/동료 공용 컴포넌트)
@@ -556,6 +640,7 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 | 15 | 엑셀 → 게임 데이터 파싱 시스템 | ✅ 완료 |
 | 16 | 다이얼로그 시스템 확장 (독백/시스템 메시지/타이핑 연출/터치 입력) | ✅ 완료 |
 | 17 | ReportKill/ReportReach 완성 + 전투 시스템 기초 | ✅ 완료 |
+| 17-1 | 적 AI FSM (Idle/Chase/Attack/Hit/Return) | ✅ 완료 |
 | 18 | ReportCollect/AcquireItem 추가 | 미구현 |
 | 19 | AudioManager (BGM/SFX) + 옵션 UI 연동 | 미구현 |
 | 20 | 인벤토리 아이템 획득/사용/장착 + _itemID 보상 지급 | 미구현 |
@@ -583,3 +668,6 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 - 전투는 AutoAttack 컴포넌트 기반 — 플레이어/동료 코드 수정 없이 Inspector에서 추가
 - 퀘스트 목표 대상 매칭은 _targetId 필드로 통일 (Talk=NPC ID, Kill=Enemy ID, Explore=Location ID)
 - 적은 맵 프리팹에 직접 배치, "Enemy" 레이어 필수
+- 적 AI는 FSM 패턴 사용 — EnemyController(데이터+실행) + EnemyFSM(상태 관리) + EnemyStates(행동 판단) 분리
+- FSM → Controller 직접 참조 금지, State가 Controller 실행 메서드를 호출하는 구조
+- State는 일반 C# 클래스 (MonoBehaviour 아님), FSM이 new로 생성
