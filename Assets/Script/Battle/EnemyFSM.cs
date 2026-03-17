@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using static EnemyReturnState;
 
 public class EnemyFSM : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class EnemyFSM : MonoBehaviour
 	public IEnemyState HitState { get; private set; }
 	public IEnemyState ReturnState { get; private set; }
 
+	public IEnemyState DieState { get; private set; }
+
 	private IEnemyState _currentState;
 	public IDamageable TargetDamageable { get; private set; }
 
@@ -68,6 +71,7 @@ public class EnemyFSM : MonoBehaviour
 		AttackState = new EnemyAttackState(this, controller);
 		HitState = new EnemyHitState(this, controller);
 		ReturnState = new EnemyReturnState(this, controller);
+		DieState = new EnemyDieState(this, controller);
 
 		// 플레이어를 타겟으로 설정
 		GameObject player = GameObject.FindGameObjectWithTag("Player");

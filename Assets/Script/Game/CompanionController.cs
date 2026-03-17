@@ -1,18 +1,16 @@
-﻿using Spine.Unity;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
 	[Header("Basic Info")]
 	[SerializeField] private CompanionData _companionData;
-	[SerializeField] private SkeletonAnimation _skel;
     [SerializeField] private float _moveSpeed = 3.0f; // 동료의 이동 속도
 
 	[Header("Follow Setting")]
 	public int _followIndex;
 	[SerializeField] private int _stepPerFollower = 6; // 한 동료가 몇 스텝 뒤를 따를지 (트레일 인덱스 간격)
 	
+	private SpineAnimator _spineAnimator;
 	private PlayerController _player;
     private Vector3 _targetPos;
 
@@ -33,10 +31,13 @@ public class CompanionController : MonoBehaviour
 		_isLineA = isLineA;
 		_indexInLine = lineIndex;
 
-		if (_skel != null)
+		_spineAnimator = GetComponent<SpineAnimator>();
+
+		var skel = _spineAnimator.Skeleton;
+		if (skel != null)
 		{
-			_skel.initialSkinName = _companionData._skinName;
-			_skel.Initialize(true);
+			skel.initialSkinName = _companionData._skinName;
+			skel.Initialize(true);
 		}
 
 		if(_player.CompanionAnchorA != null)
@@ -80,13 +81,9 @@ public class CompanionController : MonoBehaviour
 
 	public void SetFacingDirection(bool isRight)
 	{
-		if (_skel == null)
-		{
-			return;
-		}
-
-		float absScale = MathF.Abs(_skel.skeleton.ScaleX);
-		_skel.skeleton.ScaleX = isRight ? -absScale : absScale;
+		if (_spineAnimator == null) return;
+		Vector2 dir = isRight ? Vector2.right : Vector2.left;
+		_spineAnimator.SetFacing(dir);
 	}
 
 	private void CalculateTargetPosition(PlayerTrailRecorder recorder)

@@ -24,7 +24,7 @@ public class EnemyIdleState : IEnemyState
 	public void Enter()
 	{
 		_controller.StopMove();
-		_controller.PlayAnimation("idle");
+		_controller.Anim.PlayAnimation("idle");
 		_isWaiting = false;
 		_patrolWaitTimer = 0f;
 	}
@@ -63,15 +63,15 @@ public class EnemyIdleState : IEnemyState
 		Transform target = _fsm.PatrolPoints[_currentPatrolIndex];
 		Vector2 direction = (target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.PlayAnimation("run_1");
-		_controller.SetFacing(direction);
+		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.SetFacing(direction);
 
 		float distance = Vector2.Distance(_controller.transform.position, target.position);
 
 		if (distance < 0.2f)
 		{
 			_controller.StopMove();
-			_controller.PlayAnimation("idle");
+			_controller.Anim.PlayAnimation("idle");
 			_isWaiting = true;
 			_patrolWaitTimer = 0f;
 		}
@@ -99,6 +99,8 @@ public class EnemyChaseState : IEnemyState
 
 	public void Update()
 	{
+		//Debug.Log($"[ChaseState] dist: {_fsm.GetDistanceToTarget()}");
+
 		// 대상 사망 시 복귀
 		var targetDamageable = _fsm.TargetDamageable;
 		if (targetDamageable == null || targetDamageable.IsDead)
@@ -126,8 +128,8 @@ public class EnemyChaseState : IEnemyState
 		// 플레이어 방향으로 이동
 		Vector2 direction = (_fsm.Target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.PlayAnimation("run_1");
-		_controller.SetFacing(direction);
+		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.SetFacing(direction);
 	}
 
 	public void Exit()
@@ -163,6 +165,7 @@ public class EnemyAttackState : IEnemyState
 
 	public void Update()
 	{
+		//Debug.Log($"[AttackState] dist: {_fsm.GetDistanceToTarget()}, detectRange: {_fsm.DetectRange}");
 		float distance = _fsm.GetDistanceToTarget();
 
 		//대상 사망 시 복귀
@@ -192,8 +195,7 @@ public class EnemyAttackState : IEnemyState
 		{
 			_lastAttackTime = Time.time;
 
-			_controller.PlayAnimation("attack_melee", false);
-			_controller.Attack(_fsm.Target);
+			_controller.Anim.PlayAnimation("attack_melee", false);
 			_controller.Attack(_fsm.Target);
 		}
 	}
@@ -222,7 +224,7 @@ public class EnemyHitState : IEnemyState
 	{
 		_stunTimer = 0f;
 		_controller.StopMove();
-		_controller.PlayAnimation("knockback", false);
+		_controller.Anim.PlayAnimation("knockback", false);
 
 		// 타겟 반대 방향으로 넉백
 		if (_fsm.Target != null)
@@ -235,7 +237,7 @@ public class EnemyHitState : IEnemyState
 	public void Update()
 	{
 		_stunTimer += Time.deltaTime;
-
+		//Debug.Log($"[HitState] stunTimer: {_stunTimer} / {_fsm.HitStunDuration}");
 		if (_stunTimer >= _fsm.HitStunDuration)
 		{
 			// 경직 해제 → 감지 범위 내면 Chase, 밖이면 Return
@@ -280,8 +282,8 @@ public class EnemyReturnState : IEnemyState
 		// 원래 위치로 이동
 		Vector2 direction = (_fsm.OriginPosition - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.PlayAnimation("run_1");
-		_controller.SetFacing(direction);
+		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.SetFacing(direction);
 
 		// 도착 체크
 		float distance = Vector2.Distance(_controller.transform.position, _fsm.OriginPosition);
@@ -294,5 +296,26 @@ public class EnemyReturnState : IEnemyState
 	public void Exit()
 	{
 		_controller.StopMove();
+	}
+
+	// ============================================================
+	// Die 상태 (사망처리)
+	// ============================================================
+	public class EnemyDieState : IEnemyState
+	{
+		private EnemyFSM _fsm;
+		private EnemyController _controller;
+
+		public EnemyDieState(EnemyFSM fsm, EnemyController controller)
+		{
+			_fsm = fsm;
+			_controller = controller;
+		}
+
+		public void Enter() {
+			_controller.Anim.PlayAnimation("die", false);
+		}
+		public void Update() { }  // 아무것도 안 함 — 상태 전환 없음
+		public void Exit() { }
 	}
 }

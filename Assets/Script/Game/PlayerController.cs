@@ -1,5 +1,6 @@
 ﻿using Spine.Unity;
 using System.Collections;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IDamageable
@@ -7,13 +8,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Start is called before the first frame update
 	public float _moveSpeed = 5f;
 
-	[SerializeField]
-	private SkeletonAnimation _skel;
-	[SerializeField]
-	private Rigidbody2D _rb;
+	[SerializeField] private Rigidbody2D _rb;
 
 	private Vector2 _moveDir;
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
+	private SpineAnimator _spineAnimator;
 
 	//동료가 따라올 위치 (2열)
 	[SerializeField] private Transform _companionAnchorA;
@@ -27,6 +26,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Awake()
 	{
+		_spineAnimator = GetComponent<SpineAnimator>();
 	}
 
 	void Update()
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (GameManager.Instance != null && GameManager.Instance.IsInputLock)
 		{
 			_moveDir = Vector2.zero;
-			PlaySkeletonAnimation(); // idle 애니메이션 유지
+			_spineAnimator.PlayAnimation("idle");
 
 			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
 			{
@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		// 키보드 입력 받기
 		HandleInput();
 		UpdateDirection();
-		PlaySkeletonAnimation();
+		string anim = _moveDir.magnitude > 0.1f ? "run_1" : "idle";
+		_spineAnimator.PlayAnimation(anim);
 	}
 
 	private void FixedUpdate()
@@ -118,51 +119,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 		Debug.Log($"[PlayerController] SetJoystickInput - input: {_joysticInput}, isActive: {_isjoystickActive}");
 	}
 
-	private void PlaySkeletonAnimation()
-	{
-		if (_skel == null)
-			return;
-
-		string aniName = GetMoveAnimation();
-		if (_skel.AnimationName == aniName)
-			return; //이미 재생 중인 애니메이션이면 무시
-
-		_skel.AnimationState.SetAnimation(0, aniName, true);
-
-	}
-
-	string GetMoveAnimation()
-	{
-		if (_moveDir.magnitude > 0.1f)
-		{
-			// 이동 중일 때
-			return "run_1";
-		}
-		else
-		{
-			// 정지 상태일 때
-			return "idle";
-		}
-	}
 
 	private void UpdateDirection()
 	{
-		if(_skel == null)
-			return;
-
 		var facing = _moveDir != Vector2.zero ? _moveDir : _lastDir;
 
-		if (facing.x < 0)
+		if(_spineAnimator != null)
 		{
-			_skel.skeleton.ScaleX = 1f; //왼쪽 바라보기
-		}
-		else if (facing.x > 0)
-		{
-			_skel.skeleton.ScaleX = -1f; //오른쪽 바라보기
+			_spineAnimator.SetFacing(facing);
 		}
 
+		
 		bool isRight = facing.x > 0;
-		//MirrorFollowPos(isRight);
 		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
 
@@ -197,6 +165,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if(_isDead) return;
 
 		PlayerInfoManager.Instance.TakeDamage(damage);
+		_spineAnimator.PlayAnimation("knockback", false);
 
 		if(PlayerInfoManager.Instance.IsDead)
 		{

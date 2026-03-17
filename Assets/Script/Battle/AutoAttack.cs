@@ -8,6 +8,13 @@ public class AutoAttack : MonoBehaviour
 	[SerializeField] private LayerMask _enemyLayer;
 
 	private float _lastAttackTime; //마지막 공격 시간 - 쿨타임 계산용
+	private SpineAnimator _spineAnimator;
+
+
+	private void Awake()
+	{
+		_spineAnimator = GetComponent<SpineAnimator>();
+	}
 
 	private void Update()
 	{
@@ -56,7 +63,8 @@ public class AutoAttack : MonoBehaviour
 
 		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
-		// TODO: 공격 애니메이션 트리거
+		if (_spineAnimator != null)
+			_spineAnimator.PlayAnimation("attack_melee", false);
 	}
 
 #if UNITY_EDITOR

@@ -1,13 +1,14 @@
-﻿using UnityEngine;
-using System;
-using Spine.Unity;
+﻿using System;
+using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
 	[SerializeField] private string _enemyId;
 	[SerializeField] private int _maxHp = 10;
 	[SerializeField] private int _currentHp;
-	[SerializeField] private SkeletonAnimation _skel;
+
+	private SpineAnimator _spineAnimator;
+	public SpineAnimator Anim => _spineAnimator;
 
 	private EnemyFSM _fsm;
 	private Rigidbody2D _rb;
@@ -23,6 +24,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 		_rb = GetComponent<Rigidbody2D>();
 		_fsm = GetComponent<EnemyFSM>();
+		_spineAnimator = GetComponent<SpineAnimator>();
 	}
 
 	private void Start()
@@ -76,7 +78,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 		if (_rb == null) return;
 		_rb.velocity = Vector2.zero;
 
-		// TODO: Idle 애니메이션 전환
+		_spineAnimator.PlayAnimation("idle");
 	}
 
 	/// <summary>
@@ -101,7 +103,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 		//대상에게 데미지 적용 (IDamageable 구현 후)
 		var damageable = _fsm.TargetDamageable;
-		if(damageable != null && !damageable.IsDead)
+		if (damageable != null && !damageable.IsDead)
 		{
 			damageable?.TakeDamage(_fsm.AttackDamage);
 		}
@@ -114,29 +116,12 @@ public class EnemyController : MonoBehaviour, IDamageable
 	{
 		Debug.Log($"[Enemy] {_enemyId} 사망");
 
-		PlayAnimation("die", false);
+		_fsm.ChangeState(_fsm.DieState);
+		_spineAnimator.DisableAutoIdle();
+
 		OnDeath?.Invoke(this);
 		QuestManager.Instance.ReportKill(_enemyId);
 
-		Destroy(gameObject, 0.5f);
-	}
-
-	public void PlayAnimation(string animName, bool loop = true)
-	{
-		if (_skel == null) return;
-		//루프 애니메이션은 중복 재생 방지, 비루프 애니메이션은 항상 재생
-		if (loop && _skel.AnimationName == animName) return;
-
-		_skel.AnimationState.SetAnimation(0, animName, loop);
-	}
-
-	public void SetFacing(Vector2 direction)
-	{
-		if (_skel == null) return;
-
-		if (direction.x < 0)
-			_skel.skeleton.ScaleX = 1f;
-		else if (direction.x > 0)
-			_skel.skeleton.ScaleX = -1f;
+		Destroy(gameObject, 1.0f);
 	}
 }

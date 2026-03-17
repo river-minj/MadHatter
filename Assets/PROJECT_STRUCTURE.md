@@ -141,7 +141,7 @@
 - 구현: IDamageable
 - 필드:
   - `float _moveSpeed` (SerializeField)
-  - `SkeletonAnimation _skel` (SerializeField)
+  - `SpineAnimator _spineAnimator` (GetComponent)
   - `Rigidbody2D _rb`
   - `Vector2 _moveDir` (현재 이동 방향)
   - `Vector2 _lastDir` (마지막 이동 방향, 정지 시 애니메이션용)
@@ -154,7 +154,7 @@
   - `HandleInput()` → _isJoystickActive 여부에 따라 조이스틱/키보드 분기
   - `SetPosition(Transform spawnPoint)` → 위치 즉시 이동
   - `SetJoystickInput(Vector2 direction)` → JoystickUI가 매 프레임 호출, _joystickInput/_isJoystickActive 갱신
-  - `TakeDamage(int damage)` → PlayerInfoManager.TakeDamage 위임 → 사망 시 DieAndRespawn 코루틴 시작
+  - `TakeDamage(int damage)` → PlayerInfoManager.TakeDamage 위임 → hit 애니메이션 재생 → 사망 시 DieAndRespawn 코루틴 시작
   - `DieAndRespawn()` → 코루틴: 입력잠금 → 페이드아웃 → HP회복+스폰이동+카메라스냅 → 페이드인 → 입력잠금해제
 - 부활 흐름:
   ```
@@ -180,6 +180,22 @@
 - 플레이어 + 동료 모두 동일한 AutoAttack 컴포넌트로 전투 참여
 - 적 사망 시 QuestManager.ReportKill(enemyId) 호출로 Kill 퀘스트 연동
 
+### SpineAnimator (공용 컴포넌트) - SpineAnimator.cs
+- 역할: Spine 애니메이션 재생 + 좌우 반전 전담. 플레이어/동료/적 모두 이 컴포넌트를 사용
+- 필드:
+  - `SkeletonAnimation _skel` (SerializeField)
+  - `string _currentLoopAnim` (루프 애니메이션 중복 재생 방지용)
+- 프로퍼티:
+  - `SkeletonAnimation Skeleton` (읽기전용, 스킨 변경 등 특수 접근용)
+- 주요 메서드:
+  - `PlayAnimation(string animName, bool loop = true)` → 루프=중복방지, 비루프=항상 재생
+  - `SetFacing(Vector2 direction)` → Spine ScaleX로 좌우 반전 (direction.x == 0이면 무시)
+  - `DisableAutoIdle()` → Complete 콜백 해제 (사망 등 종착 상태에서 idle 복귀 방지)
+- 자동 idle 복귀: 비루프 애니메이션(attack, hit 등) 완료 시 Complete 콜백으로 자동 idle 전환
+- 배치: Player, Companion 프리팹, Enemy 프리팹에 추가, Inspector에서 _skel 할당
+- 도입 배경: 기존 PlayerController/EnemyController/CompanionController에 중복된 PlayAnimation/SetFacing 코드를 통합. AutoAttack(공용 컴포넌트)에서 애니메이션을 호출하기 위해 GetComponent<SpineAnimator>()로 통일 접근
+- 향후: Spine을 스프라이트 Animator로 교체 시 SpriteAnimator로 대체하면 호출 코드 수정 불필요
+
 ### IDamageable (인터페이스) - IDamageable.cs
 - `void TakeDamage(int damage)`
 - `bool IsDead { get; }`
@@ -192,7 +208,7 @@
   - `string _enemyId` (SerializeField, 퀘스트 _targetId와 매칭)
   - `int _maxHp` (SerializeField)
   - `int _currentHp` (런타임)
-  - `SkeletonAnimation _skel` (SerializeField, Spine 애니메이션)
+  - `SpineAnimator _spineAnimator` (GetComponent, 읽기전용 프로퍼티 Anim)
   - `EnemyFSM _fsm` (GetComponent)
   - `Rigidbody2D _rb` (GetComponent)
 - 프로퍼티:
@@ -206,12 +222,10 @@
   - `StopMove()` → velocity 초기화 (State에서 호출)
   - `ApplyKnockback(Vector2 direction, float force)` → Impulse 넉백 (HitState에서 호출)
   - `Attack(Transform target)` → FSM.TargetDamageable 캐싱 참조로 TakeDamage 호출
-  - `PlayAnimation(string animName, bool loop = true)` → Spine 애니메이션 재생 (루프=중복방지, 비루프=항상 재생)
-  - `SetFacing(Vector2 direction)` → Spine ScaleX로 좌우 반전
-  - `Die()` → die 애니메이션 → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy(0.5f)
-- 초기화: Awake에서 컴포넌트 참조, Start에서 FSM.Init(this) 호출
-- 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp/_skel 설정
-- 필수 컴포넌트: EnemyFSM, Rigidbody2D (Gravity Scale 0), "Enemy" 레이어
+  - `Die()` → FSM.ChangeState(DieState) → SpineAnimator.DisableAutoIdle → die 애니메이션 → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy(1f)
+- 초기화: Awake에서 컴포넌트 참조 (SpineAnimator, EnemyFSM, Rigidbody2D), Start에서 FSM.Init(this) 호출
+- 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp 설정
+- 필수 컴포넌트: SpineAnimator, EnemyFSM, Rigidbody2D (Gravity Scale 0), "Enemy" 레이어
 
 ### EnemyFSM - EnemyFSM.cs
 - 역할: FSM 상태 전환 관리자, 공유 데이터 보유 (MonoBehaviour)
@@ -229,7 +243,7 @@
   - `IDamageable TargetDamageable` (플레이어 IDamageable 캐싱, 읽기전용 프로퍼티)
   - `IEnemyState _currentState` (현재 활성 상태)
 - 상태 인스턴스 (읽기전용 프로퍼티):
-  - `IdleState`, `ChaseState`, `AttackState`, `HitState`, `ReturnState`
+  - `IdleState`, `ChaseState`, `AttackState`, `HitState`, `ReturnState`, `DieState`
 - 주요 메서드:
   - `Init(EnemyController controller)` → State 인스턴스 생성 (FSM+Controller 참조 전달), 플레이어 태그 Find, 초기 상태 Idle
   - `ChangeState(IEnemyState newState)` → Exit → 교체 → Enter
@@ -243,10 +257,11 @@
 - `void Update()` — 상태 활성 중 매 프레임 호출
 - `void Exit()` — 상태 퇴장 시 1회 호출
 
-### EnemyStates - EnemyStates.cs (5개 상태 클래스 통합)
+### EnemyStates - EnemyStates.cs (6개 상태 클래스 통합)
 - 모든 State는 일반 C# 클래스 (MonoBehaviour 아님)
 - 생성자에서 EnemyFSM + EnemyController 참조를 받음
 - 참조 방향: State → FSM (ChangeState 요청, 공유 데이터 읽기), State → Controller (실행 요청)
+- 애니메이션 호출: `_controller.Anim.PlayAnimation()` / `_controller.Anim.SetFacing()` (SpineAnimator 경유)
 
 #### EnemyIdleState (Idle + Patrol 통합)
 - 순찰 포인트가 있으면 웨이포인트 순회, 없으면 제자리 대기
@@ -280,6 +295,10 @@
 - 복귀 중 플레이어 재감지 시 → ChaseState 전환
 - 애니메이션: 이동 중→run+SetFacing
 
+#### EnemyDieState
+- 종착 상태 — Enter에서 die 애니메이션 재생, Update/Exit 비어있음
+- 다른 상태로 전환하지 않음 (Destroy 대기)
+
 ### 적 AI 상태 흐름도
 ```
 Idle/Patrol ──감지 범위 진입──→ Chase ──공격 범위 도달──→ Attack
@@ -287,6 +306,8 @@ Idle/Patrol ──감지 범위 진입──→ Chase ──공격 범위 도달
     └──── Return ←──감지 범위 이탈──┴─────감지 범위 이탈────┘
               ↑
         Hit (어떤 상태에서든 피격 시 진입) → 경직 해제 후 Chase 또는 Return
+
+        Die (HP 0 이하 시 Controller가 직접 전환) → 종착 상태, Destroy 대기
 ```
 
 ### 참조 방향 정리
@@ -305,11 +326,12 @@ EnemyStates → EnemyController : MoveTo, StopMove, Attack, ApplyKnockback, Play
   - `int _attackDamage` (SerializeField, 기본 3)
   - `float _attackCooldown` (SerializeField, 기본 1.0f)
   - `LayerMask _enemyLayer` (SerializeField)
+  - `SpineAnimator _spineAnimator` (Awake에서 GetComponent, null 허용)
   - `float _lastAttackTime` (런타임)
 - 주요 메서드:
   - `Update()` → InputLock 체크 → 쿨타임 체크 → FindClosestEnemy → Attack
   - `FindClosestEnemy()` → Physics2D.OverlapCircleAll로 범위 내 적 탐색 → 가장 가까운 적 반환
-  - `Attack(EnemyController target)` → 쿨타임 갱신 → TakeDamage 호출
+  - `Attack(EnemyController target)` → 쿨타임 갱신 → TakeDamage 호출 → SpineAnimator.PlayAnimation("attack", false) 호출
 - Inspector 설정:
   - Player 오브젝트에 AutoAttack 추가 → _enemyLayer에 "Enemy" 레이어 지정
   - Companion 프리팹에 AutoAttack 추가 → 동일 설정
@@ -675,10 +697,12 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 | 17-1 | 적 AI FSM (Idle/Chase/Attack/Hit/Return) | ✅ 완료 |
 | 17-2 | 플레이어 HP/피격/사망 부활 (IDamageable) | ✅ 완료 |
 | 17-3 | 적 Spine 애니메이션 연동 (idle/run/attack/hit/die) | ✅ 완료 |
+| 17-4 | SpineAnimator 공용 컴포넌트 도입 (애니메이션 코드 통합) | ✅ 완료 |
 | 18 | ReportCollect/AcquireItem 추가 | 미구현 |
 | 19 | AudioManager (BGM/SFX) + 옵션 UI 연동 | 미구현 |
 | 20 | 인벤토리 아이템 획득/사용/장착 + _itemID 보상 지급 | 미구현 |
 | 21 | Resource.Load 방식을 Addressable 시스템으로 변경 | 미구현 |
+| 22 | 공격 애니메이션 타격 타이밍 딜레이 적용 (AutoAttack에 _attackHitDelay) | 미구현 |
 
 ---
 
@@ -705,3 +729,6 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 - 적 AI는 FSM 패턴 사용 — EnemyController(데이터+실행) + EnemyFSM(상태 관리) + EnemyStates(행동 판단) 분리
 - FSM → Controller 직접 참조 금지, State가 Controller 실행 메서드를 호출하는 구조
 - State는 일반 C# 클래스 (MonoBehaviour 아님), FSM이 new로 생성
+- 애니메이션 재생/방향전환은 SpineAnimator 공용 컴포넌트에 위임 — 개별 Controller에 Spine 코드 직접 작성 금지
+- 애니메이션 이름은 범용으로 통일 (idle, run, attack, hit, die) — 향후 Spine→Sprite 교체 대비
+- SpineAnimator.Skeleton 프로퍼티로 스킨 변경 등 특수 접근 허용 (CompanionController 등)
