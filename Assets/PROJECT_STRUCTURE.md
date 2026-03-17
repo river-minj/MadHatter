@@ -43,6 +43,7 @@
   - `SaveGame()` → 각 매니저 GetSaveData 수집 → GameSystem.Save
   - `LoadGame(SaveData data)` → 각 매니저 ApplyData 호출
   - `GetPlayerController()` → PlayerController (JoystickUI에서 참조용)
+  - `SnapCamera()` → CameraController.SnapToTarget() 호출 (부활 시 카메라 즉시 이동)
 - 저장 트리거:
   - Start()에서 `QuestManager.OnQuestRewardClaimed` 구독 → 자동저장
   - `ChangeMap()` 완료 시 → 맵 이동 자동저장 (단, LoadFirstMap은 save: false로 제외)
@@ -88,20 +89,27 @@
   - `Action<string> OnQuestRewardClaimed` (questID)
 
 ### PlayerInfoManager
-- 역할: 플레이어 레벨/경험치/골드 관리
+- 역할: 플레이어 레벨/경험치/골드/HP 관리
 - 필드: PlayerInfo 구조체 `_playerInfo`
-  - `string _name`, `int _level`, `int _exp`, `int _gold`
+  - `string _name`, `int _level`, `int _exp`, `int _gold`, `int _hp`
+- 프로퍼티:
+  - `int MaxHp` (읽기전용, 100 + (레벨-1) * 10)
+  - `bool IsDead` (읽기전용, _hp <= 0)
 - 주요 메서드:
   - `AddGold(int amount)`
   - `AddExp(int amount)`
   - `AddLevel(int amount)`
+  - `TakeDamage(int damage)` → HP 감소 → OnHpChanged 발행 → 0 이하 시 OnPlayerDead 발행
+  - `RestoreHp()` → HP를 MaxHp로 회복 → OnHpChanged 발행
   - `GetMaxCompanionCount()` → int (레벨 기반 동료 최대 수)
-  - `GetSaveData()` → PlayerInfoSaveData
-  - `ApplyData(PlayerInfoSaveData data)` → 복원 후 OnGoldChanged, OnLevelChanged, OnExpChanged 발행
+  - `GetSaveData()` → PlayerInfoSaveData (hp 포함)
+  - `ApplyData(PlayerInfoSaveData data)` → 복원 후 OnGoldChanged, OnLevelChanged, OnExpChanged, OnHpChanged 발행
 - 이벤트:
   - `Action<int> OnGoldChanged`
   - `Action<int> OnLevelChanged`
   - `Action<int> OnExpChanged`
+  - `Action<int> OnHpChanged`
+  - `Action OnPlayerDead`
 
 ### CompanionManager
 - 역할: 언락된 동료 관리, 생성, 줄 배치
@@ -129,19 +137,32 @@
 ## 플레이어 시스템
 
 ### PlayerController
-- 역할: 플레이어 이동, 애니메이션, 입력 처리 (키보드 + 조이스틱 통합)
+- 역할: 플레이어 이동, 애니메이션, 입력 처리 (키보드 + 조이스틱 통합), 피격/부활
+- 구현: IDamageable
 - 필드:
   - `float _moveSpeed` (SerializeField)
+  - `SkeletonAnimation _skel` (SerializeField)
   - `Rigidbody2D _rb`
-  - `Animator _animator`
   - `Vector2 _moveDir` (현재 이동 방향)
   - `Vector2 _lastDir` (마지막 이동 방향, 정지 시 애니메이션용)
   - `Vector2 _joystickInput` (JoystickUI에서 주입받는 방향값)
   - `bool _isJoystickActive` (조이스틱 입력 활성 여부, magnitude > 0.1f 기준)
+  - `bool _isDead` (사망 상태 플래그)
+- 프로퍼티:
+  - `bool IsDead` (읽기전용)
 - 주요 메서드:
   - `HandleInput()` → _isJoystickActive 여부에 따라 조이스틱/키보드 분기
   - `SetPosition(Transform spawnPoint)` → 위치 즉시 이동
   - `SetJoystickInput(Vector2 direction)` → JoystickUI가 매 프레임 호출, _joystickInput/_isJoystickActive 갱신
+  - `TakeDamage(int damage)` → PlayerInfoManager.TakeDamage 위임 → 사망 시 DieAndRespawn 코루틴 시작
+  - `DieAndRespawn()` → 코루틴: 입력잠금 → 페이드아웃 → HP회복+스폰이동+카메라스냅 → 페이드인 → 입력잠금해제
+- 부활 흐름:
+  ```
+  TakeDamage → PlayerInfoManager.IsDead 확인 → DieAndRespawn 코루틴
+    → SetLockInput(true) → RequestFadeTransition(
+        onFadeOutComplete: RestoreHp + SetPosition + SnapCamera + _isDead = false,
+        onComplete: SetLockInput(false))
+  ```
 - 입력 분기 로직:
   - `_isJoystickActive == true` → `_moveDir = _joystickInput`
   - `_isJoystickActive == false` → `Input.GetAxisRaw("Horizontal/Vertical")`로 4방향 이동
@@ -165,15 +186,15 @@
 - 역할: HP를 가진 모든 대상의 공통 인터페이스 (확장 시 플레이어 피격에도 사용 가능)
 
 ### EnemyController - EnemyController.cs
-- 역할: 적 데이터 보유 + 실행 담당 (HP, 이동, 공격, 사망)
+- 역할: 적 데이터 보유 + 실행 담당 (HP, 이동, 공격, 사망, 애니메이션)
 - 구현: IDamageable
 - 필드:
   - `string _enemyId` (SerializeField, 퀘스트 _targetId와 매칭)
   - `int _maxHp` (SerializeField)
   - `int _currentHp` (런타임)
+  - `SkeletonAnimation _skel` (SerializeField, Spine 애니메이션)
   - `EnemyFSM _fsm` (GetComponent)
   - `Rigidbody2D _rb` (GetComponent)
-  - `Animator _animator` (GetComponent)
 - 프로퍼티:
   - `string EnemyId` (읽기전용)
   - `bool IsDead` (읽기전용, _currentHp <= 0)
@@ -184,10 +205,12 @@
   - `MoveTo(Vector2 direction)` → Rigidbody2D.velocity로 이동 (State에서 호출)
   - `StopMove()` → velocity 초기화 (State에서 호출)
   - `ApplyKnockback(Vector2 direction, float force)` → Impulse 넉백 (HitState에서 호출)
-  - `Attack(Transform target)` → 공격 실행 (AttackState에서 호출, TODO: IDamageable.TakeDamage)
-  - `Die()` → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy
+  - `Attack(Transform target)` → FSM.TargetDamageable 캐싱 참조로 TakeDamage 호출
+  - `PlayAnimation(string animName, bool loop = true)` → Spine 애니메이션 재생 (루프=중복방지, 비루프=항상 재생)
+  - `SetFacing(Vector2 direction)` → Spine ScaleX로 좌우 반전
+  - `Die()` → die 애니메이션 → OnDeath 발행 → QuestManager.ReportKill(_enemyId) → Destroy(0.5f)
 - 초기화: Awake에서 컴포넌트 참조, Start에서 FSM.Init(this) 호출
-- 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp 설정
+- 배치 방식: 맵 프리팹에 직접 배치, Inspector에서 _enemyId/_maxHp/_skel 설정
 - 필수 컴포넌트: EnemyFSM, Rigidbody2D (Gravity Scale 0), "Enemy" 레이어
 
 ### EnemyFSM - EnemyFSM.cs
@@ -203,6 +226,7 @@
   - `List<Transform> _patrolPoints` (SerializeField, 선택적 순찰 경로)
   - `Vector3 OriginPosition` (Awake에서 저장, 읽기전용 프로퍼티)
   - `Transform Target` (플레이어, 읽기전용 프로퍼티)
+  - `IDamageable TargetDamageable` (플레이어 IDamageable 캐싱, 읽기전용 프로퍼티)
   - `IEnemyState _currentState` (현재 활성 상태)
 - 상태 인스턴스 (읽기전용 프로퍼티):
   - `IdleState`, `ChaseState`, `AttackState`, `HitState`, `ReturnState`
@@ -212,6 +236,7 @@
   - `OnDamaged(int currentHp)` → HP 0 이하면 무시(Controller가 Die 처리), 아니면 HitState 전환
   - `GetDistanceToTarget()` → 타겟과의 거리 반환 (State 공용)
 - Update에서 `_currentState?.Update()` 호출 (switch문 없음)
+- Awake에서 OriginPosition 저장 + 순찰 포인트 부모 해제 (SetParent(null), 적 이동 시 웨이포인트 고정)
 
 ### IEnemyState (인터페이스) - IEnemyState.cs
 - `void Enter()` — 상태 진입 시 1회 호출
@@ -227,26 +252,33 @@
 - 순찰 포인트가 있으면 웨이포인트 순회, 없으면 제자리 대기
 - 감지 범위에 플레이어 진입 시 → ChaseState 전환
 - 순찰: 웨이포인트 도착 → 대기(1초) → 다음 포인트 (순환)
+- 애니메이션: Enter→idle, 이동 중→run+SetFacing, 대기→idle
 
 #### EnemyChaseState
 - 플레이어 방향으로 이동
 - 공격 범위 도달 시 → AttackState 전환
 - 감지 범위 이탈 시 → ReturnState 전환
+- 대상 사망 시 → ReturnState 전환
+- 애니메이션: 이동 중→run+SetFacing
 
 #### EnemyAttackState
 - 쿨타임 기반 공격, 진입 즉시 첫 공격 가능
-- Controller.Attack(target) 호출 (TODO: IDamageable 데미지 적용)
+- Controller.Attack(target) 호출 → TargetDamageable.TakeDamage
 - 공격 범위 이탈 시 → ChaseState, 감지 이탈 시 → ReturnState
+- 대상 사망 시 → ReturnState 전환
+- 애니메이션: 공격 시→attack(비루프)
 
 #### EnemyHitState
 - Enter에서 넉백 적용 (플레이어 반대 방향)
 - 경직 시간(_hitStunDuration) 동안 행동 불가
 - 경직 해제 후 감지 범위 내면 → ChaseState, 밖이면 → ReturnState
+- 애니메이션: Enter→hit(비루프)
 
 #### EnemyReturnState
 - 원래 위치(OriginPosition)로 이동
 - 도착 시 → IdleState 전환
 - 복귀 중 플레이어 재감지 시 → ChaseState 전환
+- 애니메이션: 이동 중→run+SetFacing
 
 ### 적 AI 상태 흐름도
 ```
@@ -262,7 +294,7 @@ Idle/Patrol ──감지 범위 진입──→ Chase ──공격 범위 도달
 EnemyController → EnemyFSM : OnDamaged 알림, Init 호출
 EnemyFSM → EnemyStates : 현재 상태 Update 호출
 EnemyStates → EnemyFSM : ChangeState 요청, 공유 데이터 읽기
-EnemyStates → EnemyController : MoveTo, StopMove, Attack, ApplyKnockback 실행 요청
+EnemyStates → EnemyController : MoveTo, StopMove, Attack, ApplyKnockback, PlayAnimation, SetFacing 실행 요청
 ```
 - FSM → Controller 직접 참조 없음 (피격 알림은 Controller→FSM 방향, 사망은 Controller가 직접 처리)
 
@@ -539,7 +571,7 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 - `float _followSpeed`, `float _followDistance`
 
 ### PlayerInfo (struct)
-- `string _name`, `int _level`, `int _exp`, `int _gold`
+- `string _name`, `int _level`, `int _exp`, `int _gold`, `int _hp`
 
 ---
 
@@ -614,7 +646,7 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 - `QuestSaveData questData`
 
 #### PlayerInfoSaveData
-- `string name`, `int level`, `int exp`, `int gold`
+- `string name`, `int level`, `int exp`, `int gold`, `int hp`
 
 #### QuestSaveData
 - `List<string> startedQuests`
@@ -641,6 +673,8 @@ Database는 MonoBehaviour가 아닌 일반 C# 클래스. Hierarchy 배치 불필
 | 16 | 다이얼로그 시스템 확장 (독백/시스템 메시지/타이핑 연출/터치 입력) | ✅ 완료 |
 | 17 | ReportKill/ReportReach 완성 + 전투 시스템 기초 | ✅ 완료 |
 | 17-1 | 적 AI FSM (Idle/Chase/Attack/Hit/Return) | ✅ 완료 |
+| 17-2 | 플레이어 HP/피격/사망 부활 (IDamageable) | ✅ 완료 |
+| 17-3 | 적 Spine 애니메이션 연동 (idle/run/attack/hit/die) | ✅ 완료 |
 | 18 | ReportCollect/AcquireItem 추가 | 미구현 |
 | 19 | AudioManager (BGM/SFX) + 옵션 UI 연동 | 미구현 |
 | 20 | 인벤토리 아이템 획득/사용/장착 + _itemID 보상 지급 | 미구현 |

@@ -105,7 +105,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 		{
 			damageable?.TakeDamage(_fsm.AttackDamage);
 		}
-		Debug.Log($"[Enemy] {_enemyId} → {target.name} 공격");
 	}
 
 	// ============================================================
