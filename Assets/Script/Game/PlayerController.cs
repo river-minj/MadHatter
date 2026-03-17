@@ -1,9 +1,8 @@
-﻿using Spine;
-using Spine.Unity;
-using System;
+﻿using Spine.Unity;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
 	// Start is called before the first frame update
 	public float _moveSpeed = 5f;
@@ -22,6 +21,9 @@ public class PlayerController : MonoBehaviour
 
 	public Transform CompanionAnchorA => _companionAnchorA;
 	public Transform CompanionAnchorB => _companionAnchorB;
+
+	private bool _isDead = false;
+	public bool IsDead => _isDead;
 
 	private void Awake()
 	{
@@ -187,6 +189,49 @@ public class PlayerController : MonoBehaviour
 		{
 			return new Vector3(_lastDir.x, _lastDir.y, 0f);
 		}
+	}
+
+	//인터페이스 구현
+	public void TakeDamage(int damage)
+	{
+		if(_isDead) return;
+
+		PlayerInfoManager.Instance.TakeDamage(damage);
+
+		if(PlayerInfoManager.Instance.IsDead)
+		{
+			_isDead = true;
+			StartCoroutine(DieAndRespawn());
+		}
+	}
+
+	private IEnumerator DieAndRespawn()
+	{
+		//입력 잠금
+		GameManager.Instance.SetLockInput(true);
+
+		//페이드 인아웃
+		bool fadeDone = false;
+
+		UIManager.Instance.RequestFadeTransition(0.5f, () =>
+		{
+			//hp 회복 + 스폰 포인트로 이동
+			PlayerInfoManager.Instance.RestoreHp();
+			Transform spawnPoint = GameManager.Instance.CurrentMapController.GetSpawnPoint(SpawnPointId.Default);
+			SetPosition(spawnPoint);
+			_isDead = false;
+
+			GameManager.Instance.SnapCamera();
+		},
+		() => {
+			fadeDone = true;
+			}
+		);
+
+		yield return new WaitUntil(() => fadeDone);
+
+		//입력 잠금 해제
+		GameManager.Instance.SetLockInput(false);
 	}
 }
 

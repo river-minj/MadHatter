@@ -41,10 +41,21 @@ public class EnemyFSM : MonoBehaviour
 	public IEnemyState ReturnState { get; private set; }
 
 	private IEnemyState _currentState;
+	public IDamageable TargetDamageable { get; private set; }
 
 	private void Awake()
 	{
 		OriginPosition = transform.position;
+
+		if (_patrolPoints != null)
+		{
+			foreach (var point in _patrolPoints)
+			{
+				if (point != null)
+					point.SetParent(null);
+			}
+		}
+
 	}
 
 	/// <summary>
@@ -61,7 +72,11 @@ public class EnemyFSM : MonoBehaviour
 		// 플레이어를 타겟으로 설정
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		if (player != null)
+		{
 			Target = player.transform;
+			TargetDamageable = player.GetComponent<IDamageable>();
+		}
+		Debug.Log($"[FSM] Init 완료, PatrolPoints: {_patrolPoints?.Count}");
 
 		ChangeState(IdleState);
 	}

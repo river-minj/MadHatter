@@ -24,6 +24,7 @@ public class EnemyIdleState : IEnemyState
 	public void Enter()
 	{
 		_controller.StopMove();
+		_controller.PlayAnimation("idle");
 		_isWaiting = false;
 		_patrolWaitTimer = 0f;
 	}
@@ -62,11 +63,15 @@ public class EnemyIdleState : IEnemyState
 		Transform target = _fsm.PatrolPoints[_currentPatrolIndex];
 		Vector2 direction = (target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
+		_controller.PlayAnimation("run_1");
+		_controller.SetFacing(direction);
 
 		float distance = Vector2.Distance(_controller.transform.position, target.position);
+
 		if (distance < 0.2f)
 		{
 			_controller.StopMove();
+			_controller.PlayAnimation("idle");
 			_isWaiting = true;
 			_patrolWaitTimer = 0f;
 		}
@@ -94,6 +99,14 @@ public class EnemyChaseState : IEnemyState
 
 	public void Update()
 	{
+		// 대상 사망 시 복귀
+		var targetDamageable = _fsm.TargetDamageable;
+		if (targetDamageable == null || targetDamageable.IsDead)
+		{
+			_fsm.ChangeState(_fsm.ReturnState);
+			return;
+		}
+
 		float distance = _fsm.GetDistanceToTarget();
 
 		// 공격 범위 도달
@@ -113,6 +126,8 @@ public class EnemyChaseState : IEnemyState
 		// 플레이어 방향으로 이동
 		Vector2 direction = (_fsm.Target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
+		_controller.PlayAnimation("run_1");
+		_controller.SetFacing(direction);
 	}
 
 	public void Exit()
@@ -150,6 +165,14 @@ public class EnemyAttackState : IEnemyState
 	{
 		float distance = _fsm.GetDistanceToTarget();
 
+		//대상 사망 시 복귀
+		var targetDamageable = _fsm.TargetDamageable;
+		if(targetDamageable == null || targetDamageable.IsDead)
+		{
+			_fsm.ChangeState(_fsm.ReturnState);
+			return;
+		}
+
 		// 감지 범위 이탈
 		if (distance > _fsm.DetectRange)
 		{
@@ -169,8 +192,8 @@ public class EnemyAttackState : IEnemyState
 		{
 			_lastAttackTime = Time.time;
 
-			// TODO: 대상에게 IDamageable.TakeDamage 호출
-			// 현재는 공격 실행(애니메이션 등)만 처리
+			_controller.PlayAnimation("attack_melee", false);
+			_controller.Attack(_fsm.Target);
 			_controller.Attack(_fsm.Target);
 		}
 	}
@@ -199,6 +222,7 @@ public class EnemyHitState : IEnemyState
 	{
 		_stunTimer = 0f;
 		_controller.StopMove();
+		_controller.PlayAnimation("knockback", false);
 
 		// 타겟 반대 방향으로 넉백
 		if (_fsm.Target != null)
@@ -256,6 +280,8 @@ public class EnemyReturnState : IEnemyState
 		// 원래 위치로 이동
 		Vector2 direction = (_fsm.OriginPosition - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
+		_controller.PlayAnimation("run_1");
+		_controller.SetFacing(direction);
 
 		// 도착 체크
 		float distance = Vector2.Distance(_controller.transform.position, _fsm.OriginPosition);

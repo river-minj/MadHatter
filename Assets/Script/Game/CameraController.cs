@@ -87,4 +87,18 @@ public class CameraController : MonoBehaviour
     {
         _currentBounds = bounds;
     }
+
+	public void SnapToTarget()
+	{
+		if (_target == null) return;
+
+		Vector3 targetPosition = _target.position + _offset;
+
+		if (_currentBounds.HasValue)
+		{
+			targetPosition = ClampPositionToBounds(targetPosition, _currentBounds.Value);
+		}
+
+		transform.position = targetPosition;
+	}
 }

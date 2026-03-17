@@ -200,4 +200,12 @@ public class GameManager : MonoBehaviour
     {
         return _playerController;
 	}
+
+    public void SnapCamera()
+	{
+		if (_cameraController != null)
+		{
+			_cameraController.SnapToTarget();
+		}
+	}
 }

@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System;
+using Spine.Unity;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
 	[SerializeField] private string _enemyId;
 	[SerializeField] private int _maxHp = 10;
 	[SerializeField] private int _currentHp;
+	[SerializeField] private SkeletonAnimation _skel;
 
 	private EnemyFSM _fsm;
 	private Rigidbody2D _rb;
-	private Animator _animator;
 
 	public string EnemyId => _enemyId;
 	public bool IsDead => _currentHp <= 0;
@@ -21,7 +22,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 		_currentHp = _maxHp;
 
 		_rb = GetComponent<Rigidbody2D>();
-		_animator = GetComponent<Animator>();
 		_fsm = GetComponent<EnemyFSM>();
 	}
 
@@ -99,10 +99,12 @@ public class EnemyController : MonoBehaviour, IDamageable
 		// TODO: 공격 애니메이션 트리거
 		// _animator.SetTrigger("Attack");
 
-		// TODO: 대상에게 데미지 적용 (IDamageable 구현 후)
-		// var damageable = target.GetComponent<IDamageable>();
-		// damageable?.TakeDamage(_fsm.AttackDamage);
-
+		//대상에게 데미지 적용 (IDamageable 구현 후)
+		var damageable = _fsm.TargetDamageable;
+		if(damageable != null && !damageable.IsDead)
+		{
+			damageable?.TakeDamage(_fsm.AttackDamage);
+		}
 		Debug.Log($"[Enemy] {_enemyId} → {target.name} 공격");
 	}
 
@@ -112,10 +114,30 @@ public class EnemyController : MonoBehaviour, IDamageable
 	private void Die()
 	{
 		Debug.Log($"[Enemy] {_enemyId} 사망");
+
+		PlayAnimation("die", false);
 		OnDeath?.Invoke(this);
 		QuestManager.Instance.ReportKill(_enemyId);
 
-		// TODO: 사망 애니메이션/이펙트 후 Destroy
 		Destroy(gameObject, 0.5f);
+	}
+
+	public void PlayAnimation(string animName, bool loop = true)
+	{
+		if (_skel == null) return;
+		//루프 애니메이션은 중복 재생 방지, 비루프 애니메이션은 항상 재생
+		if (loop && _skel.AnimationName == animName) return;
+
+		_skel.AnimationState.SetAnimation(0, animName, loop);
+	}
+
+	public void SetFacing(Vector2 direction)
+	{
+		if (_skel == null) return;
+
+		if (direction.x < 0)
+			_skel.skeleton.ScaleX = 1f;
+		else if (direction.x > 0)
+			_skel.skeleton.ScaleX = -1f;
 	}
 }
