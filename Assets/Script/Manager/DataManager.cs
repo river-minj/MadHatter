@@ -36,6 +36,7 @@ public class DataManager : MonoBehaviour
 		QuestDatabase.CreateInstance();
 		NpcDatabase.CreateInstance();
 		CompanionDatabase.CreateInstance();
+		ItemDatabase.CreateInstance();
 
 		onProgress?.Invoke(0f, "대화 데이터 로드 중...");
 		var dialogueList = LoadTable<DialogueTableData>("DialogueTable");
@@ -59,6 +60,11 @@ public class DataManager : MonoBehaviour
 		onProgress?.Invoke(0.85f, "동료 데이터 로드 중...");
 		var companionList = LoadTable<CompanionTableData>("CompanionTable");
 		CompanionDatabase.Instance.ApplyData(companionList);
+		yield return null;
+
+		onProgress?.Invoke(0.92f, "아이템 데이터 로드 중...");
+		var itemList = LoadTable<ItemTableData>("ItemTable");
+		ItemDatabase.Instance.ApplyData(itemList);
 		yield return null;
 
 		_isLoaded = true;

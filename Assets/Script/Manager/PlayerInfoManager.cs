@@ -149,6 +149,13 @@ public class PlayerInfoManager : MonoBehaviour
 		OnHpChanged?.Invoke(_playerInfo._hp);
 	}
 
+	public void AddHp(int amount)
+	{
+		if (amount <= 0) return;
+		_playerInfo._hp = Mathf.Min(_playerInfo._hp + amount, MaxHp);
+		OnHpChanged?.Invoke(_playerInfo._hp);
+	}
+
 	public void CheckLevelUp() {
 
 		int level = _playerInfo._level;

@@ -59,3 +59,14 @@ public class CompanionTableData
 	public float followSpeed;
 	public float followDistance;
 }
+
+[Serializable]
+public class ItemTableData
+{
+	public string itemId;
+	public string itemName;
+	public ItemType itemType;
+	public int effectValue;
+	public string description;
+	public string iconPath;
+}
