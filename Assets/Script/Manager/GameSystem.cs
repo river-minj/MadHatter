@@ -9,6 +9,7 @@ public class  SaveData
 {
 	public PlayerInfoSaveData playerInfo;
 	public QuestSaveData questInfo;
+	public InventorySaveData inventoryData;
 }
 
 [Serializable]
@@ -35,6 +36,20 @@ public class ActiveQuestEntry
 	public string questID;
 	public int currentProgress;
 	public bool isCompleted;
+}
+
+[Serializable]
+public class InventorySaveData
+{
+	public List<InventoryItemEntry> items;
+	public string equippedWeaponId;
+}
+
+[Serializable]
+public class InventoryItemEntry
+{
+	public string itemId;
+	public int count;
 }
 
 public class GameSystem : MonoBehaviour
