@@ -254,4 +254,16 @@ public class UIManager : MonoBehaviour
 		CommonConfirmPopup popup = popupObj.GetComponent<CommonConfirmPopup>();
 		popup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
 	}
+
+	public ItemDetailPopup CreateItemDetailPopup()
+	{
+		GameObject prefab = Resources.Load<GameObject>("Prefab/Popup/ItemDetailPopup");
+		if (prefab == null)
+		{
+			Debug.LogError("[UIManager] 팝업 프리팹을 찾을 수 없습니다: Prefab/Popup/ItemDetailPopup");
+			return null;
+		}
+		GameObject popupObj = Instantiate(prefab, _popupRoot);
+		return popupObj.GetComponent<ItemDetailPopup>();
+	}
 }

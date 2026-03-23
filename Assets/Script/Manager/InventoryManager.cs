@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,7 +54,7 @@ public class InventoryManager : MonoBehaviour
 		{
 			_dicInventory[itemId] = new InventorySlot(itemId, count);
 		}
-
+		Debug.Log($"[Inventory] 아이템 획득: {itemId} x{count}, 보유: {_dicInventory[itemId].count}개");
 		OnInventoryChanged?.Invoke();
 	}
 
@@ -106,6 +106,16 @@ public class InventoryManager : MonoBehaviour
 		return _equippedWeaponId;
 	}
 
+	public ItemData GetEquippedWeaponData()
+	{
+		var data = ItemDatabase.Instance.GetItemById(_equippedWeaponId);
+		if(data != null)
+		{
+			return data;
+		}
+
+		return null;
+	}
 
 	// UI용 조회
 	public Dictionary<string, InventorySlot> GetAllItems()

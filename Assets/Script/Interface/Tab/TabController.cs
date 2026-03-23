@@ -1,28 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[Serializable]
-public class TabEntry
-{
-	public Button tabButton;
-	public GameObject tabPage;
-}
-
-
 public class TabController : MonoBehaviour
 {
-	[SerializeField] private List<TabEntry> _tabs;
-
-	public event Action<TabEntry> OnTabChanged;
+	private List<Tab> _tabs = new List<Tab>();
+	public event Action<Tab> OnTabChanged;
 
 	private void Awake()
 	{
-		for(int i = 0; i < _tabs.Count; i++)
+		_tabs = new List<Tab>(GetComponentsInChildren<Tab>(true));
+		foreach (var tab in _tabs)
 		{
-			var tab = _tabs[i];
-			tab.tabButton.onClick.AddListener(()=> ChangeTab(tab));
+			var captured = tab;
+			captured.TabButton.onClick.AddListener(() => ChangeTab(captured));
 		}
 	}
 
@@ -34,11 +26,11 @@ public class TabController : MonoBehaviour
 		}
 	}
 
-	private void ChangeTab(TabEntry selectedTab)
+	private void ChangeTab(Tab selectedTab)
 	{
 		foreach(var tab in _tabs)
 		{
-			tab.tabPage.SetActive(tab == selectedTab);
+			tab.LinkedPage.gameObject.SetActive(tab == selectedTab);
 		}
 
 		OnTabChanged?.Invoke(selectedTab);

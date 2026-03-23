@@ -1,0 +1,38 @@
+[
+  {
+    "uniqueId": 1,
+    "enemyId": "E_001",
+    "itemId": "potion_hp_small",
+    "weight": 50
+  },
+  {
+    "uniqueId": 2,
+    "enemyId": "E_001",
+    "itemId": "potion_hp_medium",
+    "weight": 10
+  },
+  {
+    "uniqueId": 3,
+    "enemyId": "E_001",
+    "itemId": "",
+    "weight": 40
+  },
+  {
+    "uniqueId": 4,
+    "enemyId": "goblin_01",
+    "itemId": "potion_hp_small",
+    "weight": 30
+  },
+  {
+    "uniqueId": 5,
+    "enemyId": "goblin_01",
+    "itemId": "potion_hp_large",
+    "weight": 5
+  },
+  {
+    "uniqueId": 6,
+    "enemyId": "goblin_01",
+    "itemId": "",
+    "weight": 65
+  }
+]

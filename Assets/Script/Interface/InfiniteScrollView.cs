@@ -120,6 +120,13 @@ public class InfiniteScrollView : MonoBehaviour
 			_isInitialized = true;
 		}
 
+		if (_dataList.Count == 0)
+		{
+			foreach (var slot in _slotPool)
+				slot.gameObject.SetActive(false);
+			return;
+		}
+
 		_content.anchoredPosition = Vector2.zero;
 		_currentTopRow = 0;
 

@@ -388,8 +388,11 @@ public class QuestManager : MonoBehaviour
 				}
 			}
 
-
-			//to do : 아이템 보상 처리
+			if(!string.IsNullOrEmpty(reward._itemId))
+			{
+				int count = reward._itemCount > 0 ? reward._itemCount : 1;
+				InventoryManager.Instance.AddItem(reward._itemId, count);
+			}
 
 		}
 	}

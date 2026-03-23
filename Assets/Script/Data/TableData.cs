@@ -19,7 +19,6 @@ public class QuestTableData
 	public QuestGoalType goalType;
 	public int goalCount;
 	public string questGiverNpcId;
-	public string questCompleterNpcId;
 	public string targetId;
 	public string rewardGroupId;
 	public string startDialogueId;
@@ -63,10 +62,20 @@ public class CompanionTableData
 [Serializable]
 public class ItemTableData
 {
+	public string uniqueId;
 	public string itemId;
 	public string itemName;
 	public ItemType itemType;
 	public int effectValue;
 	public string description;
 	public string iconPath;
+}
+
+[Serializable]
+public class DropTableData
+{
+	public int uniqueId;
+	public string enemyId;
+	public string itemId;
+	public int weight;
 }

@@ -23,6 +23,7 @@ public static class ExcelToJsonConverter //static : 인스턴스가 필요없는
 		{ "NpcTable", typeof(NpcTableData) },
 		{ "CompanionTable", typeof(CompanionTableData) },
 		{ "ItemTable", typeof(ItemTableData) },
+		{ "DropTable", typeof(DropTableData) },
 
 	};
 

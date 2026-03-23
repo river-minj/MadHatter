@@ -1,0 +1,56 @@
+[
+  {
+    "uniqueId": "1",
+    "itemId": "weapon_sword_01",
+    "itemName": "낡은 검",
+    "itemType": "Equipment",
+    "description": "오래된 검이지만 쓸만하다",
+    "effectValue": 3,
+    "iconPath": "Icons/weapon_sword_01"
+  },
+  {
+    "uniqueId": "2",
+    "itemId": "weapon_sword_02",
+    "itemName": "강철 검",
+    "itemType": "Equipment",
+    "description": "단단한 강철로 만든 검",
+    "effectValue": 7,
+    "iconPath": "Icons/weapon_sword_02"
+  },
+  {
+    "uniqueId": "3",
+    "itemId": "weapon_sword_03",
+    "itemName": "마법 검",
+    "itemType": "Equipment",
+    "description": "마력이 깃든 검",
+    "effectValue": 12,
+    "iconPath": "Icons/weapon_sword_03"
+  },
+  {
+    "uniqueId": "4",
+    "itemId": "potion_hp_small",
+    "itemName": "작은 HP 포션",
+    "itemType": "Consumable",
+    "description": "HP를 20 회복한다",
+    "effectValue": 20,
+    "iconPath": "Icons/potion_hp_small"
+  },
+  {
+    "uniqueId": "5",
+    "itemId": "potion_hp_medium",
+    "itemName": "중간 HP 포션",
+    "itemType": "Consumable",
+    "description": "HP를 50 회복한다",
+    "effectValue": 50,
+    "iconPath": "Icons/potion_hp_medium"
+  },
+  {
+    "uniqueId": "6",
+    "itemId": "potion_hp_large",
+    "itemName": "큰 HP 포션",
+    "itemType": "Consumable",
+    "description": "HP를 100 회복한다",
+    "effectValue": 100,
+    "iconPath": "Icons/potion_hp_large"
+  }
+]

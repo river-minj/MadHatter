@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-[Serializable]
-public class InventoryTabMapping
-{
-	public GameObject tabPage;
-	public TabDataSource dataSource;
-}
-
-public enum TabDataSource
+public enum TabType
 {
 	Equipment,
 	Consumable,
 	Companion
+}
+
+[Serializable]
+public class InventoryTab
+{
+	public Tab tab;
+	public TabType dataSource;
+	public InfiniteScrollView scrollView;
 }
 
 public class InventoryUI : MonoBehaviour
@@ -22,20 +22,11 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private GameObject _inventoryPanel;
 	[SerializeField] private TabController _tabController;
-
-
-	[SerializeField] private List<TabEntry> _tabs;
-    
-	//[SerializeField] private Transform _content;
- //   [SerializeField] private GameObject _companioanSlot;
-	//[SerializeField] private InfiniteScrollView _scrollView;
-
-	[SerializeField] private GameObject _detailPopup;
-
-	private TabEntry _currentTab;
+	[SerializeField] private List<InventoryTab> _tabs;
+	
+	private Tab _currentTab;
 
 	
-	[SerializeField] private List<InventoryTabMapping> _tabMappings;
 	private void Awake()
 	{
         Hide();
@@ -87,17 +78,9 @@ public class InventoryUI : MonoBehaviour
 		}
 	}
 
-	private void ChangeTab(TabEntry selectedTab)
-	{
-		foreach(var tab in _tabs) {
-			tab.tabPage.SetActive(tab == selectedTab);
-		}
-	}
-
-	private void OnTabChanged(TabEntry tab)
+	private void OnTabChanged(Tab tab)
 	{
 		_currentTab = tab;
-		//_detailPopup.Hide();
 		RefreshTab(tab);
 	}
 
@@ -107,26 +90,28 @@ public class InventoryUI : MonoBehaviour
 			RefreshTab(_currentTab);
 	}
 
-	private void RefreshTab(TabEntry tab)
+	private void RefreshTab(Tab tab)
 	{
-		var tabPage = tab.tabPage.GetComponent<TabPage>();
-		if (tabPage == null)
-			return;
-
-		var mapping = _tabMappings.Find(m => m.tabPage == tab.tabPage);
+		var mapping = _tabs.Find(m => m.tab == tab);
 		if (mapping == null)
 			return;
 
 		switch (mapping.dataSource)
 		{
-			case TabDataSource.Equipment:
-				tabPage.SetData(BuildItemData(ItemType.Equipment));
+			case TabType.Equipment:
+				var equipData = BuildItemData(ItemType.Equipment);
+				Debug.Log($"[InventoryUI] 장비 데이터 수: {equipData.Count}");
+				mapping.scrollView.SetData(equipData);
 				break;
-			case TabDataSource.Consumable:
-				tabPage.SetData(BuildItemData(ItemType.Consumable));
+			case TabType.Consumable:
+				var consumeData = BuildItemData(ItemType.Consumable);
+				Debug.Log($"[InventoryUI] 소비 데이터 수: {consumeData.Count}");
+				mapping.scrollView.SetData(consumeData);
 				break;
-			case TabDataSource.Companion:
-				tabPage.SetData(BuildCompanionData());
+			case TabType.Companion:
+				var companionData = BuildCompanionData();
+				Debug.Log($"[InventoryUI] 동료 데이터 수: {companionData.Count}");
+				mapping.scrollView.SetData(companionData);
 				break;
 		}
 	}
@@ -166,11 +151,27 @@ public class InventoryUI : MonoBehaviour
 		return dataList;
 	}
 
-	//to do : 여기다 할지 말지
-	// --- 상세 팝업 ---
-
 	public void ShowDetailPopup(InventorySlot slot, bool isEquipped)
 	{
-		//_detailPopup.Show(slot, isEquipped);
+
+		var popup = UIManager.Instance.CreateItemDetailPopup();
+		if (popup == null) return;
+
+		Action actionCallback = () =>
+		{
+			if (slot.data._itemType == ItemType.Equipment)
+			{
+				if (isEquipped)
+					InventoryManager.Instance.UnequipWeapon();
+				else
+					InventoryManager.Instance.EquipWeapon(slot.itemId);
+			}
+			else if (slot.data._itemType == ItemType.Consumable)
+			{
+				InventoryManager.Instance.UseItem(slot.itemId);
+			}
+		};
+
+		popup.SetPopup(slot, isEquipped, actionCallback);
 	}
 }
