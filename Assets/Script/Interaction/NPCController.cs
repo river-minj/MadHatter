@@ -22,39 +22,58 @@ public class NPCController: InteractionController
 
 	protected override void OnInteract()
 	{
-		
-		if(_npcData == null)
+		if (_npcData == null)
 		{
 			Init();
 		}
 
-		if (_npcName == null)
+		if (_npcData == null)
 		{
 			Debug.LogError($"[NPCController] NPC Data가 없습니다: {gameObject.name}");
 			return;
 		}
+
+		// 이 NPC가 Talk 퀘스트 타겟인 경우
+		string completedDialogueId = QuestManager.Instance.GetTalkQuestCompletedDialogue(_npcId);
+		if (!string.IsNullOrEmpty(completedDialogueId))
+		{
+			QuestManager.Instance.ReportTalktoNPC(_npcId);
+			var completedDialogue = DialogueDatabase.Instance.GetDialogueById(completedDialogueId);
+			if (completedDialogue != null)
+			{
+				GameManager.Instance.StartDialogue(completedDialogue);
+				return;
+			}
+		}
+		// 이 NPC가 줄 퀘스트가 있는 경우
 		if (!string.IsNullOrEmpty(_npcData._questId))
 		{
-			QuestData questData = QuestDatabase.Instance.GetQuestById(_npcData._questId);
-			if (questData != null)
+			string questId = _npcData._questId;
+
+			// 체인 퀘스트: 현재 줄 수 있는 퀘스트 찾기
+			while (!string.IsNullOrEmpty(questId))
 			{
-				QuestManager.Instance.TryQuestStart(_npcData._questId);
+				QuestData questData = QuestDatabase.Instance.GetQuestById(questId);
+				if (questData == null) break;
+
+				// 완료된 퀘스트면 다음 체인으로
+				if (QuestManager.Instance.IsQuestCompleted(questId))
+				{
+					questId = questData._nextQuestId;
+					continue;
+				}
+
+				// 시작 가능하거나 진행 중인 퀘스트 발견
+				QuestManager.Instance.TryQuestStart(questId);
+				return;
 			}
 		}
 
-		//현재 대화하고 있는 NPC가 퀘스트의 타겟일 경우
-		QuestManager.Instance.ReportTalktoNPC(_npcId);
-
-		//to do : Quest 진행 상황에 따른 대화 불러오기
-
-
-		//var dialogue = DialogueDatabase.Instance.GetDialogueByID(_npcData._defaultDialogueID);
-		//if (dialogue != null)
-		//{
-		//	//show dialogue
-		//	GameManager.Instance?.StartDialogue(dialogue);
-		//}
-
-
+		// 줄 퀘스트가 없으면 기본 대화
+		var dialogue = DialogueDatabase.Instance.GetDialogueById(_npcData._defaultDialogueId);
+		if (dialogue != null)
+		{
+			GameManager.Instance.StartDialogue(dialogue);
+		}
 	}
 }

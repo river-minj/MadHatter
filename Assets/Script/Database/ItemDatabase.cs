@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -33,6 +33,9 @@ public class ItemDatabase
 
 	public ItemData GetItemById(string itemId)
 	{
+		if (string.IsNullOrEmpty(itemId))
+			return null;
+
 		if (_dicItem.TryGetValue(itemId, out var data))
 			return data;
 

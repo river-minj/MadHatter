@@ -7,6 +7,9 @@ public class AutoAttack : MonoBehaviour
 	[SerializeField] private float _attackCooldown = 1.0f;
 	[SerializeField] private LayerMask _enemyLayer;
 
+	[Header("Debug")]
+	[SerializeField, ReadOnly] private int _finalAttackDamage;
+
 	private float _lastAttackTime; //마지막 공격 시간 - 쿨타임 계산용
 	private SpineAnimator _spineAnimator;
 
@@ -59,8 +62,19 @@ public class AutoAttack : MonoBehaviour
 	private void Attack(EnemyController target)
 	{
 		_lastAttackTime = Time.time;
-		target.TakeDamage(_attackDamage);
 
+		int finalDamage = _attackDamage;
+		if (CompareTag("Player"))
+		{
+			ItemData weapon = InventoryManager.Instance.GetEquippedWeaponData();
+			if (weapon != null)
+			{
+
+				finalDamage += weapon._effectValue;
+
+			}
+			target.TakeDamage(finalDamage);
+		}
 		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
 		if (_spineAnimator != null)

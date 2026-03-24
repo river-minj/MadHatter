@@ -108,13 +108,10 @@ public class InventoryManager : MonoBehaviour
 
 	public ItemData GetEquippedWeaponData()
 	{
-		var data = ItemDatabase.Instance.GetItemById(_equippedWeaponId);
-		if(data != null)
-		{
-			return data;
-		}
+		if (string.IsNullOrEmpty(_equippedWeaponId))
+			return null;
 
-		return null;
+		return ItemDatabase.Instance.GetItemById(_equippedWeaponId);
 	}
 
 	// UI용 조회

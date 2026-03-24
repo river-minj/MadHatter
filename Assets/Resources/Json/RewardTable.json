@@ -43,5 +43,23 @@
     "companionId": "",
     "itemId": "iron_sword",
     "itemCount": 1
+  },
+  {
+    "uniqueId": "RWD_003_01",
+    "rewardGroupId": "RWD_003",
+    "gold": 50,
+    "exp": 50,
+    "companionId": "",
+    "itemId": "",
+    "itemCount": 0
+  },
+  {
+    "uniqueId": "RWD_003_02",
+    "rewardGroupId": "RWD_003",
+    "gold": 0,
+    "exp": 0,
+    "companionId": "",
+    "itemId": "weapon_sword_01",
+    "itemCount": 1
   }
 ]

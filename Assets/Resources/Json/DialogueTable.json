@@ -145,5 +145,54 @@
     "speakerName": "",
     "dialogueType": "System",
     "line": "어두운 숲에 들어섰습니다. 조심하세요."
+  },
+  {
+    "uniqueId": "DLG_010_01",
+    "dialogueId": "DLG_010",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "마을 근처에 슬라임이 나타나서 골치라네."
+  },
+  {
+    "uniqueId": "DLG_010_02",
+    "dialogueId": "DLG_010",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "한 마리만 처치해줄 수 있겠나?"
+  },
+  {
+    "uniqueId": "DLG_010_03",
+    "dialogueId": "DLG_010",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "알겠습니다. 처치하고 올게요."
+  },
+  {
+    "uniqueId": "DLG_011_01",
+    "dialogueId": "DLG_011",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "아직 슬라임을 처치하지 못했나? 힘내게!"
+  },
+  {
+    "uniqueId": "DLG_012_01",
+    "dialogueId": "DLG_012",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "오, 해치웠군! 대단하네."
+  },
+  {
+    "uniqueId": "DLG_012_02",
+    "dialogueId": "DLG_012",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "이 검을 가져가게. 내가 직접 만든 거라네."
+  },
+  {
+    "uniqueId": "DLG_012_03",
+    "dialogueId": "DLG_012",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "감사합니다!"
   }
 ]

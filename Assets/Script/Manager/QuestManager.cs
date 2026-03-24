@@ -109,11 +109,16 @@ public class QuestManager : MonoBehaviour
 
 	public void ApplyData(QuestSaveData data)
 	{
-		_setStartedQuest = new HashSet<string>(data.startedQuests);
-		_setCompletedQuest = new HashSet<string>(data.completedQuests);
+		if (data == null) return;
+
+		_setStartedQuest = data.startedQuests != null
+			? new HashSet<string>(data.startedQuests)
+			: new HashSet<string>();
+		_setCompletedQuest = data.completedQuests != null
+			? new HashSet<string>(data.completedQuests)
+			: new HashSet<string>();
 		_dicActiveQuest.Clear();
-		
-		foreach(var entry in data.activeQuests)
+		foreach (var entry in data.activeQuests)
 		{
 			QuestData questData = QuestDatabase.Instance.GetQuestById(entry.questID);
 			if (questData == null)
@@ -365,6 +370,7 @@ public class QuestManager : MonoBehaviour
 
 		foreach (var reward in qd._rewards)
 		{
+			Debug.Log($"[QuestManager] 보상 처리: gold={reward._gold}, exp={reward._exp}, companionId={reward._companionId}, itemId={reward._itemId}, itemCount={reward._itemCount}");
 			if (reward._gold > 0)
 			{
 				PlayerInfoManager.Instance.AddGold(reward._gold);
@@ -408,5 +414,23 @@ public class QuestManager : MonoBehaviour
 		OnQuestListChanged?.Invoke();
 		Debug.Log($"[QuestManager] 퀘스트 포기: {questId}");
 		GameManager.Instance.SaveGame();
+	}
+
+	//talk 타입 퀘스트 완료 대화
+	public string GetTalkQuestCompletedDialogue(string npcId)
+	{
+		foreach (var pair in _dicActiveQuest)
+		{
+			QuestState state = pair.Value;
+			QuestData data = state._data;
+
+			if (data._goalType == QuestGoalType.Talk
+				&& data._targetId == npcId
+				&& !state._isCompleted)
+			{
+				return data._completedDialogueId;
+			}
+		}
+		return null;
 	}
 }

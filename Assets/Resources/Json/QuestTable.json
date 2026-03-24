@@ -24,7 +24,21 @@
     "startDialogueId": "DLG_005",
     "progressDialogueId": "DLG_006",
     "completedDialogueId": "DLG_007",
-    "nextQuestId": "",
+    "nextQuestId": "QST_003",
     "rewardGroupId": "RWD_002"
+  },
+  {
+    "uniqueId": "QST_003",
+    "title": "슬라임 퇴치",
+    "description": "마을 근처의 슬라임 1마리를 처치하자.",
+    "goalType": "Kill",
+    "goalCount": 1,
+    "questGiverNpcId": "NPC_002",
+    "targetId": "slime_01",
+    "startDialogueId": "DLG_010",
+    "progressDialogueId": "DLG_011",
+    "completedDialogueId": "DLG_012",
+    "nextQuestId": "",
+    "rewardGroupId": "RWD_003"
   }
 ]
