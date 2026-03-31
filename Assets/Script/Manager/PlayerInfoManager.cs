@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using UnityEngine;
 
@@ -29,11 +29,14 @@ public class PlayerInfoManager : MonoBehaviour
 {
     public static PlayerInfoManager Instance { get; private set; }
 
+	//이벤트
 	public Action<int> OnGoldChanged;
 	public Action<int> OnLevelChanged;
 	public Action<int> OnExpChanged;
 	public Action<int> OnHpChanged;
 	public Action OnPlayerDead;
+	public Action<int> OnAtkChanged;
+
 
 	private PlayerInfo _playerInfo = new PlayerInfo("Noah", 1, 0, 0,100);
 
@@ -43,7 +46,25 @@ public class PlayerInfoManager : MonoBehaviour
 	public int MaxHp => 100 + (_playerInfo._level - 1) * 10; // 레벨당 +10 (임시)
 	public bool IsDead => _playerInfo._hp <= 0;
 
+	[SerializeField] private int _baseAtk = 3;
+	public int Atk
+	{
+		get
+		{
+			int bonus = 0;
+			if(InventoryManager.Instance != null)
+			{
+				ItemData weapon = InventoryManager.Instance.GetEquippedWeaponData();
+				if(weapon != null)
+				{
+					bonus = weapon._effectValue; //무기의 공격력
+				}
+			}
+			return _baseAtk + bonus;
+		}
+	}
 
+	
 	private void Awake()
 	{
 		if (Instance != null && Instance != this)
@@ -54,6 +75,30 @@ public class PlayerInfoManager : MonoBehaviour
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
 
+	}
+
+	private void Start()
+	{
+		//인벤토리 매니저에 장비 변경 이벤트 구독
+		if(InventoryManager.Instance != null)
+		{
+			InventoryManager.Instance.OnEquipChanged += HandleEquipChanged;
+		}
+	}
+
+	private void OnDestroy()
+	{
+		//인벤토리 매니저 이벤트 구독 해제
+		if(InventoryManager.Instance != null)
+		{
+			InventoryManager.Instance.OnEquipChanged -= HandleEquipChanged;
+		}
+
+	}
+
+	private void HandleEquipChanged()
+	{
+		OnAtkChanged?.Invoke(Atk);
 	}
 
 	public PlayerInfoSaveData GetSaveData()

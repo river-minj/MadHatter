@@ -63,22 +63,26 @@ public class AutoAttack : MonoBehaviour
 	{
 		_lastAttackTime = Time.time;
 
-		int finalDamage = _attackDamage;
-		if (CompareTag("Player"))
-		{
-			ItemData weapon = InventoryManager.Instance.GetEquippedWeaponData();
-			if (weapon != null)
-			{
+		int finalDamage = GetFinalDamage();
+		_finalAttackDamage = finalDamage;
+		target.TakeDamage(finalDamage);
 
-				finalDamage += weapon._effectValue;
-
-			}
-			target.TakeDamage(finalDamage);
-		}
 		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
 		if (_spineAnimator != null)
 			_spineAnimator.PlayAnimation("attack_melee", false);
+	}
+
+	private int GetFinalDamage()
+	{
+		if(CompareTag("Player"))
+		{
+			//플레이엉의	공력은 레벨과 장비에 따라 달라질 수 있으므로 PlayerInfoManager에서 가져옴
+			return PlayerInfoManager.Instance.Atk;
+		}
+
+		//기타 다른 모든 공격가능 객체의 기본 공격력
+		return _attackDamage;
 	}
 
 #if UNITY_EDITOR

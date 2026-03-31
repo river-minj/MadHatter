@@ -80,7 +80,7 @@ public class InventoryManager : MonoBehaviour
 		if (!_dicInventory.TryGetValue(itemId, out var slot)) return;
 		if (slot.data == null || slot.data._itemType != ItemType.Consumable) return;
 
-		//PlayerInfoManager.Instance.AddHp(slot.data._effectValue);
+		PlayerInfoManager.Instance.AddHp(slot.data._effectValue);
 		RemoveItem(itemId, 1);
 	}
 
