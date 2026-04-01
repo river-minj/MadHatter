@@ -123,6 +123,31 @@ public class CompanionManager : MonoBehaviour
 		return _lineA.Count + _lineB.Count;
 	}
 
+	public CompanionSaveData GetSaveData()
+	{
+		CompanionSaveData data = new CompanionSaveData();
+		foreach(var comp in _ownedCompanions)
+		{
+			data.ownedCompanionIds.Add(comp._companionId);
+		}
+		return data;
+	}
+
+	public void ApplyData(CompanionSaveData data)
+	{
+		if (data == null || data.ownedCompanionIds == null)
+			return;
+
+		foreach(string id in data.ownedCompanionIds)
+		{
+			CompanionData compData = CompanionDatabase.Instance.GetCompanionById(id);
+			if(compData != null)
+			{
+				AddCompanion(compData);
+			}
+		}
+	}
+
 	// 디버그: 현재 상태 출력
 	[ContextMenu("Print Companion Status")]
 	public void PrintCompanionStatus()

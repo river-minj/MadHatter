@@ -52,14 +52,14 @@ public class SceneLoader : MonoBehaviour
 		yield return null;
 
 		// 2. 세이브 데이터 로드 (이어하기)
-		if (!isNewGame)
-		{
-			_loadingUI.SetProgress(0.1f, "세이브 데이터 로드 중...");
+		//if (!isNewGame)
+		//{
+		//	_loadingUI.SetProgress(0.1f, "세이브 데이터 로드 중...");
 
-			SaveData data = GameSystem.Load();
-			GameManager.Instance.LoadGame(data);
-			yield return null;
-		}
+		//	SaveData data = GameSystem.Load();
+		//	GameManager.Instance.LoadGame(data);
+		//	yield return null;
+		//}
 
 		// 3. 씬 비동기 로드
 		_loadingUI.SetProgress(0.2f, "씬 로드 중...");
@@ -104,7 +104,8 @@ public class SceneLoader : MonoBehaviour
 		{
 			_loadingUI.SetProgress(0.95f, "데이터 적용 중...");
 
-			// to do : 각 Manager들에게 유저 데이터 주입 (ApplyUserData)
+			SaveData data = GameSystem.Load();
+			GameManager.Instance.LoadGame(data);
 			yield return null;
 		}
 

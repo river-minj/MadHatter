@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -10,6 +10,7 @@ public class  SaveData
 	public PlayerInfoSaveData playerInfo;
 	public QuestSaveData questInfo;
 	public InventorySaveData inventoryData;
+	public CompanionSaveData companionData;
 }
 
 [Serializable]
@@ -50,6 +51,12 @@ public class InventoryItemEntry
 {
 	public string itemId;
 	public int count;
+}
+
+[Serializable]
+public class CompanionSaveData
+{
+	public List<string> ownedCompanionIds = new List<string>();
 }
 
 public class GameSystem : MonoBehaviour

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spine;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -129,7 +130,8 @@ public class InventoryUI : MonoBehaviour
 			{
 				_index = i,
 				_inventorySlot = items[i],
-				_isEquipped = items[i].itemId == equippedId
+				_isEquipped = items[i].itemId == equippedId,
+				_onClicked = (slot, equipped) => { ShowDetailPopup(slot, equipped); }
 			});
 		}
 		return dataList;

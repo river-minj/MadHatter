@@ -31,7 +31,7 @@ public class ItemDetailPopup : MonoBehaviour
 
 		if (slot.data._itemType == ItemType.Equipment)
 		{
-			_effectText.text = $"공격력 +{slot.data._effectValue}";
+			_effectText.text = $"ATK +{slot.data._effectValue}";
 		}
 		else if (slot.data._itemType == ItemType.Consumable)
 		{

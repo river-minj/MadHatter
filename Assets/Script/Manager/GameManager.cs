@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -70,7 +71,9 @@ public class GameManager : MonoBehaviour
 		SaveData data = new SaveData
         {
             playerInfo = PlayerInfoManager.Instance.GetSaveData(),
-            questInfo = QuestManager.Instance.GetSaveData()
+            questInfo = QuestManager.Instance.GetSaveData(),
+            inventoryData = InventoryManager.Instance.GetSaveData(),
+            companionData = CompanionManager.Instance.GetSaveData(),
         };
 
         GameSystem.Save(data);
@@ -82,11 +85,33 @@ public class GameManager : MonoBehaviour
 
         PlayerInfoManager.Instance.ApplyData(data.playerInfo);
         QuestManager.Instance.ApplyData(data.questInfo);
+        InventoryManager.Instance.ApplyData(data.inventoryData);
+        CompanionManager.Instance.ApplyData(data.companionData);
 	}
 
 	public void Start()
 	{
-        QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
+		QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
+		InventoryManager.Instance.OnInventoryChanged += SaveGame;
+		InventoryManager.Instance.OnEquipChanged += SaveGame;
+
+		if (SceneLoader.Instance != null)
+		{
+			// 정상 흐름: SceneLoader가 LoadGame 관리, 맵만 로드
+			LoadFristMap();
+			return;
+		}
+
+		// 개발 모드: Main 씬 직접 실행
+		StartCoroutine(DevModeInit());
+	}
+
+	private IEnumerator DevModeInit()
+	{
+		if (DataManager.Instance != null && !DataManager.Instance.IsLoaded)
+		{
+			yield return DataManager.Instance.LoadAllDataAsync();
+		}
 
 		if (GameSystem.Exists())
 		{
@@ -97,7 +122,7 @@ public class GameManager : MonoBehaviour
 		LoadFristMap();
 	}
 
-    private void OnQuestRewardClaimed(string questId)
+	private void OnQuestRewardClaimed(string questId)
     {
         SaveGame();
     }

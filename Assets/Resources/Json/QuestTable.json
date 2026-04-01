@@ -34,7 +34,7 @@
     "goalType": "Kill",
     "goalCount": 1,
     "questGiverNpcId": "NPC_002",
-    "targetId": "slime_01",
+    "targetId": "E_001",
     "startDialogueId": "DLG_010",
     "progressDialogueId": "DLG_011",
     "completedDialogueId": "DLG_012",

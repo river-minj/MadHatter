@@ -1,3 +1,4 @@
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ public class ItemSlotData : InfiniteScrollData
 {
     public InventorySlot _inventorySlot;
     public bool _isEquipped;
+	public Action<InventorySlot, bool> _onClicked;
 }
 
 public class ItemSlotController : InfiniteScrollItem
@@ -16,13 +18,8 @@ public class ItemSlotController : InfiniteScrollItem
     [SerializeField] private GameObject _equipped;
     [SerializeField] private Button _slotButton;
 
-    private InventoryUI _inventoryUI;
     private ItemSlotData _slotData;
 
-    private void SetInventoryUI(InventoryUI inventoryUI)
-    {
-		_inventoryUI = inventoryUI;
-    }
 
 	protected override void RefreshUI()
 	{
@@ -70,10 +67,10 @@ public class ItemSlotController : InfiniteScrollItem
 
 	private void OnSlotClicked()
 	{
-		if (_inventoryUI == null || _slotData == null)
+		if (_slotData == null)
 			return;
 
-		_inventoryUI.ShowDetailPopup(_slotData._inventorySlot, _slotData._isEquipped);
+		_slotData._onClicked?.Invoke(_slotData._inventorySlot , _slotData._isEquipped);
 	}
 
 
