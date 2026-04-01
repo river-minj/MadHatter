@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class HudUI : MonoBehaviour
 {
 	[Header("HP")]
-	[SerializeField] private Slider _hpSlider;
+	[SerializeField] private Image _hpSlider;
 	[SerializeField] private TextMeshProUGUI _hpText;
 
 	[Header("EXP")]
+	[SerializeField] private Image _expSlider;
 	[SerializeField] private TextMeshProUGUI _expText;
-	[SerializeField] private Slider _expSlider;
 
 	[Header("Info")]
 	[SerializeField] private TextMeshProUGUI _levelText;
@@ -64,7 +64,7 @@ public class HudUI : MonoBehaviour
 	private void UpdateHp(int hp)
 	{
 		int maxHp = PlayerInfoManager.Instance.MaxHp;
-		_hpSlider.value = (float)hp / maxHp;
+		_hpSlider.fillAmount = (float)hp / maxHp;
 		_hpText.text = $"{hp} / {maxHp}";
 
 	}
@@ -72,22 +72,22 @@ public class HudUI : MonoBehaviour
 	private void UpdateExp(int exp)
 	{
 		int requiredExp = PlayerInfoManager.Instance.RequestExp;
-		_expSlider.value = (float)exp / requiredExp;
+		_expSlider.fillAmount = (float)exp / requiredExp;
 		_expText.text = $"{exp} / {requiredExp}";
 	}
 
 	private void UpdateLevel(int level)
 	{
-		_levelText.text = $"Lv. {level}";
+		_levelText.text = $"{level}";
 	}
 
 	private void UpdateGold(int gold)
 	{
-		_goldText.text = $"Gold: {gold}";
+		_goldText.text = $"{gold}";
 	}
 
 	private void UpdateAtk(int atk)
 	{
-		_atkText.text = $"ATK: {atk}";
+		_atkText.text = $"{atk}";
 	}
 }
