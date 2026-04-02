@@ -9,13 +9,13 @@
     "uniqueId": 2,
     "enemyId": "E_001",
     "itemId": "potion_hp_medium",
-    "weight": 10
+    "weight": 50
   },
   {
     "uniqueId": 3,
     "enemyId": "E_001",
     "itemId": "",
-    "weight": 40
+    "weight": 0
   },
   {
     "uniqueId": 4,
