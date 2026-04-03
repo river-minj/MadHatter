@@ -63,7 +63,7 @@ public class EnemyIdleState : IEnemyState
 		Transform target = _fsm.PatrolPoints[_currentPatrolIndex];
 		Vector2 direction = (target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.PlayAnimation("run");
 		_controller.Anim.SetFacing(direction);
 
 		float distance = Vector2.Distance(_controller.transform.position, target.position);
@@ -128,7 +128,7 @@ public class EnemyChaseState : IEnemyState
 		// 플레이어 방향으로 이동
 		Vector2 direction = (_fsm.Target.position - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.PlayAnimation("run");
 		_controller.Anim.SetFacing(direction);
 	}
 
@@ -195,7 +195,7 @@ public class EnemyAttackState : IEnemyState
 		{
 			_lastAttackTime = Time.time;
 
-			_controller.Anim.PlayAnimation("attack_melee", false);
+			_controller.Anim.PlayAnimation("attack", false);
 			_controller.Attack(_fsm.Target);
 		}
 	}
@@ -224,7 +224,7 @@ public class EnemyHitState : IEnemyState
 	{
 		_stunTimer = 0f;
 		_controller.StopMove();
-		_controller.Anim.PlayAnimation("knockback", false);
+		_controller.Anim.PlayAnimation("hit", false);
 
 		// 타겟 반대 방향으로 넉백
 		if (_fsm.Target != null)
@@ -282,7 +282,7 @@ public class EnemyReturnState : IEnemyState
 		// 원래 위치로 이동
 		Vector2 direction = (_fsm.OriginPosition - _controller.transform.position).normalized;
 		_controller.MoveTo(direction);
-		_controller.Anim.PlayAnimation("run_1");
+		_controller.Anim.PlayAnimation("run");
 		_controller.Anim.SetFacing(direction);
 
 		// 도착 체크

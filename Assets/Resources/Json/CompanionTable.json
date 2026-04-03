@@ -2,16 +2,16 @@
   {
     "uniqueId": "comp_001",
     "companionName": "꼬마 기사",
-    "skinName": "skin_female_037",
-    "companionPrefabPath": "Prefab/Character/Companion",
+    "skinName": "full-skins/boy",
+    "companionPrefabPath": "Prefab/Character/New/Companion001",
     "followSpeed": 3.0,
     "followDistance": 1.2
   },
   {
     "uniqueId": "comp_002",
     "companionName": "숲의 정령",
-    "skinName": "skin_female_045",
-    "companionPrefabPath": "Prefab/Character/Companion002",
+    "skinName": "full-skins/girl-spring-dress",
+    "companionPrefabPath": "Prefab/Character/New/Companion002",
     "followSpeed": 3.5,
     "followDistance": 1.5
   }

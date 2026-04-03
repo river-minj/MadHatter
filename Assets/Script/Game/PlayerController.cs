@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		// 키보드 입력 받기
 		HandleInput();
 		UpdateDirection();
-		string anim = _moveDir.magnitude > 0.1f ? "run_1" : "idle";
+		string anim = _moveDir.magnitude > 0.1f ? "run" : "idle";
 		_spineAnimator.PlayAnimation(anim);
 	}
 
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if(_isDead) return;
 
 		PlayerInfoManager.Instance.TakeDamage(damage);
-		_spineAnimator.PlayAnimation("knockback", false);
+		_spineAnimator.PlayAnimation("hit", false);
 
 		if(PlayerInfoManager.Instance.IsDead)
 		{

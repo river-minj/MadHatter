@@ -70,7 +70,7 @@ public class AutoAttack : MonoBehaviour
 		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
 		if (_spineAnimator != null)
-			_spineAnimator.PlayAnimation("attack_melee", false);
+			_spineAnimator.PlayAnimation("attack", false);
 	}
 
 	private int GetFinalDamage()
