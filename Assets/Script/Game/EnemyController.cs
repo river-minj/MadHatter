@@ -7,8 +7,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 	[SerializeField] private int _maxHp = 10;
 	[SerializeField] private int _currentHp;
 
-	private SpineAnimator _spineAnimator;
-	public SpineAnimator Anim => _spineAnimator;
+	private IAnimator _spineAnimator;
+	public IAnimator Anim => _spineAnimator;
 
 	private EnemyFSM _fsm;
 	private Rigidbody2D _rb;
@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 		_rb = GetComponent<Rigidbody2D>();
 		_fsm = GetComponent<EnemyFSM>();
-		_spineAnimator = GetComponent<SpineAnimator>();
+		_spineAnimator = GetComponent<IAnimator>();
 	}
 
 	private void Start()

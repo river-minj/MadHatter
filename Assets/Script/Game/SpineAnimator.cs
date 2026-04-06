@@ -11,7 +11,7 @@ public class AnimationNameMapping
 	public string actualName;
 
 }
-public class SpineAnimator : MonoBehaviour
+public class SpineAnimator : MonoBehaviour, IAnimator
 {
 	[SerializeField] private SkeletonAnimation _skel;
 	[SerializeField] private List<AnimationNameMapping> _animationMapping = new();

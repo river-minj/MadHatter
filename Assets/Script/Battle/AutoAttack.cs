@@ -11,12 +11,12 @@ public class AutoAttack : MonoBehaviour
 	[SerializeField, ReadOnly] private int _finalAttackDamage;
 
 	private float _lastAttackTime; //마지막 공격 시간 - 쿨타임 계산용
-	private SpineAnimator _spineAnimator;
+	private IAnimator _spineAnimator;
 
 
 	private void Awake()
 	{
-		_spineAnimator = GetComponent<SpineAnimator>();
+		_spineAnimator = GetComponent<IAnimator>();
 	}
 
 	private void Update()

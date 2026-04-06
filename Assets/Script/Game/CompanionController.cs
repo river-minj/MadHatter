@@ -10,7 +10,7 @@ public class CompanionController : MonoBehaviour
 	public int _followIndex;
 	[SerializeField] private int _stepPerFollower = 6; // 한 동료가 몇 스텝 뒤를 따를지 (트레일 인덱스 간격)
 	
-	private SpineAnimator _spineAnimator;
+	private IAnimator _spineAnimator;
 	private PlayerController _player;
     private Vector3 _targetPos;
 
@@ -31,9 +31,10 @@ public class CompanionController : MonoBehaviour
 		_isLineA = isLineA;
 		_indexInLine = lineIndex;
 
-		_spineAnimator = GetComponent<SpineAnimator>();
+		_spineAnimator = GetComponent<IAnimator>();
 
-		var skel = _spineAnimator.Skeleton;
+		var skelAnim = _spineAnimator as SpineAnimator;
+		var skel = skelAnim?.Skeleton;
 		if (skel != null)
 		{
 			skel.initialSkinName = _companionData._skinName;

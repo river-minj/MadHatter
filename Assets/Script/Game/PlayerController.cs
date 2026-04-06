@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private Vector2 _moveDir;
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
-	private SpineAnimator _spineAnimator;
+	private IAnimator _spineAnimator;
 
 	//동료가 따라올 위치 (2열)
 	[SerializeField] private Transform _companionAnchorA;
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Awake()
 	{
-		_spineAnimator = GetComponent<SpineAnimator>();
+		_spineAnimator = GetComponent<IAnimator>();
 	}
 
 	void Update()
