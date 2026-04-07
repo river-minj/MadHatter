@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 3273658816893215719}
   - component: {fileID: 5591671376186430362}
   - component: {fileID: 1996854525137834186}
-  - component: {fileID: 4352501766956130082}
   - component: {fileID: 5635430211195762279}
   - component: {fileID: 6033548751236971205}
   - component: {fileID: 2497177724520393493}
@@ -97,7 +96,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.6, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8625625888600428796}
@@ -150,8 +149,8 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1511367901
-  m_SortingLayer: 2
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5591671376186430362
@@ -209,21 +208,6 @@ MonoBehaviour:
   _renderer: {fileID: 3273658816893215719}
   _sortPrecision: 100
   _sortOffset: 0
---- !u!114 &4352501766956130082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5951407121995034943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cef72cdc363456641acf04e3cd70c80e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemyId: E_001
-  _maxHp: 10
-  _currentHp: 0
 --- !u!114 &5635430211195762279
 MonoBehaviour:
   m_ObjectHideFlags: 0
