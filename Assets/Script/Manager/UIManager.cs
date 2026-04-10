@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +34,7 @@ public class UIManager : MonoBehaviour
 	//popup root
 	[SerializeField] private Transform _popupRoot;
 
+	CommonConfirmPopup _currentPopup;
 	private void Awake()
 	{
 		if (Instance == null)
@@ -244,6 +247,11 @@ public class UIManager : MonoBehaviour
 	public void ShowConfirmPopup(string prefabName, string message, string confirm, string cancel,
 	CommonConfirmPopup.ConfirmType type, Action confirmAction, Action cancelAction = null)
 	{
+
+		if(_currentPopup != null)
+		{ return;
+		}
+
 		GameObject prefab = Resources.Load<GameObject>($"Prefab/Popup/{prefabName}");
 		if (prefab == null)
 		{
@@ -251,8 +259,13 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 		GameObject popupObj = Instantiate(prefab, _popupRoot);
-		CommonConfirmPopup popup = popupObj.GetComponent<CommonConfirmPopup>();
-		popup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
+		_currentPopup = popupObj.GetComponent<CommonConfirmPopup>();
+		_currentPopup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
+	}
+
+	public void ClearCurrentPopup()
+	{
+		_currentPopup = null;
 	}
 
 	public ItemDetailPopup CreateItemDetailPopup()

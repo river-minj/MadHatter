@@ -9,7 +9,8 @@
     "targetId": "NPC_002",
     "startDialogueId": "DLG_002",
     "progressDialogueId": "DLG_003",
-    "completedDialogueId": "DLG_004",
+    "completedDialogueId": "DLG_013",
+    "targetDialogueId": "DLG_004",
     "nextQuestId": "QST_002",
     "rewardGroupId": "RWD_001"
   },
@@ -23,7 +24,8 @@
     "targetId": "NPC_001",
     "startDialogueId": "DLG_005",
     "progressDialogueId": "DLG_006",
-    "completedDialogueId": "DLG_007",
+    "completedDialogueId": "DLG_014",
+    "targetDialogueId": "DLG_007",
     "nextQuestId": "QST_003",
     "rewardGroupId": "RWD_002"
   },
@@ -38,6 +40,7 @@
     "startDialogueId": "DLG_010",
     "progressDialogueId": "DLG_011",
     "completedDialogueId": "DLG_012",
+    "targetDialogueId": "",
     "nextQuestId": "",
     "rewardGroupId": "RWD_003"
   }

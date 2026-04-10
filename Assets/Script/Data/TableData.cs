@@ -24,6 +24,7 @@ public class QuestTableData
 	public string startDialogueId;
 	public string progressDialogueId;
 	public string completedDialogueId;
+	public string targetDialogueId;
 	public string nextQuestId;
 }
 

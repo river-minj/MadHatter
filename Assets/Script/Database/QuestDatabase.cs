@@ -65,7 +65,8 @@ public class QuestDatabase
 				_goalCount = row.goalCount,
 				_rewardGroupId = row.rewardGroupId,
 				_nextQuestId = row.nextQuestId,
-				_targetId = row.targetId
+				_targetId = row.targetId,
+				_targetDialogueId = row.targetDialogueId
 			};
 
 			// 보상 매칭

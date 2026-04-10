@@ -34,14 +34,14 @@ public class NPCController: InteractionController
 		}
 
 		// 이 NPC가 Talk 퀘스트 타겟인 경우
-		string completedDialogueId = QuestManager.Instance.GetTalkQuestCompletedDialogue(_npcId);
-		if (!string.IsNullOrEmpty(completedDialogueId))
+		string targetDialogueId = QuestManager.Instance.GetTalkQuestTargetDialogue(_npcId);
+		if (!string.IsNullOrEmpty(targetDialogueId))
 		{
 			QuestManager.Instance.ReportTalktoNPC(_npcId);
-			var completedDialogue = DialogueDatabase.Instance.GetDialogueById(completedDialogueId);
-			if (completedDialogue != null)
+			var targetDialogue = DialogueDatabase.Instance.GetDialogueById(targetDialogueId);
+			if (targetDialogue != null)
 			{
-				GameManager.Instance.StartDialogue(completedDialogue);
+				GameManager.Instance.StartDialogue(targetDialogue);
 				return;
 			}
 		}
@@ -55,6 +55,9 @@ public class NPCController: InteractionController
 			{
 				QuestData questData = QuestDatabase.Instance.GetQuestById(questId);
 				if (questData == null) break;
+
+				if (questData._questGiverNpcId != _npcId)
+					break;
 
 				// 완료된 퀘스트면 다음 체인으로
 				if (QuestManager.Instance.IsQuestCompleted(questId))

@@ -317,9 +317,11 @@ public class QuestManager : MonoBehaviour
 
 	public void ClaimReward(string questId)
 	{
+		//진행 중인 퀘스트 여부
 		if (_dicActiveQuest.TryGetValue(questId, out QuestState qs) == false)
 			return;
 
+		//퀘스트 달성 여부
 		if (qs._isCompleted == false)
 		{
 			Debug.LogWarning($"[QuestManager] 퀘스트가 완료되지 않았습니다: {questId}");
@@ -342,22 +344,6 @@ public class QuestManager : MonoBehaviour
 		qs._isCompleted = true;
 
 		OnQuestRewardClaimed?.Invoke(questId);
-
-		//완료 대사
-		if (string.IsNullOrEmpty(questData._completedDialogueId) == false)
-		{
-			DialogueData completedD = DialogueDatabase.Instance.GetDialogueById(questData._completedDialogueId);
-			if (completedD != null)
-			{
-				GameManager.Instance.StartDialogue(completedD);
-			}
-		}
-
-		//다음 퀘스트 연결
-		if (string.IsNullOrEmpty(questData._nextQuestId) == false)
-		{
-			TryQuestStart(questData._nextQuestId);
-		}
 	}
 
 	private void GetReward(QuestData qd)
@@ -417,7 +403,7 @@ public class QuestManager : MonoBehaviour
 	}
 
 	//talk 타입 퀘스트 완료 대화
-	public string GetTalkQuestCompletedDialogue(string npcId)
+	public string GetTalkQuestTargetDialogue(string npcId)
 	{
 		foreach (var pair in _dicActiveQuest)
 		{
@@ -428,7 +414,7 @@ public class QuestManager : MonoBehaviour
 				&& data._targetId == npcId
 				&& !state._isCompleted)
 			{
-				return data._completedDialogueId;
+				return data._targetDialogueId;
 			}
 		}
 		return null;

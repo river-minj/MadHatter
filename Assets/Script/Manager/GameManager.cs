@@ -209,10 +209,16 @@ public class GameManager : MonoBehaviour
 
         UIManager.Instance?.StartDialogue(dialogueData._lines, () => {
 
-            onComplete?.Invoke();
+			if (onComplete != null)
+			{
+		    	onComplete?.Invoke();
+			}
+			else
+			{
+				EndDialogue();
+			}
 
-            EndDialogue();
-        });
+		});
     }
 
     public void EndDialogue()

@@ -38,8 +38,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
 			{
-				UIManager.Instance.AdvanceDialogue();
+				if(UIManager.Instance.IsDialogueOpen())
+				{ 
+					UIManager.Instance.AdvanceDialogue();
+				}
 			}
+			return;
 		}
 
 		// 키보드 입력 받기
