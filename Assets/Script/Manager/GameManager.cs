@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour
     public MapController CurrentMapController => _currentMapController;
     private MapController? _currentMapController;
 
+    /// <summary>
+    /// 입력 잠금 상태 관리 = true 일때 입력 불가
+    /// 1. 다이얼로그 시작, 끝
+    /// 2. 페이드 인아웃
+    /// 3. 죽음, 리스폰
+    /// </summary>
     public bool IsInputLock { get; private set; }
     
 

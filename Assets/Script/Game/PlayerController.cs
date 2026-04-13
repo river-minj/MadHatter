@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private bool _isDead = false;
 	public bool IsDead => _isDead;
 
+	private IInteractable _currentInteractable;
+
 	private void Awake()
 	{
 		_spineAnimator = GetComponent<IAnimator>();
@@ -31,11 +33,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void Update()
 	{
+		//움직임이 잠겨있으면 입력 불가
 		if (GameManager.Instance != null && GameManager.Instance.IsInputLock)
 		{
 			_moveDir = Vector2.zero;
 			_spineAnimator.PlayAnimation("idle");
 
+			//다이얼로그 진행, 타이핑
 			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
 			{
 				if(UIManager.Instance.IsDialogueOpen())
@@ -113,6 +117,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 			UIManager.Instance.ToggleQuest();
 		}
 
+		if (Input.GetKeyDown(KeyCode.E))
+		{
+			//인터렉티브 상대가 있을때는 프롬프트를 띄우지 않음
+			if (_currentInteractable != null)
+			{
+				_currentInteractable.Interact(this);
+				UIManager.Instance?.HideNPCPrompt();
+			}
+		}
 
 		//test
 		// 키보드 T 누르면 아이템 추가 테스트
@@ -231,6 +244,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		//입력 잠금 해제
 		GameManager.Instance.SetLockInput(false);
+	}
+
+	public void SetInteractable(IInteractable target)
+	{
+		_currentInteractable = target;
+	}
+	public void ClearInteractable()
+	{
+		_currentInteractable = null; 
 	}
 }
 

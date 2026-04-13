@@ -5,27 +5,13 @@
 /// OnTriggerEnter/Exit 으로 플레이어 입퇴장 감지
 /// </summary>
 
-public class TriggerInputHandler : MonoBehaviour, IInputStrategy
+public class TriggerInputHandler : MonoBehaviour
 {
 	private IInteractable interactable;
 	private bool isEnabled = true;
 	private bool playerInRange = false;
 
 	private PlayerController _playercontroller;
-
-	public void Initialize(IInteractable target)
-	{
-		interactable = target;
-	}
-	public void Enable()
-	{
-		isEnabled = true;
-	}
-	public void Disable()
-	{
-		isEnabled = false;
-		playerInRange = false;
-	}
 
 	void Start()
 	{
@@ -46,19 +32,6 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 		}
 	}
 
-	private void Update()
-	{
-		if(!isEnabled) return;
-
-		if (!playerInRange) return;
-
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-			interactable?.Interact(_playercontroller);
-			UIManager.Instance?.HideNPCPrompt();
-        }
-    }
-
 	//trigger 입퇴장
 	void OnTriggerEnter2D(Collider2D other)
 	{
@@ -68,6 +41,7 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 		{
 			playerInRange = true;
 			_playercontroller = other.GetComponent<PlayerController>();
+			_playercontroller.SetInteractable(interactable);
 
 			if (interactable is InteractionController controller)
 			{
@@ -87,6 +61,8 @@ public class TriggerInputHandler : MonoBehaviour, IInputStrategy
 	{
 		if (collision.CompareTag("Player"))
 		{
+			//플레이어가 상호작용 하는 범위를 벗어났을 때 인터렉션 대상을 초기화
+			_playercontroller.ClearInteractable();
 			playerInRange = false;
 			_playercontroller = null;
 

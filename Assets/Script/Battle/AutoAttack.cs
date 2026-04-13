@@ -21,9 +21,11 @@ public class AutoAttack : MonoBehaviour
 
 	private void Update()
 	{
+		//움직임이 잠겨있으면 공격 불가
 		if (GameManager.Instance != null && GameManager.Instance.IsInputLock)
 			return;
 
+		//쿨타임 체크
 		if (Time.time < _lastAttackTime + _attackCooldown)
 			return;
 
