@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     public MapController CurrentMapController => _currentMapController;
     private MapController? _currentMapController;
+    private bool _isLoading;
 
     /// <summary>
     /// 입력 잠금 상태 관리 = true 일때 입력 불가
@@ -70,6 +71,8 @@ public class GameManager : MonoBehaviour
 
 	public void SaveGame()
     {
+        if (_isLoading)
+            return;
 
 		Debug.Log($"[GameManager] PlayerInfoManager: {PlayerInfoManager.Instance}");
 		Debug.Log($"[GameManager] QuestManager: {QuestManager.Instance}");
@@ -89,10 +92,15 @@ public class GameManager : MonoBehaviour
     {
         if (data == null) return;
 
+        _isLoading = true;
+
         PlayerInfoManager.Instance.ApplyData(data.playerInfo);
         QuestManager.Instance.ApplyData(data.questInfo);
         InventoryManager.Instance.ApplyData(data.inventoryData);
         CompanionManager.Instance.ApplyData(data.companionData);
+
+        _isLoading = false;
+        SaveGame();
 	}
 
 	public void Start()
@@ -195,8 +203,16 @@ public class GameManager : MonoBehaviour
         {
             _playerController.SetPosition(playerSpawnPos);
         }
-    
-        Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
+
+        //플레이어 및 동료 스케일 적용
+        Vector2 scale = _currentMapController.PlayerScale;
+        if(_playerController != null)
+        {
+            _playerController.transform.localScale = new Vector3(scale.x, scale.y, 1f);
+		}
+        CompanionManager.Instance?.SetScale(scale);
+
+		Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
     
         if(save)
         {

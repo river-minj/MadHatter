@@ -15,6 +15,8 @@ public class CompanionManager : MonoBehaviour
 	private List<CompanionController> _lineB = new List<CompanionController>();
 
 	private PlayerController _player; //플레이어가 가지고 있는 동료 위치를 얻기 위한 참조
+	private Vector3 _currentScale = new Vector3(0.4f, 0.4f, 1f);
+
 	[SerializeField] Transform _followerParent;
 
 	private void Awake()
@@ -88,8 +90,9 @@ public class CompanionManager : MonoBehaviour
 		int indexInLine = addToLineA? _lineA.Count : _lineB.Count;
 
 		cc.Initialize(_player, data, totlaCount, addToLineA, indexInLine);
+		cc.ApplyScaleWithRatio(_currentScale);
 
-        if (addToLineA)
+		if (addToLineA)
         {
 			_lineA.Add(cc);
 		}
@@ -118,6 +121,24 @@ public class CompanionManager : MonoBehaviour
 			cc.SetFacingDirection(isRight);
 		}
 	}
+
+	public void SetScale(Vector2 scale)
+	{
+		_currentScale = new Vector3(scale.x, scale.y, 1f);
+		foreach (var cc in _lineA)
+		{
+			if (cc == null)
+				continue;
+			cc.ApplyScaleWithRatio(_currentScale);
+		}
+		foreach (var cc in _lineB)
+		{
+			if (cc == null)
+				continue;
+			cc.ApplyScaleWithRatio(_currentScale);
+		}
+	}
+
 	public int GetTotalCompanionCount()
 	{
 		return _lineA.Count + _lineB.Count;
@@ -169,4 +190,5 @@ public class CompanionManager : MonoBehaviour
 			Debug.Log($"  [{i}] {_lineB[i].name}");
 		}
 	}
+
 }

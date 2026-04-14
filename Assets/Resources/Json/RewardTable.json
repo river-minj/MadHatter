@@ -58,8 +58,8 @@
     "rewardGroupId": "RWD_003",
     "gold": 0,
     "exp": 0,
-    "companionId": "",
-    "itemId": "weapon_sword_01",
+    "companionId": "comp_002",
+    "itemId": "",
     "itemCount": 1
   }
 ]

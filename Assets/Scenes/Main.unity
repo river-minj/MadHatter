@@ -5503,12 +5503,20 @@ PrefabInstance:
       value: Player_New
       objectReference: {fileID: 0}
     - target: {fileID: 3412511957144069054, guid: 3df49b3cd41860048afea3d7b7b61cb3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3412511957144069054, guid: 3df49b3cd41860048afea3d7b7b61cb3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3412511957144069054, guid: 3df49b3cd41860048afea3d7b7b61cb3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.86
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 3412511957144069054, guid: 3df49b3cd41860048afea3d7b7b61cb3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.11
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 3412511957144069054, guid: 3df49b3cd41860048afea3d7b7b61cb3, type: 3}
       propertyPath: m_LocalPosition.z

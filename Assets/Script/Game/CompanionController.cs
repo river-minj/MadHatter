@@ -17,6 +17,7 @@ public class CompanionController : MonoBehaviour
 	//동료 줄에서 자기 위치 정보
 	private bool _isLineA = true; // A라인인지 B라인인지
 	private int _indexInLine = 0; // 같은 라인에서 몇 번째 동료인지
+	private float _scaleRatio = 1f;
 
 	//A,B라인의 횡방향 오프셋 (플레이어 앵커 기준)
 	private Vector3 _lateralOffsetA;
@@ -32,6 +33,9 @@ public class CompanionController : MonoBehaviour
 		_indexInLine = lineIndex;
 
 		_spineAnimator = GetComponent<IAnimator>();
+
+		if (_player == null)
+			return;
 
 		var skelAnim = _spineAnimator as SpineAnimator;
 		var skel = skelAnim?.Skeleton;
@@ -50,9 +54,19 @@ public class CompanionController : MonoBehaviour
 			_lateralOffsetB = _player.CompanionAnchorB.localPosition;
 		}
 
-		//_moveSpeed = data._followSpeed;
+		// 플레이어와의 리소스 비율 계산: 프리팹 원본 스케일 / 플레이어 현재 스케일
+		float playerScaleX = _player.transform.localScale.x;
+		if (playerScaleX != 0)
+		{
+			_scaleRatio = transform.localScale.x / playerScaleX;
+		}
 	}
 
+	//플레이어와의 비율 기반 스케일 적용
+	public void ApplyScaleWithRatio(Vector3 playerScale)
+	{
+		transform.localScale = new Vector3(playerScale.x * _scaleRatio, playerScale.y * _scaleRatio, 1f);
+	}
 
 	private void Update()
 	{

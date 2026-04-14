@@ -28,11 +28,13 @@ public class MapController : MonoBehaviour
 {
 	[SerializeField] private MapController _nextMapMc;
 	[SerializeField] private MapBounds _mapBounds;
+	[SerializeField] private Vector2 _playerScale = new Vector2(0.4f, 0.4f);
 
 	[SerializeField] private List<SpawnPointEntry> _listSpawnPoint;
 	private Dictionary<SpawnPointId, Transform> _dicSpawnPoints = new Dictionary<SpawnPointId, Transform>();
 
 	public MapBounds MapBounds => _mapBounds;
+	public Vector2 PlayerScale => _playerScale;
 
 	private void Awake()
 	{
