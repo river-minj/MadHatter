@@ -182,12 +182,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 		transform.position = pos.position;
 	}
 
-	private void MirrorFollowPos(bool right)
+	public void SetMapCondition(Transform pos, Vector3 scale, float speed)
 	{
-		float sign = right ? -1f : 1f;
-
-		_companionAnchorA.localPosition = new Vector3(Mathf.Abs(_companionAnchorA.localPosition.x) * sign, _companionAnchorA.localPosition.y, _companionAnchorA.localPosition.z);
-		_companionAnchorB.localPosition = new Vector3(Mathf.Abs(_companionAnchorB.localPosition.x) * sign, _companionAnchorB.localPosition.y, _companionAnchorB.localPosition.z);
+		SetPosition(pos);
+		transform.localScale = scale;
+		_moveSpeed = speed;
 	}
 
 	public Vector3 GetLastDirection()

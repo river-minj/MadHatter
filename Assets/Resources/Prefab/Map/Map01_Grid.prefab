@@ -156,6 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nextMapMc: {fileID: 1275650001781604006, guid: 8a81c8f75e1705448b0aa1f2f07eecef, type: 3}
   _mapBounds: {fileID: 4985975337306907307}
+  _playerScale: {x: 0.4, y: 0.4}
+  _playerSpeed: 4
   _listSpawnPoint:
   - id: 0
     point: {fileID: 3788423120694967434}

@@ -3112,7 +3112,7 @@ MonoBehaviour:
   _cameraController: {fileID: 519420033}
   _playerController: {fileID: 0}
   _mapRoot: {fileID: 298487635}
-  _firstMapMc: {fileID: 1275650001781604006, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
+  _firstMapMc: {fileID: 1275650001781604006, guid: 8a81c8f75e1705448b0aa1f2f07eecef, type: 3}
 --- !u!114 &1253460101
 MonoBehaviour:
   m_ObjectHideFlags: 0

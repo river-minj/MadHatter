@@ -199,17 +199,14 @@ public class GameManager : MonoBehaviour
 
         //플레이어 위치 설정
         Transform playerSpawnPos = _currentMapController.GetSpawnPoint(spawnPointId);
+        Vector2 scale = _currentMapController.PlayerScale;
         if(_playerController != null && playerSpawnPos != null)
         {
             _playerController.SetPosition(playerSpawnPos);
+            _playerController.SetMapCondition(playerSpawnPos, scale, _currentMapController.PlayerSpeed);
         }
 
-        //플레이어 및 동료 스케일 적용
-        Vector2 scale = _currentMapController.PlayerScale;
-        if(_playerController != null)
-        {
-            _playerController.transform.localScale = new Vector3(scale.x, scale.y, 1f);
-		}
+        //동료 스케일 설정
         CompanionManager.Instance?.SetScale(scale);
 
 		Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
