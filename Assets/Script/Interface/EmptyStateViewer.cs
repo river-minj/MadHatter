@@ -14,7 +14,7 @@ public class EmptyStateViewer : MonoBehaviour
         UpdateView();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         UpdateView();
     }
