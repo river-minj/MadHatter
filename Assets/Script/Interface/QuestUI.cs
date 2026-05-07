@@ -6,8 +6,9 @@ public class QuestUI : MonoBehaviour
 	[SerializeField] private GameObject _root;
 	[SerializeField] private Transform _listParent;
 	[SerializeField] private GameObject _questSlotPrefab;
+	[SerializeField] private int _maxQuestCount = 10;
 
-	private List<QuestSlotController> _listQuest = new List<QuestSlotController>();
+	private List<QuestSlotController> _slotPool = new List<QuestSlotController>();
 
 	private void Start()
 	{
@@ -43,37 +44,45 @@ public class QuestUI : MonoBehaviour
 	private void RefreshQuestList()
 	{
 		var dicQuest = QuestManager.Instance?.DicActiveQuest;
+		if (dicQuest == null) return;
 
-		foreach(var slot in _listQuest)
-				{
-			Destroy(slot.gameObject);
-		}
-		_listQuest.Clear();
+		var quests = new List<QuestState>(dicQuest.Values);
 
-
-		foreach(var quest in dicQuest)
+		// 풀이 부족하면 필요한 만큼 추가 (최대 _maxQuestCount까지만 생성)
+		int targetSize = Mathf.Min(quests.Count, _maxQuestCount);
+		while (_slotPool.Count < targetSize)
 		{
-			var slot = Instantiate(_questSlotPrefab, _listParent);
-			var controller = slot.GetComponent<QuestSlotController>();
-			controller.SetQuest(quest.Value._data, quest.Value, OnSlotClaimClicked, OnSlotCancelClicked);
+			var go = Instantiate(_questSlotPrefab, _listParent);
+			go.SetActive(false);
+			_slotPool.Add(go.GetComponent<QuestSlotController>());
+		}
 
-			_listQuest.Add(controller);
+		for (int i = 0; i < _slotPool.Count; i++)
+		{
+			if (i < quests.Count)
+			{
+				_slotPool[i].SetQuest(quests[i]._data, quests[i], OnSlotClaimClicked, OnSlotCancelClicked);
+				_slotPool[i].gameObject.SetActive(true);
+			}
+			else
+			{
+				_slotPool[i].gameObject.SetActive(false);
+			}
 		}
 	}
 
 	private void OnQuestProgressUpdate(QuestState state)
 	{
-		foreach(var slot in _listQuest)
+		foreach(var slot in _slotPool)
 		{
-			if(slot.QuestData._questId == state._data._questId)
+			if(slot.gameObject.activeSelf && slot.QuestData._questId == state._data._questId)
 			{
 				slot.UpdateProgress(state);
 				break;
 			}
 		}
-		
-		GameManager.Instance.SaveGame();
 
+		GameManager.Instance.SaveGame();
 	}
 
 	private void OnSlotClaimClicked(string questID)
@@ -88,13 +97,6 @@ public class QuestUI : MonoBehaviour
 
 	private void OnQuestRewardClaimed(string questID)
 	{
-		var slot = _listQuest.Find(s => s.QuestData._questId == questID);
-		if (slot != null)
-		{
-			_listQuest.Remove(slot);
-
-			//to do : Destroy를 하지 않는 방법으로 개선 필요
-			Destroy(slot.gameObject);
-		}
+		RefreshQuestList();
 	}
 }

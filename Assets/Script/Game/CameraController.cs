@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
 
     private Camera _cam;
     private Bounds? _currentBounds;
+    private Vector3 _uiOffset = Vector3.zero;
 
 	private void Awake()
 	{
@@ -46,12 +47,14 @@ public class CameraController : MonoBehaviour
         //목표 위치
         Vector3 targetPosition = _target.position + _offset;
 
-
 		//카메라 경계 처리 및 맵이 카메라보다 작은 경우 중심 고정
 		if (_currentBounds.HasValue)
 		{
 			targetPosition = ClampPositionToBounds(targetPosition, _currentBounds.Value);
 		}
+
+		// UI 오프셋은 경계 클램핑 이후 적용 (맵 경계에 막히지 않도록)
+		targetPosition += _uiOffset;
 
         //부드럽게 이동
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
@@ -83,9 +86,34 @@ public class CameraController : MonoBehaviour
 	}
 
 
+	public float GetClampedTargetY()
+	{
+		if (_target == null) return transform.position.y;
+		float targetY = _target.position.y + _offset.y;
+		if (_currentBounds.HasValue)
+		{
+			float camH = _cam.orthographicSize;
+			float minY = _currentBounds.Value.min.y + camH;
+			float maxY = _currentBounds.Value.max.y - camH;
+			if (minY > maxY) targetY = _currentBounds.Value.center.y;
+			else targetY = Mathf.Clamp(targetY, minY, maxY);
+		}
+		return targetY;
+	}
+
 	public void SetBounds(Bounds bounds)
     {
         _currentBounds = bounds;
+    }
+
+    public void SetUIOffset(Vector3 offset)
+    {
+        _uiOffset = offset;
+    }
+
+    public void ClearUIOffset()
+    {
+        _uiOffset = Vector3.zero;
     }
 
 	public void SnapToTarget()

@@ -26,11 +26,23 @@ public class InventoryUI : MonoBehaviour
 	[SerializeField] private List<InventoryTab> _tabs;
 	
 	private Tab _currentTab;
+	private CameraController _camCtrl;
+	private Transform _playerTransform;
+	private float _visibleCenterOffset;
 
-	
 	private void Awake()
 	{
         Hide();
+	}
+
+	private void Update()
+	{
+		if (!_inventoryPanel.activeSelf) return;
+		if (_camCtrl == null || _playerTransform == null) return;
+
+		float clampedBaseY = _camCtrl.GetClampedTargetY();
+		float worldOffsetY = (_playerTransform.position.y - _visibleCenterOffset) - clampedBaseY;
+		_camCtrl.SetUIOffset(new Vector3(0f, worldOffsetY, 0f));
 	}
 
 	public void Show()
@@ -47,6 +59,9 @@ public class InventoryUI : MonoBehaviour
 
 		//디폴트 탭
 		_tabController.SetDefaultTab();
+
+		//인벤이 가리지 않는 영역 중앙으로 카메라 이동
+		AdjustCamera(true);
 	}
 
 	public void Hide()
@@ -65,6 +80,34 @@ public class InventoryUI : MonoBehaviour
 		//인벤 닫기
 		_inventoryPanel.SetActive(false);
 
+		//카메라 원상 복귀
+		AdjustCamera(false);
+	}
+
+	private void AdjustCamera(bool open)
+	{
+		var cam = Camera.main;
+		_camCtrl = cam?.GetComponent<CameraController>();
+		if (_camCtrl == null) return;
+
+		if (!open)
+		{
+			_camCtrl.ClearUIOffset();
+			_playerTransform = null;
+			return;
+		}
+
+		// 가시영역 중앙 뷰포트 → 월드 오프셋 계산 (패널 크기 기준, 한 번만)
+		var canvas = _inventoryPanel.GetComponentInParent<Canvas>().rootCanvas;
+		Vector3[] corners = new Vector3[4];
+		_inventoryPanel.GetComponent<RectTransform>().GetWorldCorners(corners);
+		float panelTopViewport = (corners[1].y * canvas.scaleFactor) / Screen.height;
+		float visibleCenterViewport = (panelTopViewport + 1f) * 0.5f;
+		_visibleCenterOffset = (visibleCenterViewport - 0.5f) * 2f * cam.orthographicSize;
+
+		var playerGO = GameObject.FindGameObjectWithTag("Player");
+		if (playerGO == null) return;
+		_playerTransform = playerGO.transform;
 	}
 
 	public void Toggle()
