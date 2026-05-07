@@ -65,6 +65,13 @@ public class SceneLoader : MonoBehaviour
 		_loadingUI.SetProgress(0.2f, "씬 로드 중...");
 
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+		if (asyncLoad == null)
+		{
+			Debug.LogError($"씬 '{sceneName}'을 찾을 수 없습니다. Build Settings를 확인하세요.");
+			_loadingUI.Hide();
+			_isLoading = false;
+			yield break;
+		}
 		asyncLoad.allowSceneActivation = false;//즉시 씬 전환을 방지
 		// allowSceneActivation = false
 		//1. 씬 로드 진행(progress 0 ~0.9까지만 올라감)
