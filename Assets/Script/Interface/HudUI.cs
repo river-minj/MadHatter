@@ -17,6 +17,11 @@ public class HudUI : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI _goldText;
 	[SerializeField] private TextMeshProUGUI _atkText;
 
+	[Header("Buttons")]
+	[SerializeField] private Button _inventoryButton;
+	[SerializeField] private Button _questButton;
+	[SerializeField] private Button _interactButton;
+
 	private void Start()
 	{
 		Subscribe();
@@ -36,6 +41,17 @@ public class HudUI : MonoBehaviour
 		PlayerInfoManager.Instance.OnGoldChanged += UpdateGold;
 		PlayerInfoManager.Instance.OnAtkChanged += UpdateAtk;
 
+		_inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
+		_questButton.onClick.AddListener(OnQuestButtonClicked);
+		_interactButton.onClick.AddListener(OnInteractButtonClicked);
+
+		var player = GameManager.Instance.GetPlayerController();
+		if (player != null)
+		{
+			player.OnInteractableChanged += HandleInteractableChanged;
+		}
+
+		_interactButton.gameObject.SetActive(false);
 	}
 
 	private void Unsubscribe()
@@ -48,6 +64,15 @@ public class HudUI : MonoBehaviour
 		PlayerInfoManager.Instance.OnLevelChanged -= UpdateLevel;
 		PlayerInfoManager.Instance.OnGoldChanged -= UpdateGold;
 		PlayerInfoManager.Instance.OnAtkChanged -= UpdateAtk;
+
+		if (GameManager.Instance != null)
+		{
+			var player = GameManager.Instance.GetPlayerController();
+			if (player != null)
+			{
+				player.OnInteractableChanged -= HandleInteractableChanged;
+			}
+		}
 	}
 
 	private void RefreshUI()
@@ -89,5 +114,29 @@ public class HudUI : MonoBehaviour
 	private void UpdateAtk(int atk)
 	{
 		_atkText.text = $"{atk}";
+	}
+
+	private void OnInventoryButtonClicked()
+	{
+		UIManager.Instance.ToggleInventory();
+	}
+
+	private void OnQuestButtonClicked()
+	{
+		UIManager.Instance.ToggleQuest();
+	}
+
+	private void OnInteractButtonClicked()
+	{
+		var player = GameManager.Instance.GetPlayerController();
+		if (player != null)
+		{
+			player.TryInteract();
+		}
+	}
+
+	private void HandleInteractableChanged(bool hasInteractable)
+	{
+		_interactButton.gameObject.SetActive(hasInteractable);
 	}
 }

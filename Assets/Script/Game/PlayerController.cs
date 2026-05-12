@@ -1,6 +1,6 @@
 ﻿using Spine.Unity;
+using System;
 using System.Collections;
-using TMPro.EditorUtilities;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IDamageable
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private bool _isDead = false;
 	public bool IsDead => _isDead;
+	public event Action<bool> OnInteractableChanged;
 
 	private IInteractable _currentInteractable;
 
@@ -119,12 +120,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (Input.GetKeyDown(KeyCode.E))
 		{
-			//인터렉티브 상대가 있을때는 프롬프트를 띄우지 않음
-			if (_currentInteractable != null)
-			{
-				_currentInteractable.Interact(this);
-				UIManager.Instance?.HideNPCPrompt();
-			}
+			TryInteract();
 		}
 
 		//test
@@ -248,10 +244,26 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void SetInteractable(IInteractable target)
 	{
 		_currentInteractable = target;
+		OnInteractableChanged?.Invoke(true);
 	}
 	public void ClearInteractable()
 	{
-		_currentInteractable = null; 
+		_currentInteractable = null;
+		OnInteractableChanged?.Invoke(false);
+	}
+
+	public void TryInteract()
+	{
+		if (GameManager.Instance.IsInputLock)
+		{
+			return;
+		}
+		if (_currentInteractable != null)
+		{
+			_currentInteractable.Interact(this);
+			//인터렉티브 상대가 있을때는 프롬프트를 띄우지 않음
+			UIManager.Instance?.HideNPCPrompt();
+		}
 	}
 }
 
