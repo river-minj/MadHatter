@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Trigger 기반 입력 처리
 /// OnTriggerEnter/Exit 으로 플레이어 입퇴장 감지
 /// </summary>
 
-public class TriggerInputHandler : MonoBehaviour
+public class InteractionTrigger : MonoBehaviour
 {
 	private IInteractable interactable;
 	private bool isEnabled = true;
@@ -21,7 +21,7 @@ public class TriggerInputHandler : MonoBehaviour
 
 			if (interactable == null)
 			{
-				Debug.LogError("TriggerInputHandler requires an IInteractable target.");
+				Debug.LogError("InteractionTrigger requires an IInteractable target.");
 			}
 		}
 

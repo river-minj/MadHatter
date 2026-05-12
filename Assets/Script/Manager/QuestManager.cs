@@ -287,7 +287,6 @@ public class QuestManager : MonoBehaviour
 
 	}
 
-	//to do : 추후 개발
 	public void ReportReach(string locationId)
 	{
 		foreach (var quest in _dicActiveQuest)

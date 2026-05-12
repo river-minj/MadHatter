@@ -135,8 +135,8 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - SpineAnimator.Skeleton 프로퍼티로 스킨 변경 등 특수 접근 허용 (CompanionController 등)
 - 탭 시스템은 범용 컴포넌트(TabController/Tab/TabPage)로 분리, 데이터 로직은 사용처(InventoryUI 등)가 담당
 - 드롭 테이블은 엑셀 데이터로 관리, 가중치 기반 랜덤 선택
-- 모든 키보드 입력은 PlayerController에서 통합 관리 — TriggerInputHandler 등 개별 컴포넌트에서 키 입력 감지 금지
-- 인터랙션 감지와 실행의 분리: TriggerInputHandler는 범위 감지만 담당 (SetInteractable/ClearInteractable), 실행(Interact 호출)은 PlayerController가 E키로 처리
+- 모든 키보드 입력은 PlayerController에서 통합 관리 — InteractionTrigger 등 개별 컴포넌트에서 키 입력 감지 금지
+- 인터랙션 감지와 실행의 분리: InteractionTrigger는 범위 감지만 담당 (SetInteractable/ClearInteractable), 실행(Interact 호출)은 PlayerController가 E키로 처리
 - IInteractable 인터페이스로 다형적 인터랙션: PlayerController는 상대가 NPC/DroppedItem/상자 등 무엇인지 모르고 Interact()만 호출, 새 인터랙션 대상 추가 시 PlayerController 수정 불필요
 - 팝업 중복 방지: UIManager._currentPopup으로 1개만 허용, CommonConfirmPopup.ClosePopup에서 ClearCurrentPopup 호출
 - 대화~팝업 InputLock 세션 관리: StartDialogue의 onComplete 유무로 분기 — onComplete 없으면 자동 EndDialogue, 있으면 호출측(QuestManager 등)이 EndDialogue 책임
