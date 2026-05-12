@@ -41,9 +41,21 @@ public class HudUI : MonoBehaviour
 		PlayerInfoManager.Instance.OnGoldChanged += UpdateGold;
 		PlayerInfoManager.Instance.OnAtkChanged += UpdateAtk;
 
-		_inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
-		_questButton.onClick.AddListener(OnQuestButtonClicked);
-		_interactButton.onClick.AddListener(OnInteractButtonClicked);
+		if (_inventoryButton != null)
+		{
+			_inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
+		}
+
+		if (_questButton != null)
+		{
+			_questButton.onClick.AddListener(OnQuestButtonClicked);
+		}
+
+		if (_interactButton != null)
+		{
+			_interactButton.onClick.AddListener(OnInteractButtonClicked);
+			_interactButton.gameObject.SetActive(false);
+		}
 
 		var player = GameManager.Instance.GetPlayerController();
 		if (player != null)
@@ -51,7 +63,6 @@ public class HudUI : MonoBehaviour
 			player.OnInteractableChanged += HandleInteractableChanged;
 		}
 
-		_interactButton.gameObject.SetActive(false);
 	}
 
 	private void Unsubscribe()
