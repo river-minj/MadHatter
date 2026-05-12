@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] MapController _firstMapMc;
 
     public MapController CurrentMapController => _currentMapController;
-    private MapController? _currentMapController;
+    private MapController _currentMapController;
     private bool _isLoading;
 
     /// <summary>

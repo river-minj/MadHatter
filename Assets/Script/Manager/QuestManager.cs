@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 //독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
 public class QuestState
