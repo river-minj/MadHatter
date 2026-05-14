@@ -10,6 +10,8 @@
 
 Unity Hub에서 Unity 2022.3.55f1로 프로젝트를 열어야 합니다. CLI 빌드 명령은 없으며 Unity 에디터를 사용합니다. 스크립트는 `Assets/Script/`에 위치합니다.
 
+WebGL 빌드: Unity 에디터 내 **Tools > Build WebGL (720x1280)** 메뉴 사용 (`Assets/Script/Editor/WebGLBuilder.cs`). Gzip 압축 + Decompression Fallback 설정으로 GitHub Pages 호환.
+
 데이터 테이블을 수정한 후 JSON으로 변환하려면: Unity 에디터 내 **Tools > Excel To Json Converter** 도구를 사용합니다.
 
 ## 아키텍처
@@ -39,6 +41,7 @@ Start 씬 → (비동기 로드) → Main 씬
 | `InventoryManager` | 아이템 수집, 장착/사용, `OnInventoryChanged` / `OnEquipChanged` 이벤트 발행 |
 | `QuestManager` | 퀘스트 상태 머신: 시작 → 수락 → 진행 → 완료 → 보상 |
 | `CompanionManager` | 보유 동료 목록, 소환, 2열 대형, 스케일 전파 |
+| `ShopManager` | 상점 재고 상태(`_stockMap`) 관리, 구매 트랜잭션 처리, 유한 재고 Save/Load |
 
 ### 데이터 파이프라인
 
@@ -50,7 +53,7 @@ Excel (외부) → ExcelToJsonConverter (에디터 도구)
   → 매니저/컨트롤러에서 public 메서드로 접근
 ```
 
-Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `ItemDatabase`, `CompanionDatabase`, `DropDatabase`
+Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `ItemDatabase`, `CompanionDatabase`, `DropDatabase`, `ShopDatabase`
 
 ### 맵 시스템
 
@@ -121,6 +124,11 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 플랫폼 분기는 #if 전처리기 사용, 조이스틱은 PC에서 자동 비활성화
 - 매니저 간 단순 메서드 호출은 허용, 내부 데이터 직접 조작은 금지
 - NPC는 맵 프리팹에 직접 배치, Inspector에서 _npcId만 입력, 데이터는 NpcDatabase에서 지연 초기화로 조회
+- NPC 상호작용 우선순위: Talk 퀘스트 타겟 → 퀘스트 제공자 → 상점(_shopId) → 기본 대화
+- 상점 NPC는 NpcTableData._shopId에 shopId 입력, ShopDatabase에서 상품 목록 조회
+- ShopManager는 유한 재고(_stockMap)만 저장 — 무한 재고(-1)는 저장 불필요, 엑셀 값 그대로 사용
+- ShopManager 저장 트리거는 OnShopStockChanged 이벤트로 통일 (GameManager가 구독) — 다른 매니저와 동일한 패턴
+- ReadOnlyAttribute는 PropertyAttribute 상속이므로 #if UNITY_EDITOR 없이 정의, DrawerOnly가 에디터 전용
 - 프리팹 참조가 필요한 경우 Resources 경로 문자열로 관리 (CompanionData._companionPrefabPath)
 팝업은 프리팹 로드 방식 — UIManager가 Instantiate, 사용처가 SetPopup으로 데이터 세팅
 - 전투는 AutoAttack 컴포넌트 기반 — 플레이어/동료 코드 수정 없이 Inspector에서 추가
