@@ -579,6 +579,7 @@ GameObject:
   - component: {fileID: 7676867503982277227}
   - component: {fileID: 5938115831934256505}
   - component: {fileID: 2468623980045202689}
+  - component: {fileID: 8724724680942547904}
   m_Layer: 0
   m_Name: NPC_1
   m_TagString: Untagged
@@ -715,6 +716,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.49999997
+--- !u!114 &8724724680942547904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552818620777172256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 4793991252690665688}
+  _sortPrecision: 100
+  _sortOffset: 0
 --- !u!1 &4145029661881727481
 GameObject:
   m_ObjectHideFlags: 0
@@ -6538,6 +6554,7 @@ GameObject:
   - component: {fileID: 3950122000166262993}
   - component: {fileID: 1277775502501468704}
   - component: {fileID: 8319849119404336568}
+  - component: {fileID: 6648698601559049968}
   m_Layer: 0
   m_Name: NPC_2
   m_TagString: Untagged
@@ -6674,6 +6691,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.49999997
+--- !u!114 &6648698601559049968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508910059039692758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 5909783673206212801}
+  _sortPrecision: 100
+  _sortOffset: 0
 --- !u!1 &8584440354818902860
 GameObject:
   m_ObjectHideFlags: 0
