@@ -25,6 +25,8 @@ public class InventoryManager : MonoBehaviour
 
 	private string _equippedWeaponId;
 
+	private bool _isLoading = false;
+
 	public event Action OnInventoryChanged;
 	public event Action OnEquipChanged;
 
@@ -54,6 +56,10 @@ public class InventoryManager : MonoBehaviour
 			_dicInventory[itemId] = new InventorySlot(itemId, count);
 		}
 		Debug.Log($"[Inventory] 아이템 획득: {itemId} x{count}, 보유: {_dicInventory[itemId].count}개");
+
+		if (!_isLoading)
+			QuestManager.Instance.ReportCollect(itemId, count);
+
 		OnInventoryChanged?.Invoke();
 	}
 
@@ -157,10 +163,16 @@ public class InventoryManager : MonoBehaviour
 
 	public void ApplyData(InventorySaveData data)
 	{
+		_isLoading = true;
+
 		_dicInventory.Clear();
 		_equippedWeaponId = null;
 
-		if (data == null) return;
+		if (data == null)
+		{
+			_isLoading = false;
+			return;
+		}
 
 		if (data.items != null)
 		{
@@ -172,6 +184,8 @@ public class InventoryManager : MonoBehaviour
 		}
 
 		_equippedWeaponId = data.equippedWeaponId;
+
+		_isLoading = false;
 
 		OnInventoryChanged?.Invoke();
 		OnEquipChanged?.Invoke();

@@ -80,3 +80,13 @@ public class DropTableData
 	public string itemId;
 	public int weight;
 }
+
+[Serializable]
+public class ShopTableData
+{
+	public string uniqueId;
+	public string shopId;
+	public string itemId;
+	public int price;
+	public int sellCount; // -1 = 무한
+}

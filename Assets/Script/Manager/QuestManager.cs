@@ -287,6 +287,32 @@ public class QuestManager : MonoBehaviour
 
 	}
 
+	public void ReportCollect(string itemId, int count = 1)
+	{
+		foreach (var quest in _dicActiveQuest)
+		{
+			QuestState qs = quest.Value;
+			if (qs == null || qs._isCompleted)
+				continue;
+
+			if (qs._data._goalType != QuestGoalType.Collect)
+				continue;
+
+			if (qs._data._targetId != itemId)
+				continue;
+
+			bool completed = qs.AddProgress(count);
+			OnQuestProgressUpdate?.Invoke(qs);
+
+			Debug.Log($"[QuestManager] ReportCollect: {itemId} x{count}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+
+			if (completed)
+			{
+				OnQuestListChanged?.Invoke();
+			}
+		}
+	}
+
 	public void ReportReach(string locationId)
 	{
 		foreach (var quest in _dicActiveQuest)

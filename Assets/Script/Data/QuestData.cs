@@ -6,8 +6,7 @@ public enum QuestGoalType
 	Kill,
 	Collect,
 	Talk,
-	Explore,
-	AcquireItem
+	Explore
 }
 
 

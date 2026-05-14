@@ -145,6 +145,16 @@ public class PlayerInfoManager : MonoBehaviour
 		OnGoldChanged?.Invoke(_playerInfo._gold);
 	}
 
+	public bool SpendGold(int amount)
+	{
+		if (amount <= 0 || _playerInfo._gold < amount)
+			return false;
+
+		_playerInfo._gold -= amount;
+		OnGoldChanged?.Invoke(_playerInfo._gold);
+		return true;
+	}
+
 	public void AddExp(int amount)
 	{
 		if(amount <= 0)

@@ -72,9 +72,11 @@ Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `
 
 ### 퀘스트 시스템
 
-퀘스트 목표 유형: Kill, Collect, Talk, Explore, AcquireItem. 진행 보고 경로:
+퀘스트 목표 유형: Kill, Collect, Talk, Explore. 진행 보고 경로:
 - `EnemyController.OnDeath()` → `QuestManager.ReportKill(enemyId)`
 - `NPCController.OnInteract()` → `QuestManager.ReportTalkToNPC(npcId)`
+- `InventoryManager.AddItem()` → `QuestManager.ReportCollect(itemId, count)` (로드 복원 시 _isLoading 플래그로 차단)
+- `QuestLocationTrigger.OnTriggerEnter2D()` → `QuestManager.ReportReach(locationId)`
 
 `_nextQuestId`를 통해 퀘스트를 연쇄 구성할 수 있습니다. 보상으로 골드, EXP, 아이템, 동료 해금이 지급됩니다.
 

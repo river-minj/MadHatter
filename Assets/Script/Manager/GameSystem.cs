@@ -59,6 +59,19 @@ public class CompanionSaveData
 	public List<string> ownedCompanionIds = new List<string>();
 }
 
+[Serializable]
+public class ShopSaveData
+{
+	public List<ShopStockEntry> stocks = new List<ShopStockEntry>();
+}
+
+[Serializable]
+public class ShopStockEntry
+{
+	public string uniqueId;
+	public int remaining;
+}
+
 public class GameSystem : MonoBehaviour
 {
 	private static string SavePath => Path.Combine(Application.persistentDataPath, "saveData.json");
