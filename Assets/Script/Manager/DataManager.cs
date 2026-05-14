@@ -38,6 +38,7 @@ public class DataManager : MonoBehaviour
 		CompanionDatabase.CreateInstance();
 		ItemDatabase.CreateInstance();
 		DropDatabase.CreateInstance();
+		ShopDatabase.CreateInstance();
 
 		onProgress?.Invoke(0f, "대화 데이터 로드 중...");
 		var dialogueList = LoadTable<DialogueTableData>("DialogueTable");
@@ -72,6 +73,11 @@ public class DataManager : MonoBehaviour
 		onProgress?.Invoke(0.96f, "드롭 데이터 로드 중...");
 		var dropList = LoadTable<DropTableData>("DropTable");
 		DropDatabase.Instance.ApplyData(dropList);
+		yield return null;
+
+		onProgress?.Invoke(0.98f, "상점 데이터 로드 중...");
+		var shopList = LoadTable<ShopTableData>("ShopTable");
+		ShopDatabase.Instance.ApplyData(shopList);
 		yield return null;
 
 		_isLoaded = true;

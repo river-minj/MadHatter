@@ -11,6 +11,7 @@ public class  SaveData
 	public QuestSaveData questInfo;
 	public InventorySaveData inventoryData;
 	public CompanionSaveData companionData;
+	public ShopSaveData shopInfo;
 }
 
 [Serializable]

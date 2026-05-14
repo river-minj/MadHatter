@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
             questInfo = QuestManager.Instance.GetSaveData(),
             inventoryData = InventoryManager.Instance.GetSaveData(),
             companionData = CompanionManager.Instance.GetSaveData(),
+            shopInfo = ShopManager.Instance.GetSaveData(),
         };
 
         GameSystem.Save(data);
@@ -101,8 +102,9 @@ public class GameManager : MonoBehaviour
 
         PlayerInfoManager.Instance.ApplyData(data.playerInfo);
         QuestManager.Instance.ApplyData(data.questInfo);
-        InventoryManager.Instance.ApplyData(data.inventoryData);
         CompanionManager.Instance.ApplyData(data.companionData);
+        InventoryManager.Instance.ApplyData(data.inventoryData);
+        ShopManager.Instance.ApplyData(data.shopInfo);
 
         _isLoading = false;
         SaveGame();
