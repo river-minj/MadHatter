@@ -54,16 +54,15 @@ public class ShopManager : MonoBehaviour
 			return false;
 		}
 
-		InventoryManager.Instance.AddItem(item.itemData.itemId);
+		InventoryManager.Instance.AddItem(item.itemData._itemId);
 
 		if (stock != -1)
 		{
 			_stockMap[uniqueId] = stock - 1;
-			OnShopStockChanged?.Invoke();
 		}
 
-		Debug.Log($"[ShopManager] 구매 완료: {item.itemData.itemId} (남은 재고: {GetStock(uniqueId)})");
-		GameManager.Instance.SaveGame();
+		Debug.Log($"[ShopManager] 구매 완료: {item.itemData._itemId} (남은 재고: {GetStock(uniqueId)})");
+		OnShopStockChanged?.Invoke();
 		return true;
 	}
 

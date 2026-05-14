@@ -64,9 +64,14 @@ public class GameManager : MonoBehaviour
 	private void OnDestroy()
 	{
         if (QuestManager.Instance != null)
-        {
             QuestManager.Instance.OnQuestRewardClaimed -= OnQuestRewardClaimed;
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnInventoryChanged -= SaveGame;
+            InventoryManager.Instance.OnEquipChanged -= SaveGame;
         }
+        if (ShopManager.Instance != null)
+            ShopManager.Instance.OnShopStockChanged -= SaveGame;
     }
 
 	public void SaveGame()
@@ -108,6 +113,7 @@ public class GameManager : MonoBehaviour
 		QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
 		InventoryManager.Instance.OnInventoryChanged += SaveGame;
 		InventoryManager.Instance.OnEquipChanged += SaveGame;
+		ShopManager.Instance.OnShopStockChanged += SaveGame;
 
 		if (SceneLoader.Instance != null)
 		{
