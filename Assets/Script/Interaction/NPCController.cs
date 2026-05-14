@@ -72,6 +72,13 @@ public class NPCController: InteractionController
 			}
 		}
 
+		// 상점 NPC
+		if (!string.IsNullOrEmpty(_npcData._shopId))
+		{
+			UIManager.Instance.ShowShop(_npcData._shopId);
+			return;
+		}
+
 		// 줄 퀘스트가 없으면 기본 대화
 		var dialogue = DialogueDatabase.Instance.GetDialogueById(_npcData._defaultDialogueId);
 		if (dialogue != null)

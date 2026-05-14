@@ -33,7 +33,8 @@ public class NpcDatabase
 				_npcId = row.uniqueId,
 				_npcName = row.npcName,
 				_defaultDialogueId = row.defaultDialogueId,
-				_questId = row.questId
+				_questId = row.questId,
+				_shopId = row.shopId
 			};
 
 			_dicNpc.Add(row.uniqueId, data);

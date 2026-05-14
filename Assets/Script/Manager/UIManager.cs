@@ -31,6 +31,9 @@ public class UIManager : MonoBehaviour
 	//퀘스트 UI
 	[SerializeField] private QuestUI _questUI;
 
+	//상점 UI
+	[SerializeField] private ShopUI _shopUI;
+
 	//popup root
 	[SerializeField] private Transform _popupRoot;
 
@@ -242,6 +245,18 @@ public class UIManager : MonoBehaviour
 			return;
 
 		_questUI.Toggle();
+	}
+
+	public void ShowShop(string shopId)
+	{
+		if (_shopUI == null) return;
+		_shopUI.Show(shopId);
+	}
+
+	public void HideShop()
+	{
+		if (_shopUI == null) return;
+		_shopUI.Hide();
 	}
 
 	public void ShowConfirmPopup(string prefabName, string message, string confirm, string cancel,

@@ -47,6 +47,7 @@ public class NpcTableData
 	public string npcName;
 	public string defaultDialogueId;
 	public string questId;
+	public string shopId;
 }
 
 [Serializable]
