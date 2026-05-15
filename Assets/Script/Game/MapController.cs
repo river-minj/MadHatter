@@ -26,7 +26,6 @@ public class SpawnPointEntry
 /// </summary>
 public class MapController : MonoBehaviour
 {
-	[SerializeField] private MapController _nextMapMc;
 	[SerializeField] private MapBounds _mapBounds;
 	[SerializeField] private Vector2 _playerScale = new Vector2(0.4f, 0.4f);
 	[SerializeField] private float _playerSpeed = 0.5f;
@@ -80,18 +79,6 @@ public class MapController : MonoBehaviour
 	{
 		//맵 진입 시 처리 (적 스폰, 오브젝트 활성화 등)
 		Debug.LogFormat("[Map Controller] Exiting {0}", gameObject.name);
-	}
-
-	//맵 전환 요청
-	public void RequestMapTransition(SpawnPointId id)
-	{
-		if(_nextMapMc == null)
-		{
-			Debug.LogError("New MapBounds is null.");
-			return;
-		}
-
-		GameManager.Instance?.RequestMapTransition(_nextMapMc, id);
 	}
 
 	//for debugging

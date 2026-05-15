@@ -1,41 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-/// <summary>
-/// The trigger of map transition
-/// e.g., door, portal
-/// </summary>
+// 맵 전환 트리거 (문, 포탈 등)
+// 맵 변경 플로우: MapTransistor → GameManager
+// _nextMapMc: 이 문이 연결하는 목적지 맵 프리팹 (Inspector에서 직접 설정)
+// _spawnPointId: 목적지 맵의 스폰 위치
 public class MapTransistor : MonoBehaviour
-{ 
-	private MapController _mapController;
+{
+	[SerializeField] private MapController _nextMapMc;
 	[SerializeField] private SpawnPointId _spawnPointId;
-
-	//맵 변경 플로우 : MapTransistor -> MapController -> GameManager
-
-	private void Awake()
-	{
-		_mapController = GetComponentInParent<MapController>();
-	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.CompareTag("Player") == false)
-			return;
+		if (!other.CompareTag("Player")) return;
 
-		RequestMapTransition();
-
-
-	}
-
-	private void RequestMapTransition()
-	{
-		if (_mapController == null)
+		if (_nextMapMc == null)
 		{
-			Debug.LogWarning("MapController or next MapBounds is not assigned.");
+			Debug.LogWarning("[MapTransistor] _nextMapMc이 할당되지 않았습니다.");
 			return;
 		}
-	
-		_mapController.RequestMapTransition(_spawnPointId);
+
+		GameManager.Instance?.RequestMapTransition(_nextMapMc, _spawnPointId);
 	}
 }

@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 5973768365375489009}
   - component: {fileID: 1275650001781604006}
   m_Layer: 0
-  m_Name: Map02_Grid
+  m_Name: Map02_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
