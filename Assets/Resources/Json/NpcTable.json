@@ -10,5 +10,12 @@
     "npcName": "대장장이",
     "defaultDialogueId": "DLG_005",
     "questId": "QST_002"
+  },
+  {
+    "uniqueId": "NPC_003",
+    "npcName": "상점 주인",
+    "defaultDialogueId": "DLG_SHOP",
+    "questId": "",
+    "shopId": "SHOP_001"
   }
 ]

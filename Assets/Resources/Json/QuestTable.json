@@ -43,5 +43,20 @@
     "targetDialogueId": "",
     "nextQuestId": "",
     "rewardGroupId": "RWD_003"
+  },
+  {
+    "uniqueId": "QST_004",
+    "title": "초보자용 검 구입",
+    "description": "상점에서 초보자용 검을 구입하세요.",
+    "goalType": "Collect",
+    "goalCount": 1,
+    "questGiverNpcId": "NPC_001",
+    "targetId": "weapon_sword_01",
+    "startDialogueId": "",
+    "progressDialogueId": "",
+    "completedDialogueId": "",
+    "targetDialogueId": "",
+    "nextQuestId": "",
+    "rewardGroupId": "RWD_004"
   }
 ]

@@ -1,0 +1,44 @@
+[
+  {
+    "uniqueId": "SHOP_001_01",
+    "shopId": "SHOP_001",
+    "itemId": "weapon_sword_01",
+    "price": 100,
+    "sellCount": 5
+  },
+  {
+    "uniqueId": "SHOP_001_02",
+    "shopId": "SHOP_001",
+    "itemId": "weapon_sword_02",
+    "price": 300,
+    "sellCount": 3
+  },
+  {
+    "uniqueId": "SHOP_001_03",
+    "shopId": "SHOP_001",
+    "itemId": "weapon_sword_03",
+    "price": 800,
+    "sellCount": 2
+  },
+  {
+    "uniqueId": "SHOP_001_04",
+    "shopId": "SHOP_001",
+    "itemId": "potion_hp_small",
+    "price": 30,
+    "sellCount": -1
+  },
+  {
+    "uniqueId": "SHOP_001_05",
+    "shopId": "SHOP_001",
+    "itemId": "potion_hp_medium",
+    "price": 70,
+    "sellCount": -1
+  },
+  {
+    "uniqueId": "SHOP_001_06",
+    "shopId": "SHOP_001",
+    "itemId": "potion_hp_large",
+    "price": 140,
+    "sellCount": -1
+  }
+]

@@ -61,5 +61,14 @@
     "companionId": "comp_002",
     "itemId": "",
     "itemCount": 1
+  },
+  {
+    "uniqueId": "RWD_004_01",
+    "rewardGroupId": "RWD_004",
+    "gold": 80,
+    "exp": 50,
+    "companionId": "",
+    "itemId": "",
+    "itemCount": 0
   }
 ]

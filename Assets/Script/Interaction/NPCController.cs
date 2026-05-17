@@ -75,7 +75,19 @@ public class NPCController: InteractionController
 		// 상점 NPC
 		if (!string.IsNullOrEmpty(_npcData._shopId))
 		{
-			UIManager.Instance.ShowShop(_npcData._shopId);
+			var shopDialogue = DialogueDatabase.Instance.GetDialogueById(_npcData._defaultDialogueId);
+			if (shopDialogue != null)
+			{
+				GameManager.Instance.StartDialogue(shopDialogue, () =>
+				{
+					GameManager.Instance.EndDialogue();
+					UIManager.Instance.ShowShop(_npcData._shopId);
+				});
+			}
+			else
+			{
+				UIManager.Instance.ShowShop(_npcData._shopId);
+			}
 			return;
 		}
 

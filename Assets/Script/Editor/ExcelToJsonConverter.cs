@@ -24,7 +24,7 @@ public static class ExcelToJsonConverter //static : 인스턴스가 필요없는
 		{ "CompanionTable", typeof(CompanionTableData) },
 		{ "ItemTable", typeof(ItemTableData) },
 		{ "DropTable", typeof(DropTableData) },
-
+		{ "ShopTable", typeof(ShopTableData) },
 	};
 
 	[MenuItem("Tools/Convert All Excel to JSON")]
