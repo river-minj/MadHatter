@@ -51,6 +51,7 @@ public class ShopManager : MonoBehaviour
 		if (!PlayerInfoManager.Instance.SpendGold(item.price))
 		{
 			Debug.Log($"[ShopManager] 골드 부족: {item.price} 필요");
+			UIManager.Instance.ShowToast("골드가 부족합니다.");
 			return false;
 		}
 

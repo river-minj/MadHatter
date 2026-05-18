@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private Transform _popupRoot;
 
 	CommonConfirmPopup _currentPopup;
+	private ToastPopup _currentToast;
 	private void Awake()
 	{
 		if (Instance == null)
@@ -282,6 +283,27 @@ public class UIManager : MonoBehaviour
 	public void ClearCurrentPopup()
 	{
 		_currentPopup = null;
+	}
+
+	public void ShowToast(string message, float duration = -1f)
+	{
+		if (_currentToast != null)
+			Destroy(_currentToast.gameObject);
+
+		GameObject prefab = Resources.Load<GameObject>("Prefab/Popup/ToastPopup");
+		if (prefab == null)
+		{
+			Debug.LogError("[UIManager] 토스트 프리팹을 찾을 수 없습니다: Prefab/Popup/ToastPopup");
+			return;
+		}
+
+		GameObject toastObj = Instantiate(prefab, _popupRoot);
+		_currentToast = toastObj.GetComponent<ToastPopup>();
+
+		if (duration > 0f)
+			_currentToast.Show(message, duration);
+		else
+			_currentToast.Show(message);
 	}
 
 	public ItemDetailPopup CreateItemDetailPopup()
