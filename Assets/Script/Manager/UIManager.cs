@@ -249,6 +249,7 @@ public class UIManager : MonoBehaviour
 
 	public void ShowShop(string shopId)
 	{
+		Debug.Log($"[UIManager] ShowShop | shopId={shopId} | _shopUI={((_shopUI == null) ? "null" : "assigned")}");
 		if (_shopUI == null) return;
 		_shopUI.Show(shopId);
 	}

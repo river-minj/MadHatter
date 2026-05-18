@@ -58,6 +58,7 @@ public class InfiniteScrollView : MonoBehaviour
 
 		RectTransform prefabRect = _slotPrefab.GetComponent<RectTransform>();
 		_slotSize = prefabRect.sizeDelta;
+		Debug.Log($"[InfiniteScroll] slotSize={_slotSize}");
 	}
 
 	/// <summary>
@@ -86,6 +87,7 @@ public class InfiniteScrollView : MonoBehaviour
 		// 데이터 수보다 많은 슬롯은 불필요
 		int dataCount = _dataList != null ? _dataList.Count : 0;
 		_poolSize = Mathf.Min(maxVisibleSlots, dataCount);
+		Debug.Log($"[InfiniteScroll] viewportHeight={viewportHeight} rowHeight={rowHeight} visibleRows={visibleRows} poolSize={_poolSize} dataCount={dataCount}");
 	}
 
 	public void SetData(List<InfiniteScrollData> dataList)
@@ -121,10 +123,7 @@ public class InfiniteScrollView : MonoBehaviour
 							+ (Mathf.Max(0, totalRows - 1) * _spacing.y); // totalRows=0일 때 음수 방지
 
 		_content.sizeDelta = new Vector2(_content.sizeDelta.x, contentHeight);
-
-#if UNITY_EDITOR
-		Debug.Log($"[InfiniteScroll] Content height set to {contentHeight}");
-#endif
+		Debug.Log($"[InfiniteScroll] totalRows={totalRows} contentHeight={contentHeight} viewportHeight={_viewport.rect.height}");
 	}
 
 	/// <summary>
