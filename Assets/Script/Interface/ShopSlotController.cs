@@ -46,12 +46,13 @@ public class ShopSlotController : InfiniteScrollItem
 
 		if (_stockText != null)
 		{
-			if (slotData._stock == -1)
+			int initialStock = slotData._shopItemData.initialStock;
+			if (initialStock == -1)
 				_stockText.gameObject.SetActive(false);
 			else
 			{
 				_stockText.gameObject.SetActive(true);
-				_stockText.text = $"재고 {slotData._stock}";
+				_stockText.text = $"({slotData._stock}/{initialStock})";
 			}
 		}
 

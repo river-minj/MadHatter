@@ -20,6 +20,13 @@ public class NPCController: InteractionController
 		}
 	}
 
+	protected override void OnPlayerExit()
+	{
+		base.OnPlayerExit();
+		if (_npcData != null && !string.IsNullOrEmpty(_npcData._shopId))
+			UIManager.Instance.HideShop();
+	}
+
 	protected override void OnInteract()
 	{
 		if (_npcData == null)

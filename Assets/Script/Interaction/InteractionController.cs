@@ -64,7 +64,7 @@ public abstract class InteractionController : MonoBehaviour, IInteractable
 		Debug.Log("Player entered interaction range of " + gameObject.name);
 	}
 
-	protected void OnPlayerExit()
+	protected virtual void OnPlayerExit()
 	{
 		//플레이어가 인터랙션 범위에서 나갔을 때의 기본 동작 (서브클래스에서 오버라이드 가능)
 		Debug.Log("Player exited interaction range of " + gameObject.name);
