@@ -21,16 +21,9 @@ public class DataManager : MonoBehaviour
 		Instance = this;
 	}
 
-	private void Start()
-	{
-		if (!_isLoaded)
-		{
-			StartCoroutine(LoadAllDataAsync());
-		}
-	}
-
 	public IEnumerator LoadAllDataAsync(Action<float, string> onProgress = null)
 	{
+		if (_isLoaded) yield break;
 		// Database 인스턴스 생성
 		DialogueDatabase.CreateInstance();
 		QuestDatabase.CreateInstance();
