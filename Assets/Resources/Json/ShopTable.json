@@ -40,5 +40,40 @@
     "itemId": "potion_hp_large",
     "price": 140,
     "sellCount": -1
+  },
+  {
+    "uniqueId": "SHOP_001_07",
+    "shopId": "SHOP_001",
+    "itemId": "armor_leather",
+    "price": 150,
+    "sellCount": 5
+  },
+  {
+    "uniqueId": "SHOP_001_08",
+    "shopId": "SHOP_001",
+    "itemId": "armor_iron",
+    "price": 400,
+    "sellCount": 3
+  },
+  {
+    "uniqueId": "SHOP_001_09",
+    "shopId": "SHOP_001",
+    "itemId": "ring_magic",
+    "price": 500,
+    "sellCount": 2
+  },
+  {
+    "uniqueId": "SHOP_001_10",
+    "shopId": "SHOP_001",
+    "itemId": "potion_antidote",
+    "price": 50,
+    "sellCount": -1
+  },
+  {
+    "uniqueId": "SHOP_001_11",
+    "shopId": "SHOP_001",
+    "itemId": "potion_stamina",
+    "price": 200,
+    "sellCount": 10
   }
 ]

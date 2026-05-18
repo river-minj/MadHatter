@@ -157,7 +157,7 @@ public class InfiniteScrollView : MonoBehaviour
 		if (_dataList == null || _dataList.Count == 0)
 			return;
 
-		float scrollPos = -_content.anchoredPosition.y; // 스크롤 내릴수록 anchoredPosition.y가 음수이므로 부호 반전
+		float scrollPos = _content.anchoredPosition.y;
 		float rowHeight = _slotSize.y + _spacing.y;
 		int newTopRow = Mathf.Max(0, Mathf.FloorToInt(scrollPos / rowHeight));
 

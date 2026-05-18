@@ -52,5 +52,50 @@
     "description": "HP를 100 회복한다",
     "effectValue": 100,
     "iconPath": "Icons/potion_hp_large"
+  },
+  {
+    "uniqueId": "7",
+    "itemId": "armor_leather",
+    "itemName": "가죽 갑옷",
+    "itemType": "Equipment",
+    "description": "가벼운 가죽 갑옷",
+    "effectValue": 3,
+    "iconPath": "Icons/armor_leather"
+  },
+  {
+    "uniqueId": "8",
+    "itemId": "armor_iron",
+    "itemName": "쇠 갑옷",
+    "itemType": "Equipment",
+    "description": "단단한 쇠로 만든 갑옷",
+    "effectValue": 8,
+    "iconPath": "Icons/armor_iron"
+  },
+  {
+    "uniqueId": "9",
+    "itemId": "ring_magic",
+    "itemName": "마력 반지",
+    "itemType": "Equipment",
+    "description": "마력을 높여주는 반지",
+    "effectValue": 5,
+    "iconPath": "Icons/ring_magic"
+  },
+  {
+    "uniqueId": "10",
+    "itemId": "potion_antidote",
+    "itemName": "해독제",
+    "itemType": "Consumable",
+    "description": "독 상태를 해제한다",
+    "effectValue": 0,
+    "iconPath": "Icons/potion_antidote"
+  },
+  {
+    "uniqueId": "11",
+    "itemId": "potion_stamina",
+    "itemName": "강화 물약",
+    "itemType": "Consumable",
+    "description": "잠시 공격력이 올라간다",
+    "effectValue": 5,
+    "iconPath": "Icons/potion_stamina"
   }
 ]
