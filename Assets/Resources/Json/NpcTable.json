@@ -3,13 +3,15 @@
     "uniqueId": "NPC_001",
     "npcName": "마을 이장",
     "defaultDialogueId": "DLG_001",
-    "questId": "QST_001"
+    "questId": "QST_001",
+    "shopId": ""
   },
   {
     "uniqueId": "NPC_002",
     "npcName": "대장장이",
     "defaultDialogueId": "DLG_005",
-    "questId": "QST_002"
+    "questId": "QST_002",
+    "shopId": ""
   },
   {
     "uniqueId": "NPC_003",

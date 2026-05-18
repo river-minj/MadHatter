@@ -11,7 +11,10 @@
       "mcp__unityMCP__find_gameobjects",
       "mcp__unityMCP__execute_code",
       "mcp__unityMCP__refresh_unity",
-      "mcp__unityMCP__manage_scene"
+      "mcp__unityMCP__manage_scene",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Work\\\\UnityProject\\\\MadHatter\\\\Assets\\\\Resources\" -Filter \"*.asset\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Work\\\\UnityProject\\\\MadHatter\\\\Assets\\\\Resources\\\\Tile\\\\Map3\" -Recurse)"
     ]
   }
 }

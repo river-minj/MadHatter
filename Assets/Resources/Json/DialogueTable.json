@@ -194,5 +194,12 @@
     "speakerName": "플레이어",
     "dialogueType": "Monologue",
     "line": "감사합니다!"
+  },
+  {
+    "uniqueId": "DLG_SHOP",
+    "dialogueId": "DLG_SHOP",
+    "speakerName": "상점주인",
+    "dialogueType": "NPC",
+    "line": "없는건 없고 있는건 있다네."
   }
 ]

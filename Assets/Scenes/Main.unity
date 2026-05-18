@@ -3953,7 +3953,7 @@ MonoBehaviour:
   _dialogueUI: {fileID: 1931960180}
   _inventoryUI: {fileID: 1255639694}
   _questUI: {fileID: 732075179}
-  _shopUI: {fileID: 0}
+  _shopUI: {fileID: 5946141152283411425}
   _popupRoot: {fileID: 1045627222}
 --- !u!4 &1253460099
 Transform:
@@ -3986,7 +3986,7 @@ MonoBehaviour:
   _cameraController: {fileID: 519420033}
   _playerController: {fileID: 1054705961}
   _mapRoot: {fileID: 298487635}
-  _firstMapMc: {fileID: 1275650001781604006, guid: 3574dfadd7eea724a968590a099b5aab, type: 3}
+  _firstMapMc: {fileID: 3953533637105107911, guid: 88dca8d3776dda647a396e72b245fe1a, type: 3}
 --- !u!114 &1253460101
 MonoBehaviour:
   m_ObjectHideFlags: 0
