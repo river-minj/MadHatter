@@ -297,23 +297,23 @@ public class EnemyReturnState : IEnemyState
 	{
 		_controller.StopMove();
 	}
+}
 
-	// ============================================================
-	// Die 상태 (사망처리)
-	// ============================================================
-	public class EnemyDieState : IEnemyState
+// ============================================================
+// Die 상태 (사망처리)
+// ============================================================
+public class EnemyDieState : IEnemyState
+{
+	private EnemyFSM _fsm;
+	private EnemyController _controller;
+
+	public EnemyDieState(EnemyFSM fsm, EnemyController controller)
 	{
-		private EnemyFSM _fsm;
-		private EnemyController _controller;
-
-		public EnemyDieState(EnemyFSM fsm, EnemyController controller)
-		{
-			_fsm = fsm;
-			_controller = controller;
-		}
-
-		public void Enter() { }
-		public void Update() { }  // 아무것도 안 함 — 상태 전환 없음
-		public void Exit() { }
+		_fsm = fsm;
+		_controller = controller;
 	}
+
+	public void Enter() { }
+	public void Update() { }
+	public void Exit() { }
 }

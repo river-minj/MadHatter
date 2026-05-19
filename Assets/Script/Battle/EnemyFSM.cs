@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using static EnemyReturnState;
 
 public class EnemyFSM : MonoBehaviour
 {

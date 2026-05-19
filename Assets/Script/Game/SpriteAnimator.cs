@@ -39,8 +39,12 @@ public class SpriteAnimator : MonoBehaviour, IAnimator
 		string resolved = ResolveAnimName(animName);
 		if (resolved == null)
 			return;
-		if (_currentAnim == resolved)
-			return;
+
+		if (loop)
+		{
+			if (_currentAnim == resolved)
+				return;
+		}
 
 		_currentAnim = resolved;
 		_animator.Play(resolved);
