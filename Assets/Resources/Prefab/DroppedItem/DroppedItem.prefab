@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1477231045971638731}
   - component: {fileID: 6517543668386017083}
   - component: {fileID: 5748035574369069300}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DroppedItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5330370020657846600}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1229805214378505989
 MonoBehaviour:
@@ -88,8 +88,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 939260342, guid: 2d4136ec4ff980645afdfb9204acb654, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -31,6 +31,10 @@ public class DroppedItemController : InteractionController
 	{
 		if (string.IsNullOrEmpty(_itemId)) return;
 
+		ItemData data = ItemDatabase.Instance.GetItemById(_itemId);
+		if (data != null)
+			UIManager.Instance.ShowToast($"{data._itemName}{KoreanParticle.EulReul(data._itemName)} 획득했다!");
+
 		InventoryManager.Instance.AddItem(_itemId, 1);
 		Destroy(gameObject);
 	}
