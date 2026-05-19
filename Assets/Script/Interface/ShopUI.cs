@@ -14,12 +14,6 @@ public class ShopUI : MonoBehaviour
 
 #if UNITY_EDITOR
 	[SerializeField] private bool _previewInEditor;
-
-	private void OnValidate()
-	{
-		if (_shopPanel == null) return;
-		_shopPanel.SetActive(_previewInEditor);
-	}
 #endif
 
 	private void Awake()
