@@ -312,9 +312,7 @@ public class EnemyReturnState : IEnemyState
 			_controller = controller;
 		}
 
-		public void Enter() {
-			_controller.Anim.PlayAnimation("die", false);
-		}
+		public void Enter() { }
 		public void Update() { }  // 아무것도 안 함 — 상태 전환 없음
 		public void Exit() { }
 	}

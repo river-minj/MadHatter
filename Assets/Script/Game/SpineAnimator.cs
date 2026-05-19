@@ -1,7 +1,7 @@
-﻿using Spine;
-using Spine.Unity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Spine;
+using Spine.Unity;
 using UnityEngine;
 
 [Serializable]
@@ -20,6 +20,7 @@ public class SpineAnimator : MonoBehaviour, IAnimator
 	public SkeletonAnimation Skeleton => _skel;
 
     private string _currentLoopAnim;
+	private Action _onCompleteCallback;
 
 	//anim 이름 dic 초기화
 	private void Awake()
@@ -59,7 +60,7 @@ public class SpineAnimator : MonoBehaviour, IAnimator
 	/// loop=true: 같은 애니메이션 중복 재생 방지
 	/// loop=false: 항상 재생 (attack, hit, die 등)
 	/// </summary>
-	public void PlayAnimation(string animName, bool loop = true)
+	public void PlayAnimation(string animName, bool loop = true, Action onComplete = null)
     {
 		string resolved = ResolveAnimationName(animName);
 		if (resolved == null)
@@ -69,9 +70,12 @@ public class SpineAnimator : MonoBehaviour, IAnimator
 		{
 			if (_currentLoopAnim == resolved)
 				return;
-			
+
 			_currentLoopAnim = resolved;
 		}
+
+		if (!loop)
+			_onCompleteCallback = onComplete;
 
 		_skel.AnimationState.SetAnimation(0, resolved, loop);
 	}
@@ -102,7 +106,13 @@ public class SpineAnimator : MonoBehaviour, IAnimator
 	{
 		if (trackEntry.Loop == false)
 		{
-			PlayAnimation("idle");
+			var cb = _onCompleteCallback;
+			_onCompleteCallback = null;
+
+			if (cb != null)
+				cb.Invoke();
+			else
+				PlayAnimation("idle");
 		}
 	}
 }

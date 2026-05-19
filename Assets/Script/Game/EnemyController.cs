@@ -117,27 +117,30 @@ public class EnemyController : MonoBehaviour, IDamageable
 		Debug.Log($"[Enemy] {_enemyId} 사망");
 
 		_fsm.ChangeState(_fsm.DieState);
-		_spineAnimator.DisableAutoIdle();
 
 		OnDeath?.Invoke(this);
 		QuestManager.Instance.ReportKill(_enemyId);
 
 		string droppedItemId = DropDatabase.Instance.RollDrop(_enemyId);
 		Debug.Log($"[Drop] enemyId: {_enemyId}, droppedItemId: {droppedItemId ?? "없음"}");
-		if (!string.IsNullOrEmpty(droppedItemId))
-		{
-			GameObject prefab = Resources.Load<GameObject>("Prefab/DroppedItem/DroppedItem");
-			if (prefab != null)
-			{
-				GameObject dropObj = Instantiate(prefab, transform.position, Quaternion.identity);
-				DroppedItemController dic = dropObj.GetComponent<DroppedItemController>();
-				if (dic != null)
-				{
-					dic.Init(droppedItemId);
-				}
-			}
-		}
 
-		Destroy(gameObject, 1.0f);
+		_spineAnimator.PlayAnimation("die", false, () =>
+		{
+			SpawnDrop(droppedItemId);
+			Destroy(gameObject);
+		});
+	}
+
+	private void SpawnDrop(string droppedItemId)
+	{
+		if (string.IsNullOrEmpty(droppedItemId)) return;
+
+		GameObject prefab = Resources.Load<GameObject>("Prefab/DroppedItem/DroppedItem");
+		if (prefab == null) return;
+
+		GameObject dropObj = Instantiate(prefab, transform.position, Quaternion.identity);
+		DroppedItemController dic = dropObj.GetComponent<DroppedItemController>();
+		if (dic != null)
+			dic.Init(droppedItemId);
 	}
 }

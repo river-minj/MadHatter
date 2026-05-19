@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,16 +34,27 @@ public class SpriteAnimator : MonoBehaviour, IAnimator
 		}
 	}
 
-	public void PlayAnimation(string animName, bool loop = true)
+	public void PlayAnimation(string animName, bool loop = true, Action onComplete = null)
 	{
 		string resolved = ResolveAnimName(animName);
 		if (resolved == null)
 			return;
 		if (_currentAnim == resolved)
-			return; //같은 애니메이션 중복 재생 방지
+			return;
 
 		_currentAnim = resolved;
 		_animator.Play(resolved);
+
+		if (onComplete != null && !loop)
+			StartCoroutine(WaitForAnimComplete(onComplete));
+	}
+
+	private IEnumerator WaitForAnimComplete(Action onComplete)
+	{
+		yield return null;
+		while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+			yield return null;
+		onComplete?.Invoke();
 	}
 
 	public void SetFacing(Vector2 direction)
