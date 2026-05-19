@@ -222,6 +222,8 @@ public class GameManager : MonoBehaviour
         //동료 스케일 설정
         CompanionManager.Instance?.SetScale(scale);
 
+        _cameraController.SnapToTarget();
+
 		Debug.LogFormat("[GameManager] Loaded new map: {0}", _currentMapController.gameObject.name);
     
         if(save)
