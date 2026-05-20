@@ -105,6 +105,12 @@ public class CompanionManager : MonoBehaviour
         
     }
 
+	public void SnapAllToFormation()
+	{
+		foreach (var cc in _lineA) cc?.SnapToFormation();
+		foreach (var cc in _lineB) cc?.SnapToFormation();
+	}
+
 	public void SetFacingDirection(bool isRight)
 	{
 		foreach(var cc in _lineA)

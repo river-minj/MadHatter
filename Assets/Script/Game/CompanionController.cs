@@ -94,6 +94,14 @@ public class CompanionController : MonoBehaviour
 
 	}
 
+	public void SnapToFormation()
+	{
+		var recorder = PlayerTrailRecorder.Instance;
+		if (recorder == null || _player == null) return;
+		CalculateTargetPosition(recorder);
+		transform.position = _targetPos;
+	}
+
 	public void SetFacingDirection(bool isRight)
 	{
 		if (_spineAnimator == null) return;

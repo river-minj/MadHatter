@@ -40,6 +40,15 @@ public class PlayerTrailRecorder : MonoBehaviour
 		return _listTrail[_listTrail.Count - 1];
 	}
 
+	public void ResetToPosition(Vector3 position)
+	{
+		_listTrail.Clear();
+		var point = new TrailPoint(position, Vector3.down);
+		for (int i = 0; i < _maxTrailCount; i++)
+			_listTrail.Add(point);
+		_lastRecordedPos = position;
+	}
+
 	private void Awake()
 	{
 		if (Instance == null)
