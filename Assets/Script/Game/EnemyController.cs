@@ -104,9 +104,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 		//대상에게 데미지 적용 (IDamageable 구현 후)
 		var damageable = _fsm.TargetDamageable;
 		if (damageable != null && !damageable.IsDead)
-		{
-			damageable?.TakeDamage(_fsm.AttackDamage);
-		}
+			damageable.TakeDamage(_fsm.AttackDamage);
 	}
 
 	// ============================================================

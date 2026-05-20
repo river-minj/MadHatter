@@ -89,16 +89,10 @@ public class CameraController : MonoBehaviour
 	public float GetClampedTargetY()
 	{
 		if (_target == null) return transform.position.y;
-		float targetY = _target.position.y + _offset.y;
+		Vector3 targetPos = _target.position + _offset;
 		if (_currentBounds.HasValue)
-		{
-			float camH = _cam.orthographicSize;
-			float minY = _currentBounds.Value.min.y + camH;
-			float maxY = _currentBounds.Value.max.y - camH;
-			if (minY > maxY) targetY = _currentBounds.Value.center.y;
-			else targetY = Mathf.Clamp(targetY, minY, maxY);
-		}
-		return targetY;
+			targetPos = ClampPositionToBounds(targetPos, _currentBounds.Value);
+		return targetPos.y;
 	}
 
 	public void SetBounds(Bounds bounds)
