@@ -198,9 +198,6 @@ public class GameManager : MonoBehaviour
         //기존 맵 언로드
         if (CurrentMapController != null)
         {
-            //protected virtual 메서드라서 직접 호출 불가 -> 상속받은 클래스에서 처리하도록 변경 필요
-            //CurrentMapController?.OnMapExit();
-
             Destroy(CurrentMapController.gameObject);
             Debug.LogFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
         }

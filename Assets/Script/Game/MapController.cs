@@ -75,9 +75,13 @@ public class MapController : MonoBehaviour
 		Debug.LogFormat("[Map Controller] Entered {0}", gameObject.name);
 	}
 
+	private void OnDestroy()
+	{
+		OnMapExit();
+	}
+
 	protected virtual void OnMapExit()
 	{
-		//맵 진입 시 처리 (적 스폰, 오브젝트 활성화 등)
 		Debug.LogFormat("[Map Controller] Exiting {0}", gameObject.name);
 	}
 
