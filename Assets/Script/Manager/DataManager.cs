@@ -73,6 +73,7 @@ public class DataManager : MonoBehaviour
 		ShopDatabase.Instance.ApplyData(shopList);
 		yield return null;
 
+		GameDatabase.Initialize();
 		_isLoaded = true;
 		onProgress?.Invoke(1f, "데이터 로드 완료!");
 	}

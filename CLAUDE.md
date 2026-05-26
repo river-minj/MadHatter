@@ -55,6 +55,8 @@ Excel (외부) → ExcelToJsonConverter (에디터 도구)
 
 Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `ItemDatabase`, `CompanionDatabase`, `DropDatabase`, `ShopDatabase`
 
+`GameDatabase`는 위 7개 Database의 단일 진입점 파사드(Facade)입니다. 기존 싱글턴에 위임하며 동작은 동일합니다. 신규 코드에서는 `GameDatabase.Instance.Items.GetItem(...)` 패턴을 사용합니다. `DataManager.LoadAllDataAsync()` 완료 직후 `GameDatabase.Initialize()`가 호출되어 인스턴스가 생성됩니다.
+
 ### 맵 시스템
 
 맵은 전환 시 프리팹을 인스턴스화/파괴하는 방식입니다. `MapController`(기반 클래스)가 정의하는 것:
@@ -120,7 +122,8 @@ Legacy Input Manager 사용. 키보드: WASD/방향키(이동), E(상호작용/�
 - 런타임 클래스(QuestState 등)는 직렬화 전용 클래스로 분리 (QuestData 등 참조 타입 제거)
 - 게임 데이터(불변)는 엑셀 → JSON → Database 경로로 관리, ScriptableObject 미사용
 TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 클래스는 Database가 가공하여 생성
-- 새 테이블 추가 시: TableData.cs에 클래스 추가 → ExcelToJsonConverter.TableTypeMap에 등록 → DataManager.LoadAllDataAsync에 로드 코드 추가 - → Database 구현
+- 새 테이블 추가 시: TableData.cs에 클래스 추가 → ExcelToJsonConverter.TableTypeMap에 등록 → DataManager.LoadAllDataAsync에 로드 코드 추가 → Database 구현 → GameDatabase에 프로퍼티 추가
+- Database 접근은 GameDatabase.Instance.XXX 패턴을 신규 코드 기준으로 사용 — 기존 Database.Instance 직접 참조는 점진적으로 교체, 과도기 중 혼재 허용
 - 플랫폼 분기는 #if 전처리기 사용, 조이스틱은 PC에서 자동 비활성화
 - 매니저 간 단순 메서드 호출은 허용, 내부 데이터 직접 조작은 금지
 - NPC는 맵 프리팹에 직접 배치, Inspector에서 _npcId만 입력, 데이터는 NpcDatabase에서 지연 초기화로 조회
