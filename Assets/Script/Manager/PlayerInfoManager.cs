@@ -179,6 +179,24 @@ public class PlayerInfoManager : MonoBehaviour
 		OnLevelChanged?.Invoke(_playerInfo._level);
 	}
 
+	public void SetGold(int amount)
+	{
+		_playerInfo._gold = Mathf.Max(0, amount);
+		OnGoldChanged?.Invoke(_playerInfo._gold);
+	}
+
+	public void SetLevel(int level)
+	{
+		_playerInfo._level = Mathf.Max(1, level);
+		OnLevelChanged?.Invoke(_playerInfo._level);
+	}
+
+	public void SetBaseAtk(int atk)
+	{
+		_baseAtk = Mathf.Max(0, atk);
+		OnAtkChanged?.Invoke(Atk);
+	}
+
 	public void TakeDamage(int damage)
 	{
 		if (damage <= 0 || IsDead)

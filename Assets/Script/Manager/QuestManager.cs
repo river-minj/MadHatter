@@ -158,12 +158,32 @@ public class QuestManager : MonoBehaviour
 		}
 
 		//진행중인 퀘스트
-		if(_dicActiveQuest.ContainsKey(questID))
+		if(_dicActiveQuest.TryGetValue(questID, out QuestState qs))
 		{
-			DialogueData progressD = DialogueDatabase.Instance.GetDialogueById(questData._progressDialogueId);
-			if (progressD != null)
+			if (qs._isCompleted)
 			{
-				GameManager.Instance.StartDialogue(progressD);
+				// 목표 달성 → completedDialogue 재생 후 보상 지급
+				DialogueData completedD = DialogueDatabase.Instance.GetDialogueById(questData._completedDialogueId);
+				if (completedD != null)
+				{
+					GameManager.Instance.StartDialogue(completedD, () =>
+					{
+						ClaimReward(questID);
+						GameManager.Instance.EndDialogue();
+					});
+				}
+				else
+				{
+					ClaimReward(questID);
+				}
+			}
+			else
+			{
+				DialogueData progressD = DialogueDatabase.Instance.GetDialogueById(questData._progressDialogueId);
+				if (progressD != null)
+				{
+					GameManager.Instance.StartDialogue(progressD);
+				}
 			}
 			return;
 		}

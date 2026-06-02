@@ -2,7 +2,7 @@
   {
     "uniqueId": "RWD_001_01",
     "rewardGroupId": "RWD_001",
-    "gold": 50,
+    "gold": 100,
     "exp": 30,
     "companionId": "",
     "itemId": "",
@@ -14,13 +14,13 @@
     "gold": 0,
     "exp": 0,
     "companionId": "",
-    "itemId": "herb_potion",
-    "itemCount": 1
+    "itemId": "potion_hp_small",
+    "itemCount": 2
   },
   {
     "uniqueId": "RWD_002_01",
     "rewardGroupId": "RWD_002",
-    "gold": 100,
+    "gold": 200,
     "exp": 80,
     "companionId": "",
     "itemId": "",
@@ -36,37 +36,37 @@
     "itemCount": 0
   },
   {
-    "uniqueId": "RWD_002_03",
-    "rewardGroupId": "RWD_002",
-    "gold": 0,
-    "exp": 0,
-    "companionId": "",
-    "itemId": "iron_sword",
-    "itemCount": 1
-  },
-  {
     "uniqueId": "RWD_003_01",
     "rewardGroupId": "RWD_003",
     "gold": 50,
-    "exp": 50,
+    "exp": 60,
     "companionId": "",
     "itemId": "",
     "itemCount": 0
   },
   {
-    "uniqueId": "RWD_003_02",
-    "rewardGroupId": "RWD_003",
+    "uniqueId": "RWD_004_01",
+    "rewardGroupId": "RWD_004",
+    "gold": 150,
+    "exp": 120,
+    "companionId": "",
+    "itemId": "",
+    "itemCount": 0
+  },
+  {
+    "uniqueId": "RWD_004_02",
+    "rewardGroupId": "RWD_004",
     "gold": 0,
     "exp": 0,
     "companionId": "comp_002",
     "itemId": "",
-    "itemCount": 1
+    "itemCount": 0
   },
   {
-    "uniqueId": "RWD_004_01",
-    "rewardGroupId": "RWD_004",
-    "gold": 80,
-    "exp": 50,
+    "uniqueId": "RWD_005_01",
+    "rewardGroupId": "RWD_005",
+    "gold": 300,
+    "exp": 300,
     "companionId": "",
     "itemId": "",
     "itemCount": 0

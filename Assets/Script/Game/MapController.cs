@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -105,7 +106,7 @@ public class MapController : MonoBehaviour
 		{
 			return spawnPoint;
 		}
-		
+
 		Debug.LogWarningFormat("[MapController] Spawn point with ID {0} not found. => Default", id);
 
 		if(_dicSpawnPoints.TryGetValue(SpawnPointId.Default, out Transform fallback))
@@ -115,5 +116,21 @@ public class MapController : MonoBehaviour
 
 		Debug.LogError("[MapController] Default spawn point not found.");
 		return null;
+	}
+
+	public void RequestRespawn(string prefabPath, Vector3 position, float delay)
+	{
+		if (string.IsNullOrEmpty(prefabPath)) return;
+		StartCoroutine(RespawnCoroutine(prefabPath, position, delay));
+	}
+
+	private IEnumerator RespawnCoroutine(string prefabPath, Vector3 position, float delay)
+	{
+		yield return new WaitForSeconds(delay);
+		var prefab = Resources.Load<GameObject>(prefabPath);
+		if (prefab != null)
+			Instantiate(prefab, position, Quaternion.identity, transform);
+		else
+			Debug.LogWarningFormat("[MapController] Respawn prefab not found: {0}", prefabPath);
 	}
 }

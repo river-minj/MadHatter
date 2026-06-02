@@ -75,6 +75,22 @@ Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `
 
 `EnemyFSM`은 `IEnemyState` 객체를 사용합니다: `Idle → Chase → Attack → Hit → Return → Die`. 상태 전환은 탐지 범위, 공격 범위, 넉백에 의해 결정됩니다. `EnemyController`는 사망 시 `QuestManager.ReportKill()`을 호출하고 `DropDatabase`로 아이템 드롭을 처리합니다.
 
+### 적 리스폰 시스템
+
+컴포지션 패턴으로 책임 분리: `EnemyRespawner`(요청) + `MapController`(실행).
+
+- `EnemyRespawner`: `EnemyController.OnDeath` 구독 → `MapController.RequestRespawn` 위임. 코루틴을 직접 소유하지 않음.
+- `MapController`: `RequestRespawn(prefabPath, position, delay)` + `RespawnCoroutine`. 맵 파괴 시 MonoBehaviour 코루틴 자동 취소.
+- `_linkedQuestId`: `QuestManager.IsQuestCompleted()` true이면 리스폰 중단 (퀘스트 완료 후 적 재등장 방지).
+- 타입별 적 프리팹(`Enemy_Slime`, `Enemy_Goblin`)에 `EnemyId` + `EnemyRespawner` 설정을 내장 → 리스폰으로 생성된 인스턴스도 동일 설정 유지.
+
+현재 배치 (`Map01_Grid`):
+
+| 프리팹 | EnemyId | 연결 퀘스트 | 위치 |
+|---|---|---|---|
+| `Enemy_Slime.prefab` | E_001 | QST_002 | (5.47, 4.58) |
+| `Enemy_Goblin.prefab` | E_002 | QST_004 | (-5.00, -4.00) |
+
 ### 퀘스트 시스템
 
 퀘스트 목표 유형: Kill, Collect, Talk, Explore. 진행 보고 경로:
@@ -84,6 +100,10 @@ Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `
 - `QuestLocationTrigger.OnTriggerEnter2D()` → `QuestManager.ReportReach(locationId)`
 
 `_nextQuestId`를 통해 퀘스트를 연쇄 구성할 수 있습니다. 보상으로 골드, EXP, 아이템, 동료 해금이 지급됩니다.
+
+퀘스트 완료 보상 수령 흐름: 목표 달성(`_isCompleted=true`) 후 퀘스트를 준 NPC에게 직접 방문 → `TryQuestStart`에서 completedDialogue 재생 → `ClaimReward` 호출 순으로 처리. UI에서 즉시 보상 수령하는 버튼은 제공하지 않음.
+
+`_nextQuestId` 체인은 동일 giver NPC 내에서만 유효. NPCController 체인 탐색 시 `questGiverNpcId != _npcId`이면 즉시 중단되므로 다른 NPC가 주는 퀘스트 ID를 nextQuestId로 설정하면 체인이 끊어짐.
 
 ### UI 아키텍처
 
@@ -96,6 +116,30 @@ Legacy Input Manager 사용. 키보드: WASD/방향키(이동), E(상호작용/�
 ### 자동 세이브 트리거
 
 다음 시점에 자동 저장이 실행됩니다: 맵 전환 완료, 퀘스트 보상 수령, 인벤토리 변경, 장비 변경
+
+## SaveData 스키마
+
+`Application.persistentDataPath/saveData.json`에 `JsonUtility`로 직렬화. 필드 추가 시 이 목록을 함께 갱신.
+
+```
+SaveData
+├── playerInfo: PlayerInfoSaveData
+│     name(string), level(int), exp(int), gold(int), hp(int)
+├── questInfo: QuestSaveData
+│     startedQuests: List<string>          // 시작된 questId 목록
+│     completedQuests: List<string>        // 보상까지 완료된 questId 목록
+│     activeQuests: List<ActiveQuestEntry>
+│       └── questID(string), currentProgress(int), isCompleted(bool)
+├── inventoryData: InventorySaveData
+│     items: List<InventoryItemEntry>
+│       └── itemId(string), count(int)
+│     equippedWeaponId: string
+├── companionData: CompanionSaveData
+│     ownedCompanionIds: List<string>
+└── shopInfo: ShopSaveData
+      stocks: List<ShopStockEntry>         // 유한 재고(-1 제외)만 저장
+        └── uniqueId(string), remaining(int)
+```
 
 ## 주요 패턴
 
@@ -146,6 +190,10 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 애니메이션 재생/방향전환은 SpineAnimator 공용 컴포넌트에 위임 — 개별 Controller에 Spine 코드 직접 작성 금지
 - 애니메이션 이름은 범용으로 통일 (idle, run, attack, hit, die) — 향후 Spine→Sprite 교체 대비
 - SpineAnimator.Skeleton 프로퍼티로 스킨 변경 등 특수 접근 허용 (CompanionController 등)
+- SpriteAnimator 사용 시 `_animationMappings` Inspector 리스트에서 standardName → Animator state name 매핑 필수. FSM은 표준 이름(idle/attack/hit/die)으로만 요청, 실제 state 이름은 매핑에서 해결
+- 스프라이트 스트립 슬라이싱은 정수 좌표 기반으로 설정: `xStart = RoundToInt(i * texW / n)`, `xEnd = (마지막 프레임은 texW로 고정)` — float 경계 오류 시 마지막 프레임 누락 발생
+- 적 스프라이트 에셋 위치: `Assets/Resources/Sprite/{EnemyType}/` — 클립(.anim) + 컨트롤러(.controller) 동일 폴더 보관
+- 슬라이싱 재설정 후 애니메이션 클립의 스프라이트 참조(fileID)가 끊겨 Missing 프레임이 발생할 수 있음 — 재슬라이싱 시 해당 클립도 반드시 재생성
 - 탭 시스템은 범용 컴포넌트(TabController/Tab/TabPage)로 분리, 데이터 로직은 사용처(InventoryUI 등)가 담당
 - 드롭 테이블은 엑셀 데이터로 관리, 가중치 기반 랜덤 선택
 - 모든 키보드 입력은 PlayerController에서 통합 관리 — InteractionTrigger 등 개별 컴포넌트에서 키 입력 감지 금지
@@ -170,3 +218,7 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 인벤토리 슬롯 프리팹이 가벼움 (Image + TMP + Button)
 - 탭 전환이 빈번한 작업이 아님
 - 조기 최적화 회피 — hitch가 실제 체감되면 그때 레이지 풀로 전환
+- 디버그/치트 기능은 `#if UNITY_EDITOR || DEVELOPMENT_BUILD`로 조건부 컴파일, `GameManager.Awake()`에서 `AddComponent`로 자동 주입 — 별도 GameObject 배치 불필요
+- 적 리스폰은 EnemyRespawner(요청) + MapController(코루틴 소유) 컴포지션으로 분리 — 맵 파괴 시 코루틴 자동 취소됨
+- 적 타입별 프리팹에 EnemyId + EnemyRespawner 설정을 내장 — 리스폰 후에도 설정 유지, 퀘스트 완료 후 리스폰 중단은 _linkedQuestId로 제어
+- 프리팹은 독립(Regular) 타입으로 유지: MCP 등으로 Variant가 생성된 경우 `PrefabUtility.UnpackPrefabInstance(Completely)`로 베이스 연결 해제 후 저장

@@ -4,133 +4,70 @@
     "dialogueId": "DLG_001",
     "speakerName": "마을 이장",
     "dialogueType": "NPC",
-    "line": "오, 여행자인가? 잘 왔네."
+    "line": "여행자여, 마침 잘 왔소. 최근 마을에 이상한 일이 잦아지고 있다네."
   },
   {
     "uniqueId": "DLG_001_02",
     "dialogueId": "DLG_001",
-    "speakerName": "플레이어",
-    "dialogueType": "Monologue",
-    "line": "안녕하세요. 이곳이 어디인가요?"
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마을 대장장이에게 가보게나. 그가 상황을 잘 알고 있을 거야."
   },
   {
     "uniqueId": "DLG_001_03",
     "dialogueId": "DLG_001",
-    "speakerName": "마을 이장",
-    "dialogueType": "NPC",
-    "line": "여기는 바람개비 마을이라네."
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "알겠습니다. 대장장이를 찾아가 보죠."
   },
   {
-    "uniqueId": "DLG_001_04",
-    "dialogueId": "DLG_001",
+    "uniqueId": "DLG_001_C_01",
+    "dialogueId": "DLG_001_C",
     "speakerName": "마을 이장",
     "dialogueType": "NPC",
-    "line": "마침 부탁할 일이 있는데, 들어주겠나?"
+    "line": "대장장이를 만나고 왔군. 수고했네. 작은 거지만 받아 주게."
   },
   {
     "uniqueId": "DLG_002_01",
     "dialogueId": "DLG_002",
-    "speakerName": "마을 이장",
+    "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "마을 대장장이에게 전할 말이 있다네."
+    "line": "오, 이장님이 보내셨군. 잘 왔어."
   },
   {
     "uniqueId": "DLG_002_02",
     "dialogueId": "DLG_002",
-    "speakerName": "마을 이장",
+    "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "대장장이를 찾아가서 안부를 전해주게."
+    "line": "사실 큰일이야. 요즘 마을 주변에 슬라임이 이상하게 많아졌거든."
   },
   {
     "uniqueId": "DLG_002_03",
     "dialogueId": "DLG_002",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "예전엔 한두 마리 정도였는데... 뭔가 이상한 힘이 몬스터들을 끌어들이는 것 같아."
+  },
+  {
+    "uniqueId": "DLG_002_04",
+    "dialogueId": "DLG_002",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "내 제자 꼬마 기사도 걱정이 태산이야. 이장님께 돌아가 보게."
+  },
+  {
+    "uniqueId": "DLG_002_05",
+    "dialogueId": "DLG_002",
     "speakerName": "플레이어",
     "dialogueType": "Monologue",
-    "line": "알겠습니다. 대장장이를 찾아가 볼게요."
+    "line": "알겠습니다. 이장님께 전하고 올게요."
   },
   {
     "uniqueId": "DLG_003_01",
     "dialogueId": "DLG_003",
     "speakerName": "마을 이장",
     "dialogueType": "NPC",
-    "line": "아직 대장장이를 만나지 못한 건가?"
-  },
-  {
-    "uniqueId": "DLG_003_02",
-    "dialogueId": "DLG_003",
-    "speakerName": "마을 이장",
-    "dialogueType": "NPC",
-    "line": "마을 동쪽에 있으니 찾아가 보게."
-  },
-  {
-    "uniqueId": "DLG_004_01",
-    "dialogueId": "DLG_004",
-    "speakerName": "대장장이",
-    "dialogueType": "NPC",
-    "line": "오, 이장님이 보내셨군. 반갑네!"
-  },
-  {
-    "uniqueId": "DLG_004_02",
-    "dialogueId": "DLG_004",
-    "speakerName": "대장장이",
-    "dialogueType": "NPC",
-    "line": "고맙네. 이건 수고비일세."
-  },
-  {
-    "uniqueId": "DLG_004_03",
-    "dialogueId": "DLG_004",
-    "speakerName": "플레이어",
-    "dialogueType": "Monologue",
-    "line": "감사합니다."
-  },
-  {
-    "uniqueId": "DLG_005_01",
-    "dialogueId": "DLG_005",
-    "speakerName": "대장장이",
-    "dialogueType": "NPC",
-    "line": "사실 요즘 고민이 있다네."
-  },
-  {
-    "uniqueId": "DLG_005_02",
-    "dialogueId": "DLG_005",
-    "speakerName": "대장장이",
-    "dialogueType": "NPC",
-    "line": "이장님께 이 이야기를 전해줄 수 있겠나?"
-  },
-  {
-    "uniqueId": "DLG_005_03",
-    "dialogueId": "DLG_005",
-    "speakerName": "플레이어",
-    "dialogueType": "Monologue",
-    "line": "물론이죠. 이장님께 전해드릴게요."
-  },
-  {
-    "uniqueId": "DLG_006_01",
-    "dialogueId": "DLG_006",
-    "speakerName": "대장장이",
-    "dialogueType": "NPC",
-    "line": "이장님께 아직 전하지 못했나? 부탁하네."
-  },
-  {
-    "uniqueId": "DLG_007_01",
-    "dialogueId": "DLG_007",
-    "speakerName": "마을 이장",
-    "dialogueType": "NPC",
-    "line": "대장장이에게 그런 고민이 있었구만."
-  },
-  {
-    "uniqueId": "DLG_007_02",
-    "dialogueId": "DLG_007",
-    "speakerName": "마을 이장",
-    "dialogueType": "NPC",
-    "line": "알려줘서 고맙네. 이건 답례일세."
-  },
-  {
-    "uniqueId": "DLG_007_03",
-    "dialogueId": "DLG_007",
-    "speakerName": "플레이어",
-    "dialogueType": "Monologue",
-    "line": "도움이 되었다니 다행이에요."
+    "line": "아직 대장장이를 만나지 못했나? 마을 동쪽에 있다네."
   },
   {
     "uniqueId": "DLG_008_01",
@@ -151,55 +88,244 @@
     "dialogueId": "DLG_010",
     "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "마을 근처에 슬라임이 나타나서 골치라네."
+    "line": "이쪽은 내 제자, 꼬마 기사야. 같이 싸우고 싶어 하는데..."
   },
   {
     "uniqueId": "DLG_010_02",
     "dialogueId": "DLG_010",
     "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "한 마리만 처치해줄 수 있겠나?"
+    "line": "먼저 네 실력을 봐야겠어. 마을 근처 슬라임 3마리를 처치해줄 수 있겠나?"
   },
   {
     "uniqueId": "DLG_010_03",
     "dialogueId": "DLG_010",
     "speakerName": "플레이어",
     "dialogueType": "Monologue",
-    "line": "알겠습니다. 처치하고 올게요."
+    "line": "맡겨두세요."
   },
   {
     "uniqueId": "DLG_011_01",
     "dialogueId": "DLG_011",
     "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "아직 슬라임을 처치하지 못했나? 힘내게!"
+    "line": "아직 슬라임들이 돌아다니고 있나? 조심하게."
   },
   {
     "uniqueId": "DLG_012_01",
     "dialogueId": "DLG_012",
     "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "오, 해치웠군! 대단하네."
+    "line": "해치웠군! 역시 기대를 저버리지 않는군."
   },
   {
     "uniqueId": "DLG_012_02",
     "dialogueId": "DLG_012",
-    "speakerName": "대장장이",
+    "speakerName": "꼬마 기사",
     "dialogueType": "NPC",
-    "line": "이 검을 가져가게. 내가 직접 만든 거라네."
+    "line": "...대단해요. 저도 같이 싸우게 해주세요!"
   },
   {
     "uniqueId": "DLG_012_03",
     "dialogueId": "DLG_012",
-    "speakerName": "플레이어",
-    "dialogueType": "Monologue",
-    "line": "감사합니다!"
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "꼬마 기사, 이 여행자를 잘 부탁한다."
   },
   {
-    "uniqueId": "DLG_SHOP",
-    "dialogueId": "DLG_SHOP",
-    "speakerName": "상점주인",
+    "uniqueId": "DLG_012_04",
+    "dialogueId": "DLG_012",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "잘 부탁해, 꼬마 기사."
+  },
+  {
+    "uniqueId": "DLG_020_01",
+    "dialogueId": "DLG_020",
+    "speakerName": "대장장이",
     "dialogueType": "NPC",
-    "line": "없는건 없고 있는건 있다네."
+    "line": "앞으로 더 강한 적들이 나타날 거야. 무기를 업그레이드해야 해."
+  },
+  {
+    "uniqueId": "DLG_020_02",
+    "dialogueId": "DLG_020",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "마을 옆에 상점이 있다네. 거기서 강철 검을 구해오게."
+  },
+  {
+    "uniqueId": "DLG_020_03",
+    "dialogueId": "DLG_020",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "알겠습니다."
+  },
+  {
+    "uniqueId": "DLG_021_01",
+    "dialogueId": "DLG_021",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "아직 강철 검을 못 구했나? 상점에 가보게."
+  },
+  {
+    "uniqueId": "DLG_022_01",
+    "dialogueId": "DLG_022",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "오, 좋은 검이군. 이제 이장님께 가봐. 새로운 소식이 있을 거야."
+  },
+  {
+    "uniqueId": "DLG_030_01",
+    "dialogueId": "DLG_030",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "잘 왔네. 이번엔 더 심각한 문제야."
+  },
+  {
+    "uniqueId": "DLG_030_02",
+    "dialogueId": "DLG_030",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "숲에서 고블린들이 나타나기 시작했다네. 슬라임과는 다른 종류야."
+  },
+  {
+    "uniqueId": "DLG_030_03",
+    "dialogueId": "DLG_030",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "전하는 말에 의하면 숲의 정령이 고블린들에게 쫓기고 있다더군. 고블린 3마리를 처치해주게."
+  },
+  {
+    "uniqueId": "DLG_030_04",
+    "dialogueId": "DLG_030",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "반드시 해치우겠습니다."
+  },
+  {
+    "uniqueId": "DLG_031_01",
+    "dialogueId": "DLG_031",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "고블린들이 아직 돌아다니고 있다네. 숲 속을 잘 살펴보게."
+  },
+  {
+    "uniqueId": "DLG_032_01",
+    "dialogueId": "DLG_032",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "잘 해냈어! 숲의 정령이 크게 감사해 하더군."
+  },
+  {
+    "uniqueId": "DLG_032_02",
+    "dialogueId": "DLG_032",
+    "speakerName": "숲의 정령",
+    "dialogueType": "NPC",
+    "line": "당신이 우리 숲을 지켜줬군요. 함께 싸울게요."
+  },
+  {
+    "uniqueId": "DLG_032_03",
+    "dialogueId": "DLG_032",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "이 모든 것의 배후를 알았다네. 이건 보상이고..."
+  },
+  {
+    "uniqueId": "DLG_032_04",
+    "dialogueId": "DLG_032",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "고마워, 숲의 정령."
+  },
+  {
+    "uniqueId": "DLG_040_01",
+    "dialogueId": "DLG_040",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "자네와 동료들이 이 마을을 지켜줬다네. 이제 마지막 임무야."
+  },
+  {
+    "uniqueId": "DLG_040_02",
+    "dialogueId": "DLG_040",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마을 북쪽, 저 언덕 너머에 오래된 왕궁이 있다네. 어둠이 그곳을 점령한 이후로 아무도 접근하지 못했지."
+  },
+  {
+    "uniqueId": "DLG_040_03",
+    "dialogueId": "DLG_040",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "자네라면... 그 궁에 도달할 수 있을 거야."
+  },
+  {
+    "uniqueId": "DLG_040_04",
+    "dialogueId": "DLG_040",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "반드시 가겠습니다. 모든 여정을 끝내러요."
+  },
+  {
+    "uniqueId": "DLG_041_01",
+    "dialogueId": "DLG_041",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "아직 왕궁에 도달하지 못했나? 마을 북쪽 언덕을 넘으면 된다네."
+  },
+  {
+    "uniqueId": "DLG_042_01",
+    "dialogueId": "DLG_042",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "...드디어 왕궁의 문 앞에 섰다."
+  },
+  {
+    "uniqueId": "DLG_042_02",
+    "dialogueId": "DLG_042",
+    "speakerName": "꼬마 기사",
+    "dialogueType": "NPC",
+    "line": "길었던 여정이었어요. 하지만 우리가 해냈습니다!"
+  },
+  {
+    "uniqueId": "DLG_042_03",
+    "dialogueId": "DLG_042",
+    "speakerName": "숲의 정령",
+    "dialogueType": "NPC",
+    "line": "이 땅의 어둠이 걷히고 있어요... 느껴지시나요?"
+  },
+  {
+    "uniqueId": "DLG_042_04",
+    "dialogueId": "DLG_042",
+    "speakerName": "플레이어",
+    "dialogueType": "Monologue",
+    "line": "그래. 다들 고마워. 여기서 끝내자."
+  },
+  {
+    "uniqueId": "DLG_DEFAULT_ELDER_01",
+    "dialogueId": "DLG_DEFAULT_ELDER",
+    "speakerName": "마을 이장",
+    "dialogueType": "NPC",
+    "line": "마을을 지켜줘서 정말 고맙네. 자네 덕분에 모두가 편히 잠든다네."
+  },
+  {
+    "uniqueId": "DLG_DEFAULT_SMITH_01",
+    "dialogueId": "DLG_DEFAULT_SMITH",
+    "speakerName": "대장장이",
+    "dialogueType": "NPC",
+    "line": "오늘도 열심히 망치질 중이라네. 무기가 필요하면 상점에 가보게."
+  },
+  {
+    "uniqueId": "DLG_SHOP_01",
+    "dialogueId": "DLG_SHOP",
+    "speakerName": "상점 주인",
+    "dialogueType": "NPC",
+    "line": "어서 오세요! 마을이 어수선하지만 장사는 계속해야죠."
+  },
+  {
+    "uniqueId": "DLG_SHOP_02",
+    "dialogueId": "DLG_SHOP",
+    "speakerName": "상점 주인",
+    "dialogueType": "NPC",
+    "line": "필요한 게 있으면 말씀해 주세요."
   }
 ]

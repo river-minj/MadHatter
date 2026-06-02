@@ -34,18 +34,24 @@ public class QuestSlotController : MonoBehaviour
 		if(state == null)
 			return;
 
-		bool isCompleted = state._isCompleted;
-
-		_rewardButton.SetActive(isCompleted);
-		_cancelButton.SetActive(!isCompleted);
-
+		_rewardButton.SetActive(false);
+		_cancelButton.SetActive(!state._isCompleted);
+		_questProgress.text = state._isCompleted
+			? $"{state._currentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
+			: $"{state._currentProgress} / {_questData._goalCount}";
 	}
+
 	public void UpdateProgress(QuestState state)
 	{
 		if (_questData == null)
 			return;
 
-		_questProgress.text = $"{state._currentProgress} / {_questData._goalCount}";
+		_questProgress.text = state._isCompleted
+			? $"{state._currentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
+			: $"{state._currentProgress} / {_questData._goalCount}";
+
+		_rewardButton.SetActive(false);
+		_cancelButton.SetActive(!state._isCompleted);
 	}
 
 	// 메서드 작성

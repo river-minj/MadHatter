@@ -53,4 +53,9 @@ public class CompanionDatabase
 		Debug.LogWarningFormat("[CompanionDatabase] Companion ID not found: {0}", companionID);
 		return null;
 	}
+
+	public IEnumerable<CompanionData> GetAllCompanions()
+	{
+		return _dicCompanion.Values;
+	}
 }

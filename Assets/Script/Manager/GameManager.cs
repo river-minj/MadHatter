@@ -44,6 +44,10 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (GetComponent<CheatConsole>() == null)
+                gameObject.AddComponent<CheatConsole>();
+#endif
         }
 
         //카메라
