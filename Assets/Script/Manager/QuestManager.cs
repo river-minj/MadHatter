@@ -397,6 +397,22 @@ public class QuestManager : MonoBehaviour
 		qs._isCompleted = true;
 
 		OnQuestRewardClaimed?.Invoke(questId);
+
+		// 모든 퀘스트 완료 시 엔딩 팝업
+		bool allCleared = true;
+		foreach (var q in QuestDatabase.Instance.GetAllQuests())
+		{
+			if (!_setCompletedQuest.Contains(q._questId)) { allCleared = false; break; }
+		}
+		if (allCleared)
+		{
+			UIManager.Instance?.ShowConfirmPopup(
+				"CommonConfirmPopup",
+				"퀘스트를 전부 달성하였습니다!",
+				"확인", "",
+				CommonConfirmPopup.ConfirmType.OK,
+				null);
+		}
 	}
 
 	private void GetReward(QuestData qd)
