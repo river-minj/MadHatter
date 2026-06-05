@@ -107,8 +107,17 @@ public class CompanionManager : MonoBehaviour
 
 	public void SnapAllToFormation()
 	{
-		foreach (var cc in _lineA) cc?.SnapToFormation();
-		foreach (var cc in _lineB) cc?.SnapToFormation();
+		foreach (var cc in _lineA) { if (cc != null) cc.SnapToFormation(); }
+		foreach (var cc in _lineB) { if (cc != null) cc.SnapToFormation(); }
+	}
+
+	public void ClearAll()
+	{
+		foreach (var cc in _lineA) { if (cc != null) Destroy(cc.gameObject); }
+		foreach (var cc in _lineB) { if (cc != null) Destroy(cc.gameObject); }
+		_lineA.Clear();
+		_lineB.Clear();
+		_ownedCompanions.Clear();
 	}
 
 	public void SetFacingDirection(bool isRight)
@@ -162,6 +171,9 @@ public class CompanionManager : MonoBehaviour
 
 	public void ApplyData(CompanionSaveData data)
 	{
+		ClearAll();
+		_player = FindObjectOfType<PlayerController>();
+
 		if (data == null || data.ownedCompanionIds == null)
 			return;
 

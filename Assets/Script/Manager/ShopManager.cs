@@ -56,6 +56,7 @@ public class ShopManager : MonoBehaviour
 		}
 
 		InventoryManager.Instance.AddItem(item.itemData._itemId);
+		UIManager.Instance?.ShowToast($"{item.itemData._itemName}{KoreanParticle.EulReul(item.itemData._itemName)} 구매했다! (-{item.price}G)");
 
 		if (stock != -1)
 		{

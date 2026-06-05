@@ -7,12 +7,13 @@
     "goalCount": 1,
     "questGiverNpcId": "NPC_001",
     "targetId": "NPC_002",
+    "rewardGroupId": "RWD_001",
     "startDialogueId": "DLG_001",
     "progressDialogueId": "DLG_003",
     "completedDialogueId": "DLG_001_C",
     "targetDialogueId": "DLG_002",
     "nextQuestId": "QST_004",
-    "rewardGroupId": "RWD_001"
+    "preQuestId": ""
   },
   {
     "uniqueId": "QST_002",
@@ -22,12 +23,13 @@
     "goalCount": 3,
     "questGiverNpcId": "NPC_002",
     "targetId": "E_001",
+    "rewardGroupId": "RWD_002",
     "startDialogueId": "DLG_010",
     "progressDialogueId": "DLG_011",
     "completedDialogueId": "DLG_012",
     "targetDialogueId": "",
     "nextQuestId": "QST_003",
-    "rewardGroupId": "RWD_002"
+    "preQuestId": "QST_001"
   },
   {
     "uniqueId": "QST_003",
@@ -37,12 +39,13 @@
     "goalCount": 1,
     "questGiverNpcId": "NPC_002",
     "targetId": "weapon_sword_02",
+    "rewardGroupId": "RWD_003",
     "startDialogueId": "DLG_020",
     "progressDialogueId": "DLG_021",
     "completedDialogueId": "DLG_022",
     "targetDialogueId": "",
     "nextQuestId": "",
-    "rewardGroupId": "RWD_003"
+    "preQuestId": ""
   },
   {
     "uniqueId": "QST_004",
@@ -52,12 +55,13 @@
     "goalCount": 3,
     "questGiverNpcId": "NPC_001",
     "targetId": "E_002",
+    "rewardGroupId": "RWD_004",
     "startDialogueId": "DLG_030",
     "progressDialogueId": "DLG_031",
     "completedDialogueId": "DLG_032",
     "targetDialogueId": "",
     "nextQuestId": "QST_005",
-    "rewardGroupId": "RWD_004"
+    "preQuestId": "QST_003"
   },
   {
     "uniqueId": "QST_005",
@@ -67,11 +71,12 @@
     "goalCount": 1,
     "questGiverNpcId": "NPC_001",
     "targetId": "LOC_PALACE",
+    "rewardGroupId": "RWD_005",
     "startDialogueId": "DLG_040",
     "progressDialogueId": "DLG_041",
     "completedDialogueId": "DLG_042",
     "targetDialogueId": "",
     "nextQuestId": "",
-    "rewardGroupId": "RWD_005"
+    "preQuestId": "QST_003"
   }
 ]

@@ -106,15 +106,26 @@ public class SceneLoader : MonoBehaviour
 			});
 		}
 
-		// 6. 세이브 데이터 매니저에 주입
-		if (!isNewGame)
+		// 5-2. 세이브 데이터 매니저에 주입 (OnMainSceneReady보다 먼저 — CompanionManager stale 참조 정리)
+		_loadingUI.SetProgress(0.95f, "데이터 적용 중...");
 		{
-			_loadingUI.SetProgress(0.95f, "데이터 적용 중...");
-
-			SaveData data = GameSystem.Load();
+			SaveData data = isNewGame
+				? new SaveData
+				{
+					playerInfo    = new PlayerInfoSaveData(),
+					questInfo     = new QuestSaveData(),
+					inventoryData = new InventorySaveData { items = new System.Collections.Generic.List<InventoryItemEntry>() },
+					companionData = new CompanionSaveData(),
+					shopInfo      = new ShopSaveData()
+				}
+				: GameSystem.Load();
 			GameManager.Instance.LoadGame(data);
 			yield return null;
 		}
+
+		// 5-3. 씬 참조 갱신 및 첫 맵 생성 보장
+		// LoadGame으로 CompanionManager 정리 후 호출해야 SnapAllToFormation에서 stale 참조 오류 없음
+		GameManager.Instance?.OnMainSceneReady();
 
 		// 7. 완료
 		_loadingUI.SetProgress(1f, "완료!");

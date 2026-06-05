@@ -11,6 +11,7 @@ public class ItemDetailPopup : MonoBehaviour
 	[SerializeField] private Button _actionButton; //착용,해제
 	[SerializeField] private TextMeshProUGUI _actionButtonText; //착용 해제
 	[SerializeField] private Button _closeButton; //팝업 닫기
+	[SerializeField] private Button _cancelButton; //취소
 
 	private Action _actionCallback;
 
@@ -20,6 +21,8 @@ public class ItemDetailPopup : MonoBehaviour
 			_actionButton.onClick.AddListener(OnActionClicked);
 		if (_closeButton != null)
 			_closeButton.onClick.AddListener(ClosePopup);
+		if (_cancelButton != null)
+			_cancelButton.onClick.AddListener(ClosePopup);
 	}
 
 	public void SetPopup(InventorySlot slot, bool isEquipped, Action actionCallback)

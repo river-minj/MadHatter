@@ -26,6 +26,7 @@ public class QuestTableData
 	public string completedDialogueId;
 	public string targetDialogueId;
 	public string nextQuestId;
+	public string preQuestId;
 }
 
 [Serializable]

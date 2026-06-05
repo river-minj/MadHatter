@@ -381,10 +381,19 @@ public class QuestManager : MonoBehaviour
 
 		GetReward(questData);
 
+		// 보상 요약 토스트
+		int totalGold = 0, totalExp = 0;
+		foreach (var r in questData._rewards) { totalGold += r._gold; totalExp += r._exp; }
+		var parts = new System.Collections.Generic.List<string>();
+		if (totalGold > 0) parts.Add($"골드 +{totalGold}");
+		if (totalExp  > 0) parts.Add($"EXP +{totalExp}");
+		string summary = parts.Count > 0 ? $" ({string.Join(" / ", parts)})" : "";
+		UIManager.Instance?.ShowToast($"[퀘스트 완료] {questData._title}{summary}");
+
 		//퀘스트 리스트에서 제거
 		_dicActiveQuest.Remove(questId);
 		_setCompletedQuest.Add(questId);
-		
+
 		qs._isCompleted = true;
 
 		OnQuestRewardClaimed?.Invoke(questId);

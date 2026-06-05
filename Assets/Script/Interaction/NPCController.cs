@@ -81,6 +81,14 @@ public class NPCController: InteractionController
 					continue;
 				}
 
+				// 선행 퀘스트 미완료 시 체인 중단 → 기본 대화 fallthrough
+				if (!string.IsNullOrEmpty(questData._preQuestId) &&
+					!QuestManager.Instance.IsQuestCompleted(questData._preQuestId))
+				{
+					Debug.Log($"[NPCController] 선행 퀘스트 미완료: {questData._preQuestId}");
+					break;
+				}
+
 				Debug.Log($"[NPCController] TryQuestStart: {questId}");
 				QuestManager.Instance.TryQuestStart(questId);
 				return;

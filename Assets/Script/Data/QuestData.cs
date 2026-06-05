@@ -32,4 +32,5 @@ public class QuestData
 	public List<QuestReward> _rewards = new List<QuestReward>();
 
 	public string _nextQuestId;
+	public string _preQuestId;
 }

@@ -66,7 +66,8 @@ public class QuestDatabase
 				_rewardGroupId = row.rewardGroupId,
 				_nextQuestId = row.nextQuestId,
 				_targetId = row.targetId,
-				_targetDialogueId = row.targetDialogueId
+				_targetDialogueId = row.targetDialogueId,
+				_preQuestId = row.preQuestId
 			};
 
 			// 보상 매칭

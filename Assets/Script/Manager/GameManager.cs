@@ -158,6 +158,24 @@ public class GameManager : MonoBehaviour
         SaveGame();
     }
 
+    // SceneLoader가 Main 씬 로드 완료 후 호출 — DontDestroyOnLoad GameManager의 씬 참조를 갱신하고
+    // Start()가 재실행되지 않는 재진입 시에도 첫 맵을 생성한다 (CheatConsole 초기화 후 재시작 등)
+    public void OnMainSceneReady()
+    {
+        if (_cameraController == null)
+            _cameraController = Camera.main?.GetComponent<CameraController>();
+
+        if (_playerController == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                _playerController = playerObj.GetComponent<PlayerController>();
+        }
+
+        if (_currentMapController == null)
+            LoadFristMap();
+    }
+
     private void LoadFristMap()
     {
         if (_firstMapMc == null)
@@ -167,7 +185,7 @@ public class GameManager : MonoBehaviour
 		}
 
         ChangeMap(_firstMapMc, SpawnPointId.Default, save: false);
-    
+
     }
 
     public void RequestMapTransition(MapController nextMap, SpawnPointId spawnPointId)

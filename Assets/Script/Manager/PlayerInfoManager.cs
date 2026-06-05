@@ -116,8 +116,8 @@ public class PlayerInfoManager : MonoBehaviour
 	public void ApplyData(PlayerInfoSaveData data)
 	{
 		_playerInfo._name = data.name;
-		_playerInfo._level = data.level;	
-		_playerInfo._exp = data.exp;	
+		_playerInfo._level = Mathf.Max(1, data.level);
+		_playerInfo._exp = data.exp;
 		_playerInfo._gold = data.gold;
 		_playerInfo._hp = data.hp;
 
@@ -229,15 +229,19 @@ public class PlayerInfoManager : MonoBehaviour
 		OnHpChanged?.Invoke(_playerInfo._hp);
 	}
 
-	public void CheckLevelUp() {
-
-		int level = _playerInfo._level;
-		while (_playerInfo._exp >= RequestExp)
+	public void CheckLevelUp()
+	{
+		int levelUps = 0;
+		while (_playerInfo._level > 0 && _playerInfo._exp >= RequestExp)
 		{
 			_playerInfo._exp -= RequestExp;
-			level++;
+			_playerInfo._level++;
+			levelUps++;
 		}
-
-		AddLevel(level);
+		if (levelUps > 0)
+		{
+			OnLevelChanged?.Invoke(_playerInfo._level);
+			OnExpChanged?.Invoke(_playerInfo._exp);
+		}
 	}
 }

@@ -56,8 +56,12 @@ public class SpriteAnimator : MonoBehaviour, IAnimator
 	private IEnumerator WaitForAnimComplete(Action onComplete)
 	{
 		yield return null;
-		while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-			yield return null;
+		// 루프 애니메이션은 normalizedTime이 1에 도달하지 않으므로 즉시 콜백
+		if (!_animator.GetCurrentAnimatorStateInfo(0).loop)
+		{
+			while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+				yield return null;
+		}
 		onComplete?.Invoke();
 	}
 

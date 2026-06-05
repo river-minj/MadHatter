@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef72cdc363456641acf04e3cd70c80e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyId: E_002
+  _enemyId: E_001
   _maxHp: 10
   _currentHp: 0
 --- !u!114 &5700298999759522185
@@ -214,13 +214,15 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 428093026795086498}
   _animationMappings:
   - starndardName: idle
-    actualName: Goblin_Idle
+    actualName: Blue_Slime_Idle
+  - starndardName: run
+    actualName: Blue_Slime_Run
   - starndardName: attack
-    actualName: Goblin_Attack
+    actualName: Blue_Slime_Idle
   - starndardName: hit
-    actualName: Goblin_Hit
+    actualName: Blue_Slime_Idle
   - starndardName: die
-    actualName: Goblin_Die
+    actualName: Blue_Slime_Idle
 --- !u!50 &4486124595358563710
 Rigidbody2D:
   serializedVersion: 4

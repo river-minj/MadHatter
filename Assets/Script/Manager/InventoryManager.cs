@@ -86,6 +86,7 @@ public class InventoryManager : MonoBehaviour
 		if (slot.data == null || slot.data._itemType != ItemType.Consumable) return;
 
 		PlayerInfoManager.Instance.AddHp(slot.data._effectValue);
+		UIManager.Instance?.ShowToast($"{slot.data._itemName}{KoreanParticle.EulReul(slot.data._itemName)} 사용했다! ({GetEffectDescription(slot.data)})");
 		RemoveItem(itemId, 1);
 	}
 
@@ -98,12 +99,29 @@ public class InventoryManager : MonoBehaviour
 
 		_equippedWeaponId = itemId;
 		OnEquipChanged?.Invoke();
+		UIManager.Instance?.ShowToast($"{slot.data._itemName}{KoreanParticle.EulReul(slot.data._itemName)} 장착했다! ({GetEffectDescription(slot.data)})");
 	}
 
 	public void UnequipWeapon()
 	{
+		if (!string.IsNullOrEmpty(_equippedWeaponId) &&
+			_dicInventory.TryGetValue(_equippedWeaponId, out var slot) &&
+			slot.data != null)
+		{
+			UIManager.Instance?.ShowToast($"{slot.data._itemName}{KoreanParticle.EulReul(slot.data._itemName)} 해제했다!");
+		}
 		_equippedWeaponId = null;
 		OnEquipChanged?.Invoke();
+	}
+
+	private string GetEffectDescription(ItemData data)
+	{
+		return data._itemType switch
+		{
+			ItemType.Equipment  => $"ATK +{data._effectValue}",
+			ItemType.Consumable => $"HP +{data._effectValue}",
+			_ => ""
+		};
 	}
 
 	public string GetEquippedWeaponId()
