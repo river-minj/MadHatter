@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 	private EnemyFSM _fsm;
 	private Rigidbody2D _rb;
+	private HitFlashEffect _hitFlash;
 
 	public string EnemyId => _enemyId;
 	public bool IsDead => _currentHp <= 0;
@@ -25,6 +26,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 		_rb = GetComponent<Rigidbody2D>();
 		_fsm = GetComponent<EnemyFSM>();
 		_spineAnimator = GetComponent<IAnimator>();
+		_hitFlash = GetComponent<HitFlashEffect>();
 	}
 
 	private void Start()
@@ -42,6 +44,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 		_currentHp -= damage;
 		Debug.Log($"[Enemy] {_enemyId} 피격: {damage} (HP: {_currentHp}/{_maxHp})");
+
+		_hitFlash?.Flash();
 
 		if (IsDead)
 		{

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Vector2 _moveDir;
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
 	private IAnimator _spineAnimator;
+	private HitFlashEffect _hitFlash;
 
 	//동료가 따라올 위치 (2열)
 	[SerializeField] private Transform _companionAnchorA;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void Awake()
 	{
 		_spineAnimator = GetComponent<IAnimator>();
+		_hitFlash = GetComponent<HitFlashEffect>();
 	}
 
 	void Update()
@@ -203,6 +205,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if(_isDead) return;
 
 		PlayerInfoManager.Instance.TakeDamage(damage);
+		_hitFlash?.Flash();
 		_spineAnimator.PlayAnimation("hit", false);
 
 		if(PlayerInfoManager.Instance.IsDead)

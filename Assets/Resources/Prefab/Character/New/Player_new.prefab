@@ -81,8 +81,9 @@ GameObject:
   - component: {fileID: 7072584131425527958}
   - component: {fileID: 1552471989701706159}
   - component: {fileID: 5329552060532057260}
+  - component: {fileID: 238306474406464065}
   m_Layer: 9
-  m_Name: Player_New
+  m_Name: Player_new
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,3 +356,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _finalAttackDamage: 0
+--- !u!114 &238306474406464065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2596650602847931958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7b66299cf70e444b45baa975caf7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  _flashDuration: 0.12
