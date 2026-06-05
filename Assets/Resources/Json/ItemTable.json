@@ -4,8 +4,8 @@
     "itemId": "weapon_sword_01",
     "itemName": "낡은 검",
     "itemType": "Equipment",
-    "description": "오래된 검이지만 쓸만하다",
     "effectValue": 3,
+    "description": "오래된 검이지만 쓸만하다",
     "iconPath": "Icons/weapon_sword_01"
   },
   {
@@ -13,8 +13,8 @@
     "itemId": "weapon_sword_02",
     "itemName": "강철 검",
     "itemType": "Equipment",
-    "description": "단단한 강철로 만든 검",
     "effectValue": 7,
+    "description": "단단한 강철로 만든 검",
     "iconPath": "Icons/weapon_sword_02"
   },
   {
@@ -22,8 +22,8 @@
     "itemId": "weapon_sword_03",
     "itemName": "마법 검",
     "itemType": "Equipment",
-    "description": "마력이 깃든 검",
     "effectValue": 12,
+    "description": "마력이 깃든 검",
     "iconPath": "Icons/weapon_sword_03"
   },
   {
@@ -31,8 +31,8 @@
     "itemId": "potion_hp_small",
     "itemName": "작은 HP 포션",
     "itemType": "Consumable",
-    "description": "HP를 20 회복한다",
     "effectValue": 20,
+    "description": "HP를 20 회복한다",
     "iconPath": "Icons/potion_hp_small"
   },
   {
@@ -40,8 +40,8 @@
     "itemId": "potion_hp_medium",
     "itemName": "중간 HP 포션",
     "itemType": "Consumable",
-    "description": "HP를 50 회복한다",
     "effectValue": 50,
+    "description": "HP를 50 회복한다",
     "iconPath": "Icons/potion_hp_medium"
   },
   {
@@ -49,8 +49,8 @@
     "itemId": "potion_hp_large",
     "itemName": "큰 HP 포션",
     "itemType": "Consumable",
-    "description": "HP를 100 회복한다",
     "effectValue": 100,
+    "description": "HP를 100 회복한다",
     "iconPath": "Icons/potion_hp_large"
   },
   {
@@ -58,8 +58,8 @@
     "itemId": "armor_leather",
     "itemName": "가죽 갑옷",
     "itemType": "Equipment",
-    "description": "가벼운 가죽 갑옷",
     "effectValue": 3,
+    "description": "가벼운 가죽 갑옷",
     "iconPath": "Icons/armor_leather"
   },
   {
@@ -67,8 +67,8 @@
     "itemId": "armor_iron",
     "itemName": "쇠 갑옷",
     "itemType": "Equipment",
-    "description": "단단한 쇠로 만든 갑옷",
     "effectValue": 8,
+    "description": "단단한 쇠로 만든 갑옷",
     "iconPath": "Icons/armor_iron"
   },
   {
@@ -76,8 +76,8 @@
     "itemId": "ring_magic",
     "itemName": "마력 반지",
     "itemType": "Equipment",
-    "description": "마력을 높여주는 반지",
     "effectValue": 5,
+    "description": "마력을 높여주는 반지",
     "iconPath": "Icons/ring_magic"
   },
   {
@@ -85,8 +85,8 @@
     "itemId": "potion_antidote",
     "itemName": "해독제",
     "itemType": "Consumable",
-    "description": "독 상태를 해제한다",
     "effectValue": 0,
+    "description": "독 상태를 해제한다",
     "iconPath": "Icons/potion_antidote"
   },
   {
@@ -94,8 +94,8 @@
     "itemId": "potion_stamina",
     "itemName": "강화 물약",
     "itemType": "Consumable",
-    "description": "잠시 공격력이 올라간다",
     "effectValue": 5,
+    "description": "잠시 공격력이 올라간다",
     "iconPath": "Icons/potion_stamina"
   }
 ]
