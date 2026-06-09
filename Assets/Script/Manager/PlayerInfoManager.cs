@@ -119,7 +119,7 @@ public class PlayerInfoManager : MonoBehaviour
 		_playerInfo._level = Mathf.Max(1, data.level);
 		_playerInfo._exp = data.exp;
 		_playerInfo._gold = data.gold;
-		_playerInfo._hp = data.hp;
+		_playerInfo._hp = data.hp > 0 ? data.hp : MaxHp;
 
 		//적용
 		OnGoldChanged?.Invoke(_playerInfo._gold);

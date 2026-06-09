@@ -112,7 +112,7 @@ public class SceneLoader : MonoBehaviour
 			SaveData data = isNewGame
 				? new SaveData
 				{
-					playerInfo    = new PlayerInfoSaveData(),
+					playerInfo    = new PlayerInfoSaveData { name = "Noah", level = 1, exp = 0, gold = 0, hp = 100 },
 					questInfo     = new QuestSaveData(),
 					inventoryData = new InventorySaveData { items = new System.Collections.Generic.List<InventoryItemEntry>() },
 					companionData = new CompanionSaveData(),
