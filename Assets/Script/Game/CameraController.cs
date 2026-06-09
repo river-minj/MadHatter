@@ -58,6 +58,12 @@ public class CameraController : MonoBehaviour
 
         //부드럽게 이동
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
+
+        // 서브픽셀 아티팩트 방지: 카메라 위치를 픽셀 그리드에 스냅
+        float pixelSize = _cam.orthographicSize * 2f / Screen.height;
+        smoothedPosition.x = Mathf.Round(smoothedPosition.x / pixelSize) * pixelSize;
+        smoothedPosition.y = Mathf.Round(smoothedPosition.y / pixelSize) * pixelSize;
+
         transform.position = smoothedPosition;
     }
 
@@ -120,6 +126,10 @@ public class CameraController : MonoBehaviour
 		{
 			targetPosition = ClampPositionToBounds(targetPosition, _currentBounds.Value);
 		}
+
+		float pixelSize = _cam.orthographicSize * 2f / Screen.height;
+		targetPosition.x = Mathf.Round(targetPosition.x / pixelSize) * pixelSize;
+		targetPosition.y = Mathf.Round(targetPosition.y / pixelSize) * pixelSize;
 
 		transform.position = targetPosition;
 	}

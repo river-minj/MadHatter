@@ -10,7 +10,7 @@
 
 Unity Hub에서 Unity 2022.3.55f1로 프로젝트를 열어야 합니다. CLI 빌드 명령은 없으며 Unity 에디터를 사용합니다. 스크립트는 `Assets/Script/`에 위치합니다.
 
-WebGL 빌드: Unity 에디터 내 **Tools > Build WebGL (720x1280)** 메뉴 사용 (`Assets/Script/Editor/WebGLBuilder.cs`). Gzip 압축 + Decompression Fallback 설정으로 GitHub Pages 호환.
+WebGL 빌드: Unity 에디터의 **File > Build Settings** 에서 WebGL 플랫폼으로 직접 빌드. GitHub Pages 호환을 위해 Player Settings에서 Gzip 압축 + Decompression Fallback 설정 필요.
 
 데이터 테이블을 수정한 후 JSON으로 변환하려면: Unity 에디터 내 **Tools > Excel To Json Converter** 도구를 사용합니다.
 
@@ -210,6 +210,7 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 동료 스케일은 비율 기반: CompanionController._scaleRatio로 프리팹 원본 스케일과 플레이어 스케일의 비율을 저장, 맵 전환 시 비율 유지 (동료마다 개별 비율)
 - 맵 제작 방식은 2가지 공존: 타일맵 방식(맵 1)과 배경 이미지+콜라이더 방식(맵 2), 맵 특성에 따라 선택
 - 카메라 고정 맵: MapBounds 크기를 카메라 뷰보다 작게 설정하면 카메라 이동 없이 고정
+- 타일맵 세로줄 아티팩트: CameraController.LateUpdate()에서 Lerp 후 카메라 위치가 서브픽셀(소수점) 좌표에 놓이면 타일 경계에 검은 틈이 생김 → Lerp 결과를 `pixelSize = orthographicSize * 2 / Screen.height` 단위로 반올림 스냅하여 해결 (SnapToTarget에도 동일 적용)
 - 인벤토리 UI 디자인 방향: 판타지 RPG풍, 하단 절반 패널, 장비/소비 탭은 그리드형(보유 아이템만 표시), 동료 탭은 컬렉션/도감 스타일(획득/미발견/잠금 3상태)
 - InfiniteScrollView 풀링 정책: 매 SetData마다 풀 사이즈를 Min(theoretical_pool, dataCount)로 동기화 (Instantiate/Destroy 양방향). theoretical_pool은 뷰포트 크기 기반 상한 ((visibleRows + 2 buffer) × columns)이라 데이터가 아무리 많아도 일정 크기 이상 늘지 않음. "풀은 줄지 않는다(레이지 풀)" 안도 검토했으나 다음 이유로 현재 방식 채택:
 - 
