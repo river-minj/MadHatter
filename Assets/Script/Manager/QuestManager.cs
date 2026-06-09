@@ -470,10 +470,30 @@ public class QuestManager : MonoBehaviour
 
 		_dicActiveQuest.Remove(questId);
 		_setStartedQuest.Remove(questId);
-		
+
 		OnQuestListChanged?.Invoke();
 		Debug.Log($"[QuestManager] 퀘스트 포기: {questId}");
 		GameManager.Instance.SaveGame();
+	}
+
+	public void ResetQuest(string questId)
+	{
+		_setStartedQuest.Remove(questId);
+		_setCompletedQuest.Remove(questId);
+		_dicActiveQuest.Remove(questId);
+
+		OnQuestListChanged?.Invoke();
+		Debug.Log($"[QuestManager] 퀘스트 초기화: {questId}");
+		GameManager.Instance.SaveGame();
+	}
+
+	public string GetQuestStatus(string questId)
+	{
+		if (_setCompletedQuest.Contains(questId)) return "완료";
+		if (_dicActiveQuest.ContainsKey(questId))
+			return _dicActiveQuest[questId]._isCompleted ? "보상대기" : "진행중";
+		if (_setStartedQuest.Contains(questId)) return "진행중";
+		return "미시작";
 	}
 
 	//talk 타입 퀘스트 완료 대화

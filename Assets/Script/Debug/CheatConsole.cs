@@ -77,6 +77,27 @@ public class CheatConsole : MonoBehaviour
 
         GUILayout.Space(10);
 
+        // ── Quest ───────────────────────────────
+        GUILayout.Label("─ Quest ──────────────────────────────────────");
+
+        foreach (var quest in QuestDatabase.Instance.GetAllQuests())
+        {
+            string status = QuestManager.Instance != null
+                ? QuestManager.Instance.GetQuestStatus(quest._questId)
+                : "-";
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"[{status}] {quest._questId} {quest._title}", GUILayout.Width(scaledW * 0.7f));
+            if (GUILayout.Button("초기화", GUILayout.Width(scaledW * 0.12f)))
+            {
+                QuestManager.Instance?.ResetQuest(quest._questId);
+                ShowFeedback($"{quest._questId} 초기화");
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.Space(10);
+
         // ── System ──────────────────────────────
         GUILayout.Label("─ System ─────────────────────────────────────");
         if (GUILayout.Button("세이브 데이터 초기화", GUILayout.Width(scaledW * 0.25f)))
