@@ -335,6 +335,8 @@ public class QuestManager : MonoBehaviour
 
 	public void ReportReach(string locationId)
 	{
+		var autoComplete = new System.Collections.Generic.List<string>();
+
 		foreach (var quest in _dicActiveQuest)
 		{
 			QuestState qs = quest.Value;
@@ -342,7 +344,6 @@ public class QuestManager : MonoBehaviour
 				continue;
 			if (qs._data._targetId != locationId)
 				continue;
-
 			if (qs._data._goalType != QuestGoalType.Explore)
 				continue;
 
@@ -354,9 +355,13 @@ public class QuestManager : MonoBehaviour
 			if (completed)
 			{
 				OnQuestListChanged?.Invoke();
+				autoComplete.Add(quest.Key);
 			}
 		}
-	
+
+		// Explore 퀘스트는 도달 즉시 자동 완료 — NPC 귀환 불필요
+		foreach (var questId in autoComplete)
+			ClaimReward(questId);
 	}
 
 	public void ClaimReward(string questId)
