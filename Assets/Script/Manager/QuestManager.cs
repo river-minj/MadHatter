@@ -335,7 +335,7 @@ public class QuestManager : MonoBehaviour
 
 	public void ReportReach(string locationId)
 	{
-		var autoComplete = new System.Collections.Generic.List<string>();
+		var autoComplete = new List<string>();
 
 		foreach (var quest in _dicActiveQuest)
 		{

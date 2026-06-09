@@ -16,6 +16,16 @@ public class EnemyRespawner : MonoBehaviour
             enemy.OnDeath += HandleDeath;
     }
 
+    private void Start()
+    {
+        if (!string.IsNullOrEmpty(_linkedQuestId) &&
+            QuestManager.Instance != null &&
+            QuestManager.Instance.IsQuestCompleted(_linkedQuestId))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void HandleDeath(EnemyController _)
     {
         if (!string.IsNullOrEmpty(_linkedQuestId) &&
