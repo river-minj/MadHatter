@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class ItemDetailPopup : MonoBehaviour
 {
-	[SerializeField] private TextMeshProUGUI _nameText; //아이템 이름
-	[SerializeField] private TextMeshProUGUI _descriptionText; //아이템 정보
-	[SerializeField] private TextMeshProUGUI _effectText; //효과
-	[SerializeField] private Button _actionButton; //착용,해제
-	[SerializeField] private TextMeshProUGUI _actionButtonText; //착용 해제
-	[SerializeField] private Button _closeButton; //팝업 닫기
-	[SerializeField] private Button _cancelButton; //취소
+	[SerializeField] private Image _iconImage;
+	[SerializeField] private TextMeshProUGUI _nameText;
+	[SerializeField] private TextMeshProUGUI _descriptionText;
+	[SerializeField] private TextMeshProUGUI _effectText;
+	[SerializeField] private Button _actionButton;
+	[SerializeField] private TextMeshProUGUI _actionButtonText;
+	[SerializeField] private Button _closeButton;
+	[SerializeField] private Button _cancelButton;
 
 	private Action _actionCallback;
 
@@ -31,6 +32,9 @@ public class ItemDetailPopup : MonoBehaviour
 
 		_nameText.text = slot.data._itemName;
 		_descriptionText.text = slot.data._description;
+
+		if (_iconImage != null && !string.IsNullOrEmpty(slot.data._iconPath))
+			_iconImage.sprite = Resources.Load<Sprite>(slot.data._iconPath);
 
 		if (slot.data._itemType == ItemType.Equipment)
 		{
