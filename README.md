@@ -1,4 +1,4 @@
-# 2D Top-Down RPG Project (Work in Progress)
+# 2D Top-Down RPG Project v2 (Work in Progress)
 
 (개발 중인 2D 탑다운 프로젝트)
 
@@ -28,8 +28,39 @@ https://river-minj.github.io/MadHatter_Build/
 - 단일 AutoAttack 컴포넌트로 플레이어/동료 전투 통합
 - 기획자 직접 수정 가능한 데이터 파이프라인 (Excel → JSON, 필드명 양방향 검증)
 
+## ▶ 구현된 시스템
+
+| 시스템 | 내용 |
+|---|---|
+| 씬 전환 | SceneLoader 비동기 로딩 + LoadingUI 오버레이 |
+| 데이터 파이프라인 | Excel → JSON → Database 싱글턴, GameDatabase 파사드 패턴 |
+| 세이브/로드 | JSON 직렬화 (JsonUtility), 자동 저장 트리거 |
+| 퀘스트 시스템 | Kill / Collect / Talk / Explore 4종 목표, 체인 퀘스트, NPC 보상 수령 |
+| 인벤토리 | 아이템 획득/장착/사용, 드롭 테이블 (가중치 기반) |
+| 상점 | 유한/무한 재고, ShopManager, 탭·스크롤뷰 재사용 |
+| 동료 시스템 | 경로 추종 (PlayerTrailRecorder + CompanionController), 2열 대형 |
+| 적 AI | FSM (Idle/Chase/Attack/Hit/Return/Die), 리스폰, 퀘스트 연동 중단 |
+| 전투 | AutoAttack 컴포넌트 (범위 자동 공격), IDamageable 인터페이스 |
+| NPC 상호작용 | IInteractable 다형성, 퀘스트/상점/대화 우선순위 처리 |
+| UI | 범용 탭 시스템 + InfiniteScrollView 풀링, 이벤트 기반 갱신 |
+| 입력 | Legacy Input Manager, PC 키보드 + 모바일/WebGL 가상 조이스틱 |
+| WebGL 빌드 | Custom Template (9:16 반응형), Gzip + GitHub Pages 배포 |
+
 ## ▶ What's Next
 - Object Pooling: 적·드롭 아이템 Instantiate/Destroy 반복 해소
 - EditMode 테스트 도입: QuestManager, DropDatabase 등 로직 검증
-- 상점/우편 시스템 추가: 기존 팝업/탭/인벤토리 재사용성 검증
-- 매니저 싱글톤 통일: Singleton<T> 베이스 도입으로 7개 매니저 일관화
+- 매니저 인터페이스화: 순환 참조 제거, 단위 테스트 가능 구조
+- AudioManager: BGM/SFX + 옵션 UI 연동
+- Addressable 전환: Resources.Load 방식 교체
+- 인벤토리 UI 비주얼 완성: 슬롯 프레임, 동료 도감 스타일, HUD 스프라이트
+
+## ▶ 기술 스택
+
+| 항목 | 내용 |
+|---|---|
+| 엔진 | Unity 2022.3.55f1 |
+| 언어 | C# |
+| 애니메이션 | Spine-Unity |
+| 데이터 | Excel → JSON (자체 에디터 툴) |
+| 저장 | JSON 직렬화 (JsonUtility / Newtonsoft.Json) |
+| 버전관리 | Git / GitHub |
