@@ -14,7 +14,20 @@
       "mcp__unityMCP__manage_scene",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Work\\\\UnityProject\\\\MadHatter\\\\Assets\\\\Resources\" -Filter \"*.asset\" -Recurse)",
       "Bash(Select-Object FullName)",
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Work\\\\UnityProject\\\\MadHatter\\\\Assets\\\\Resources\\\\Tile\\\\Map3\" -Recurse)"
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Work\\\\UnityProject\\\\MadHatter\\\\Assets\\\\Resources\\\\Tile\\\\Map3\" -Recurse)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "mcp__unityMCP__manage_camera",
+      "Bash(Get-ChildItem -Path \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\" -Directory)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Get-ChildItem \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\\\\Script\" -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\\\\Script\\\\Vir\" -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\\\\Script\\\\Vir\\\\Game\" -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\\\\Script\\\\Common\" -Directory | ForEach-Object { $_.Name })",
+      "Bash(Get-ChildItem -Path \"D:\\\\Project_VIR\\\\vir_unity\" -Directory)",
+      "Bash(Select-Object -First 20)",
+      "Bash(Get-ChildItem -Path \"D:\\\\Project_VIR\\\\vir_unity\\\\Assets\\\\Script\\\\Shared\\\\Script\\\\Loader\" -File)"
     ]
   }
 }
