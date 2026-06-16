@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class DropDatabase : MonoBehaviour
+public class DropDatabase
 {
 	public static DropDatabase Instance { get; private set; }
 
