@@ -5,29 +5,34 @@ using UnityEngine;
 //독립적인 데이터 구조이며 여러 시스템에서 참조될 가능성이 높음
 public class QuestState
 {
-	public QuestData _data;
-	public int _currentProgress;
-	public bool _isCompleted;
+	public QuestData Data { get; }
+	public int CurrentProgress { get; private set; }
+	public bool IsCompleted { get; private set; }
 
 	public QuestState(QuestData data)
 	{
-		_data = data; 
-		_currentProgress = 0;
-		_isCompleted = false;
+		Data = data;
+		CurrentProgress = 0;
+		IsCompleted = false;
 	}
 
-	public bool AddProgress(int amount =1)
+	public QuestState(QuestData data, int currentProgress, bool isCompleted)
 	{
-		if(_isCompleted)
-		{
-			return false;
-		}
+		Data = data;
+		CurrentProgress = currentProgress;
+		IsCompleted = isCompleted;
+	}
 
-		_currentProgress += amount;
-		if(_currentProgress >= _data._goalCount)
+	public bool AddProgress(int amount = 1)
+	{
+		if (IsCompleted)
+			return false;
+
+		CurrentProgress += amount;
+		if (CurrentProgress >= Data._goalCount)
 		{
-			_isCompleted = true;
-			_currentProgress = _data._goalCount;
+			IsCompleted = true;
+			CurrentProgress = Data._goalCount;
 			return true;
 		}
 
@@ -67,9 +72,9 @@ public class QuestManager : MonoBehaviour
 	private const int MaxQuestCount = 5;
 
 	//이벤트
-	public Action OnQuestListChanged;
-	public Action<QuestState> OnQuestProgressUpdate;
-	public Action<string> OnQuestRewardClaimed;
+	public event Action OnQuestListChanged;
+	public event Action<QuestState> OnQuestProgressUpdate;
+	public event Action<string> OnQuestRewardClaimed;
 
 	private void Awake()
 	{
@@ -98,8 +103,8 @@ public class QuestManager : MonoBehaviour
 			data.activeQuests.Add(new ActiveQuestEntry
 			{
 				questID = kv.Key,
-				currentProgress = qs._currentProgress,
-				isCompleted = qs._isCompleted
+				currentProgress = qs.CurrentProgress,
+				isCompleted = qs.IsCompleted
 			});
 		}
 
@@ -123,11 +128,7 @@ public class QuestManager : MonoBehaviour
 			if (questData == null)
 				continue;
 
-			QuestState qs = new QuestState(questData)
-			{
-				_currentProgress = entry.currentProgress,
-				_isCompleted = entry.isCompleted
-			};
+			QuestState qs = new QuestState(questData, entry.currentProgress, entry.isCompleted);
 
 			_dicActiveQuest.Add(entry.questID, qs);
 		}
@@ -160,7 +161,7 @@ public class QuestManager : MonoBehaviour
 		//진행중인 퀘스트
 		if(_dicActiveQuest.TryGetValue(questID, out QuestState qs))
 		{
-			if (qs._isCompleted)
+			if (qs.IsCompleted)
 			{
 				// 목표 달성 → completedDialogue 재생 후 보상 지급
 				DialogueData completedD = DialogueDatabase.Instance.GetDialogueById(questData._completedDialogueId);
@@ -257,13 +258,13 @@ public class QuestManager : MonoBehaviour
 			if (qs == null)
 				continue;
 
-			if (qs._isCompleted == true)
+			if (qs.IsCompleted)
 				continue;
 
-			if (qs._data._targetId != npcId)
+			if (qs.Data._targetId != npcId)
 				continue;
 
-			if (qs._data._goalType != QuestGoalType.Talk)
+			if (qs.Data._goalType != QuestGoalType.Talk)
 				continue;
 
 			bool completed = qs.AddProgress();
@@ -285,13 +286,13 @@ public class QuestManager : MonoBehaviour
 		foreach (var quest in _dicActiveQuest)
 		{
 			QuestState qs = quest.Value;
-			if (qs == null || qs._isCompleted)
+			if (qs == null || qs.IsCompleted)
 				continue;
 
-			if (qs._data._goalType != QuestGoalType.Kill)
+			if (qs.Data._goalType != QuestGoalType.Kill)
 				continue;
 
-			if (qs._data._targetId != enemyId)
+			if (qs.Data._targetId != enemyId)
 				continue;
 
 			bool completed = qs.AddProgress();
@@ -312,13 +313,13 @@ public class QuestManager : MonoBehaviour
 		foreach (var quest in _dicActiveQuest)
 		{
 			QuestState qs = quest.Value;
-			if (qs == null || qs._isCompleted)
+			if (qs == null || qs.IsCompleted)
 				continue;
 
-			if (qs._data._goalType != QuestGoalType.Collect)
+			if (qs.Data._goalType != QuestGoalType.Collect)
 				continue;
 
-			if (qs._data._targetId != itemId)
+			if (qs.Data._targetId != itemId)
 				continue;
 
 			bool completed = qs.AddProgress(count);
@@ -340,11 +341,11 @@ public class QuestManager : MonoBehaviour
 		foreach (var quest in _dicActiveQuest)
 		{
 			QuestState qs = quest.Value;
-			if (qs == null || qs._isCompleted)
+			if (qs == null || qs.IsCompleted)
 				continue;
-			if (qs._data._targetId != locationId)
+			if (qs.Data._targetId != locationId)
 				continue;
-			if (qs._data._goalType != QuestGoalType.Explore)
+			if (qs.Data._goalType != QuestGoalType.Explore)
 				continue;
 
 			bool completed = qs.AddProgress();
@@ -371,13 +372,13 @@ public class QuestManager : MonoBehaviour
 			return;
 
 		//퀘스트 달성 여부
-		if (qs._isCompleted == false)
+		if (!qs.IsCompleted)
 		{
 			Debug.LogWarning($"[QuestManager] 퀘스트가 완료되지 않았습니다: {questId}");
 			return;
 		}
 
-		var questData = qs._data;
+		var questData = qs.Data;
 		if (questData == null)
 		{
 			Debug.LogWarning($"[QuestManager] 유효하지 않은 퀘스트ID: {questId}");
@@ -398,8 +399,6 @@ public class QuestManager : MonoBehaviour
 		//퀘스트 리스트에서 제거
 		_dicActiveQuest.Remove(questId);
 		_setCompletedQuest.Add(questId);
-
-		qs._isCompleted = true;
 
 		OnQuestRewardClaimed?.Invoke(questId);
 
@@ -491,7 +490,7 @@ public class QuestManager : MonoBehaviour
 	{
 		if (_setCompletedQuest.Contains(questId)) return "완료";
 		if (_dicActiveQuest.ContainsKey(questId))
-			return _dicActiveQuest[questId]._isCompleted ? "보상대기" : "진행중";
+			return _dicActiveQuest[questId].IsCompleted ? "보상대기" : "진행중";
 		if (_setStartedQuest.Contains(questId)) return "진행중";
 		return "미시작";
 	}
@@ -502,11 +501,11 @@ public class QuestManager : MonoBehaviour
 		foreach (var pair in _dicActiveQuest)
 		{
 			QuestState state = pair.Value;
-			QuestData data = state._data;
+			QuestData data = state.Data;
 
 			if (data._goalType == QuestGoalType.Talk
 				&& data._targetId == npcId
-				&& !state._isCompleted)
+				&& !state.IsCompleted)
 			{
 				return data._targetDialogueId;
 			}

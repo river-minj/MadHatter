@@ -24,7 +24,7 @@ public class QuestSlotController : MonoBehaviour
 
 		_questTitle.text = data._title;
 		_questDesc.text = data._description;
-		_questProgress.text = $"{state._currentProgress} / {data._goalCount}";
+		_questProgress.text = $"{state.CurrentProgress} / {data._goalCount}";
 
 		RefreshRewardButton(state);
 	}
@@ -35,10 +35,10 @@ public class QuestSlotController : MonoBehaviour
 			return;
 
 		_rewardButton.SetActive(false);
-		_cancelButton.SetActive(!state._isCompleted);
-		_questProgress.text = state._isCompleted
-			? $"{state._currentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
-			: $"{state._currentProgress} / {_questData._goalCount}";
+		_cancelButton.SetActive(!state.IsCompleted);
+		_questProgress.text = state.IsCompleted
+			? $"{state.CurrentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
+			: $"{state.CurrentProgress} / {_questData._goalCount}";
 	}
 
 	public void UpdateProgress(QuestState state)
@@ -46,12 +46,12 @@ public class QuestSlotController : MonoBehaviour
 		if (_questData == null)
 			return;
 
-		_questProgress.text = state._isCompleted
-			? $"{state._currentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
-			: $"{state._currentProgress} / {_questData._goalCount}";
+		_questProgress.text = state.IsCompleted
+			? $"{state.CurrentProgress} / {_questData._goalCount}  완료! NPC에게 돌아가세요"
+			: $"{state.CurrentProgress} / {_questData._goalCount}";
 
 		_rewardButton.SetActive(false);
-		_cancelButton.SetActive(!state._isCompleted);
+		_cancelButton.SetActive(!state.IsCompleted);
 	}
 
 	// 메서드 작성

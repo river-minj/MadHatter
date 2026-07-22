@@ -28,6 +28,6 @@ public class ToastPopup : MonoBehaviour
     private IEnumerator AutoCloseCoroutine(float duration)
     {
         yield return new WaitForSeconds(duration);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

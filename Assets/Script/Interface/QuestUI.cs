@@ -61,7 +61,7 @@ public class QuestUI : MonoBehaviour
 		{
 			if (i < quests.Count)
 			{
-				_slotPool[i].SetQuest(quests[i]._data, quests[i], OnSlotClaimClicked, OnSlotCancelClicked);
+				_slotPool[i].SetQuest(quests[i].Data, quests[i], OnSlotClaimClicked, OnSlotCancelClicked);
 				_slotPool[i].gameObject.SetActive(true);
 			}
 			else
@@ -75,7 +75,7 @@ public class QuestUI : MonoBehaviour
 	{
 		foreach(var slot in _slotPool)
 		{
-			if(slot.gameObject.activeSelf && slot.QuestData._questId == state._data._questId)
+			if(slot.gameObject.activeSelf && slot.QuestData._questId == state.Data._questId)
 			{
 				slot.UpdateProgress(state);
 				break;

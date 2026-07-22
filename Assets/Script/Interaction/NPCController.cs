@@ -40,16 +40,16 @@ public class NPCController: InteractionController
 			return;
 		}
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 		Debug.Log($"[NPCController] OnInteract | npcId={_npcId} | name={_npcData._npcName} | questId={_npcData._questId} | shopId={_npcData._shopId} | defaultDialogueId={_npcData._defaultDialogueId}");
+#endif
 
 		// 이 NPC가 Talk 퀘스트 타겟인 경우
 		string targetDialogueId = QuestManager.Instance.GetTalkQuestTargetDialogue(_npcId);
-		Debug.Log($"[NPCController] Talk 퀘스트 타겟 dialogueId={targetDialogueId}");
 		if (!string.IsNullOrEmpty(targetDialogueId))
 		{
 			QuestManager.Instance.ReportTalktoNPC(_npcId);
 			var targetDialogue = DialogueDatabase.Instance.GetDialogueById(targetDialogueId);
-			Debug.Log($"[NPCController] targetDialogue={(targetDialogue != null ? "found" : "null")}");
 			if (targetDialogue != null)
 			{
 				GameManager.Instance.StartDialogue(targetDialogue);
@@ -61,22 +61,16 @@ public class NPCController: InteractionController
 		if (!string.IsNullOrEmpty(_npcData._questId))
 		{
 			string questId = _npcData._questId;
-			Debug.Log($"[NPCController] 퀘스트 분기 진입 | questId={questId}");
 
 			while (!string.IsNullOrEmpty(questId))
 			{
 				QuestData questData = QuestDatabase.Instance.GetQuestById(questId);
-				if (questData == null) { Debug.Log($"[NPCController] questData null: {questId}"); break; }
+				if (questData == null) break;
 
-				if (questData._questGiverNpcId != _npcId)
-				{
-					Debug.Log($"[NPCController] giverNpcId 불일치: {questData._questGiverNpcId} != {_npcId}");
-					break;
-				}
+				if (questData._questGiverNpcId != _npcId) break;
 
 				if (QuestManager.Instance.IsQuestCompleted(questId))
 				{
-					Debug.Log($"[NPCController] 퀘스트 완료됨, 다음 체인: {questData._nextQuestId}");
 					questId = questData._nextQuestId;
 					continue;
 				}
@@ -85,11 +79,9 @@ public class NPCController: InteractionController
 				if (!string.IsNullOrEmpty(questData._preQuestId) &&
 					!QuestManager.Instance.IsQuestCompleted(questData._preQuestId))
 				{
-					Debug.Log($"[NPCController] 선행 퀘스트 미완료: {questData._preQuestId}");
 					break;
 				}
 
-				Debug.Log($"[NPCController] TryQuestStart: {questId}");
 				QuestManager.Instance.TryQuestStart(questId);
 				return;
 			}
@@ -99,12 +91,10 @@ public class NPCController: InteractionController
 		if (!string.IsNullOrEmpty(_npcData._shopId))
 		{
 			var shopDialogue = DialogueDatabase.Instance.GetDialogueById(_npcData._defaultDialogueId);
-			Debug.Log($"[NPCController] 상점 분기 | shopId={_npcData._shopId} | shopDialogue={(shopDialogue != null ? "found" : "null")}");
 			if (shopDialogue != null)
 			{
 				GameManager.Instance.StartDialogue(shopDialogue, () =>
 				{
-					Debug.Log($"[NPCController] 상점 대화 완료 콜백 | shopId={_npcData._shopId}");
 					GameManager.Instance.EndDialogue();
 					UIManager.Instance.ShowShop(_npcData._shopId);
 				});
@@ -118,7 +108,6 @@ public class NPCController: InteractionController
 
 		// 기본 대화
 		var dialogue = DialogueDatabase.Instance.GetDialogueById(_npcData._defaultDialogueId);
-		Debug.Log($"[NPCController] 기본 대화 분기 | defaultDialogueId={_npcData._defaultDialogueId} | dialogue={(dialogue != null ? "found" : "null")}");
 		if (dialogue != null)
 		{
 			GameManager.Instance.StartDialogue(dialogue);

@@ -81,17 +81,6 @@ public class CompanionController : MonoBehaviour
 		CalculateTargetPosition(recorder);
 		MoveToTarget();
 
-		// 부드럽게 이동
-		transform.position = Vector3.MoveTowards(
-			transform.position,
-			_targetPos,
-			_moveSpeed * Time.deltaTime
-		);
-
-		// 방향 전환
-		//Vector3 moveDir = (_targetPos - transform.position).normalized;
-		//UpdateFacingDirection(moveDir);
-
 	}
 
 	public void SnapToFormation()

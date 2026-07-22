@@ -126,11 +126,19 @@ public class EnemyController : MonoBehaviour, IDamageable
 		string droppedItemId = DropDatabase.Instance.RollDrop(_enemyId);
 		Debug.Log($"[Drop] enemyId: {_enemyId}, droppedItemId: {droppedItemId ?? "없음"}");
 
-		_spineAnimator.PlayAnimation("die", false, () =>
+		if (_spineAnimator != null)
+		{
+			_spineAnimator.PlayAnimation("die", false, () =>
+			{
+				SpawnDrop(droppedItemId);
+				Destroy(gameObject);
+			});
+		}
+		else
 		{
 			SpawnDrop(droppedItemId);
 			Destroy(gameObject);
-		});
+		}
 	}
 
 	private void SpawnDrop(string droppedItemId)

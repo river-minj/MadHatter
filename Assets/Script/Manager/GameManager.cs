@@ -83,9 +83,6 @@ public class GameManager : MonoBehaviour
         if (_isLoading)
             return;
 
-		Debug.Log($"[GameManager] PlayerInfoManager: {PlayerInfoManager.Instance}");
-		Debug.Log($"[GameManager] QuestManager: {QuestManager.Instance}");
-
 		SaveData data = new SaveData
         {
             playerInfo = PlayerInfoManager.Instance.GetSaveData(),

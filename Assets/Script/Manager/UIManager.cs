@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Transactions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -287,18 +286,18 @@ public class UIManager : MonoBehaviour
 
 	public void ShowToast(string message, float duration = -1f)
 	{
-		if (_currentToast != null)
-			Destroy(_currentToast.gameObject);
-
-		GameObject prefab = Resources.Load<GameObject>("Prefab/Popup/ToastPopup");
-		if (prefab == null)
+		if (_currentToast == null)
 		{
-			Debug.LogError("[UIManager] 토스트 프리팹을 찾을 수 없습니다: Prefab/Popup/ToastPopup");
-			return;
+			GameObject prefab = Resources.Load<GameObject>("Prefab/Popup/ToastPopup");
+			if (prefab == null)
+			{
+				Debug.LogError("[UIManager] 토스트 프리팹을 찾을 수 없습니다: Prefab/Popup/ToastPopup");
+				return;
+			}
+			_currentToast = Instantiate(prefab, _popupRoot).GetComponent<ToastPopup>();
 		}
 
-		GameObject toastObj = Instantiate(prefab, _popupRoot);
-		_currentToast = toastObj.GetComponent<ToastPopup>();
+		_currentToast.gameObject.SetActive(true);
 
 		if (duration > 0f)
 			_currentToast.Show(message, duration);

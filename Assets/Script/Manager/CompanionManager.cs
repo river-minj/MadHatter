@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class CompanionManager : MonoBehaviour
 {
-	public static CompanionManager Instance;
+	public static CompanionManager Instance { get; private set; }
 	private List<CompanionData> _ownedCompanions = new(); // 언락된 동료 ID
 	public IEnumerable<CompanionData> OwnedCompanions => _ownedCompanions;
 	
