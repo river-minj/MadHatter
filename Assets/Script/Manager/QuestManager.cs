@@ -271,7 +271,7 @@ public class QuestManager : MonoBehaviour
 
 			OnQuestProgressUpdate?.Invoke(qs);
 	
-			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+			Debug.Log($"[QuestManager] ReportTalktoNPC: {npcId}, Progress: {qs.CurrentProgress}/{qs.Data._goalCount}");
 
 			if (completed)
 			{
@@ -298,7 +298,7 @@ public class QuestManager : MonoBehaviour
 			bool completed = qs.AddProgress();
 			OnQuestProgressUpdate?.Invoke(qs);
 
-			Debug.Log($"[QuestManager] ReportKill: {enemyId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+			Debug.Log($"[QuestManager] ReportKill: {enemyId}, Progress: {qs.CurrentProgress}/{qs.Data._goalCount}");
 
 			if (completed)
 			{
@@ -325,7 +325,7 @@ public class QuestManager : MonoBehaviour
 			bool completed = qs.AddProgress(count);
 			OnQuestProgressUpdate?.Invoke(qs);
 
-			Debug.Log($"[QuestManager] ReportCollect: {itemId} x{count}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+			Debug.Log($"[QuestManager] ReportCollect: {itemId} x{count}, Progress: {qs.CurrentProgress}/{qs.Data._goalCount}");
 
 			if (completed)
 			{
@@ -351,7 +351,7 @@ public class QuestManager : MonoBehaviour
 			bool completed = qs.AddProgress();
 			OnQuestProgressUpdate?.Invoke(qs);
 
-			Debug.Log($"[QuestManager] ReportReach: {locationId}, Progress: {qs._currentProgress}/{qs._data._goalCount}");
+			Debug.Log($"[QuestManager] ReportReach: {locationId}, Progress: {qs.CurrentProgress}/{qs.Data._goalCount}");
 
 			if (completed)
 			{
