@@ -67,7 +67,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 	public void MoveTo(Vector2 direction)
 	{
 		if (_rb == null) return;
-		_rb.velocity = direction * _fsm.MoveSpeed;
+		_rb.linearVelocity = direction * _fsm.MoveSpeed;
 
 		// TODO: 이동 애니메이션 파라미터 설정
 		// _animator.SetFloat("MoveX", direction.x);
@@ -80,7 +80,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 	public void StopMove()
 	{
 		if (_rb == null) return;
-		_rb.velocity = Vector2.zero;
+		_rb.linearVelocity = Vector2.zero;
 
 		_spineAnimator.PlayAnimation("idle");
 	}
@@ -91,7 +91,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 	public void ApplyKnockback(Vector2 direction, float force)
 	{
 		if (_rb == null) return;
-		_rb.velocity = Vector2.zero;
+		_rb.linearVelocity = Vector2.zero;
 		_rb.AddForce(direction * force, ForceMode2D.Impulse);
 	}
 
