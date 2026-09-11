@@ -46,12 +46,13 @@ public class InteractionTrigger : MonoBehaviour
 			if (interactable is InteractionController controller)
 			{
 				controller.NotifyPlayerEnter(other.transform);
+				
+				if (UIManager.Instance != null)
+				{
+					UIManager.Instance.ShowPrompt(controller.GetInteractionMessage(), transform);
+				}
 			}
 
-			if (UIManager.Instance != null)
-			{
-				UIManager.Instance.ShowNPCPrompt("Press E to interact", transform);
-			}
 
 			Debug.Log("Player entered interaction range.");
 		}
@@ -73,7 +74,7 @@ public class InteractionTrigger : MonoBehaviour
 
 			if (UIManager.Instance != null)
 			{
-				UIManager.Instance.HideNPCPrompt();
+				UIManager.Instance.HidePrompt();
 			}
 
 			Debug.Log("Player exited interaction range.");

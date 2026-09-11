@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,7 +35,7 @@ public class UIManager : MonoBehaviour
 	//popup root
 	[SerializeField] private Transform _popupRoot;
 
-	CommonConfirmPopup _currentPopup;
+	IPopup _currentPopup;
 	private ToastPopup _currentToast;
 	private void Awake()
 	{
@@ -50,7 +49,7 @@ public class UIManager : MonoBehaviour
 			Debug.LogWarning("Multiple instances of UIManager detected. Destroying duplicate.");
 			Destroy(gameObject);
 			return;
-		}
+		}  
 
 	}
 
@@ -60,9 +59,6 @@ public class UIManager : MonoBehaviour
 
 		if(_npcPrompt == null)
 		{
-			//to do : 이 것의 위치 정리 고민 필요..
-			_npcPrompt = FindObjectOfType<NPCPromptUI>();
-
 			if(_npcPrompt == null)
 			{
 				Debug.LogWarning("NPCPromptUI not found in the scene.");
@@ -194,7 +190,7 @@ public class UIManager : MonoBehaviour
 	}
 
 
-	public void ShowNPCPrompt(string message, Transform npcTransfomt)
+	public void ShowPrompt(string message, Transform npcTransfomt)
 	{
 		if (_npcPrompt != null)
 		{
@@ -202,7 +198,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void HideNPCPrompt()
+	public void HidePrompt()
 	{
 		if (_npcPrompt != null)
 		{
@@ -275,8 +271,10 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 		GameObject popupObj = Instantiate(prefab, _popupRoot);
-		_currentPopup = popupObj.GetComponent<CommonConfirmPopup>();
-		_currentPopup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
+		CommonConfirmPopup popup = popupObj.GetComponent<CommonConfirmPopup>();
+		popup.SetPopup(type, message, confirm, cancel, confirmAction, cancelAction);
+
+		_currentPopup = popup;
 	}
 
 	public void ClearCurrentPopup()
@@ -315,5 +313,26 @@ public class UIManager : MonoBehaviour
 		}
 		GameObject popupObj = Instantiate(prefab, _popupRoot);
 		return popupObj.GetComponent<ItemDetailPopup>();
+	}
+
+	public void ShowInfoPopup(string message, Action confirmAction)
+	{
+
+		if (_currentPopup != null)
+		{
+			return;
+		}
+
+		GameObject prefab = Resources.Load<GameObject>($"Prefab/Popup/InfoPopup");
+		if (prefab == null)
+		{
+			Debug.LogError($"[UIManager] 팝업 프리팹을 찾을 수 없습니다: Prefab/Popup/InfoPopup");
+			return;
+		}
+		GameObject popupObj = Instantiate(prefab, _popupRoot);
+		InfoPopup popup = popupObj.GetComponent<InfoPopup>();	
+		popup.SetPopup(message);
+
+		_currentPopup = popup;
 	}
 }

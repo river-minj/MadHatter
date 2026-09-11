@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CommonConfirmPopup : MonoBehaviour
+public class CommonConfirmPopup : MonoBehaviour, IPopup
 {
 	public enum ConfirmType
 	{
@@ -69,7 +69,7 @@ public class CommonConfirmPopup : MonoBehaviour
 		ClosePopup();
 	}
 
-	private void ClosePopup()
+	public void ClosePopup()
 	{
 		//to do : 팝업 풀링 시스템이 도입되면 Destroy 대신 비활성화 후 재사용하는 방식으로 변경할 것
 		UIManager.Instance.ClearCurrentPopup();

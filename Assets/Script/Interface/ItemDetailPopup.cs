@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemDetailPopup : MonoBehaviour
+public class ItemDetailPopup : MonoBehaviour, IPopup
 {
 	[SerializeField] private Image _iconImage;
 	[SerializeField] private TextMeshProUGUI _nameText;
@@ -61,7 +61,7 @@ public class ItemDetailPopup : MonoBehaviour
 		ClosePopup();
 	}
 
-	private void ClosePopup()
+	public void ClosePopup()
 	{
 		Destroy(gameObject);
 	}

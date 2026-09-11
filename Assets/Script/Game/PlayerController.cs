@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			_currentInteractable.Interact(this);
 			//인터렉티브 상대가 있을때는 프롬프트를 띄우지 않음
-			UIManager.Instance?.HideNPCPrompt();
+			UIManager.Instance?.HidePrompt();
 		}
 	}
 }
