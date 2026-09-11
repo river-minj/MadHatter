@@ -7,6 +7,10 @@ public class EnemyController : MonoBehaviour, IDamageable
 	[SerializeField] private int _maxHp = 10;
 	[SerializeField] private int _currentHp;
 
+	[Header("Camera Shake")]
+	[SerializeField] private float _deathShakeDuration = 0.15f;
+	[SerializeField] private float _deathShakeMagnitude = 0.12f;
+
 	private IAnimator _spineAnimator;
 	public IAnimator Anim => _spineAnimator;
 
@@ -119,6 +123,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 		Debug.Log($"[Enemy] {_enemyId} 사망");
 
 		_fsm.ChangeState(_fsm.DieState);
+
+		GameManager.Instance?.CameraShake(_deathShakeDuration, _deathShakeMagnitude);
 
 		OnDeath?.Invoke(this);
 		QuestManager.Instance.ReportKill(_enemyId);

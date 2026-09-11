@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	[SerializeField] private Rigidbody2D _rb;
 
+	[Header("Camera Shake")]
+	[SerializeField] private float _hitShakeDuration = 0.2f;
+	[SerializeField] private float _hitShakeMagnitude = 0.15f;
+
 	private Vector2 _moveDir;
 	private Vector2 _lastDir = Vector2.right; //캐릭터가 마지막에 바라본 방향
 	private IAnimator _spineAnimator;
@@ -207,6 +211,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		PlayerInfoManager.Instance.TakeDamage(damage);
 		_hitFlash?.Flash();
 		_spineAnimator.PlayAnimation("hit", false);
+		GameManager.Instance?.CameraShake(_hitShakeDuration, _hitShakeMagnitude);
 
 		if(PlayerInfoManager.Instance.IsDead)
 		{

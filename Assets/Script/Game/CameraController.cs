@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -16,6 +17,8 @@ public class CameraController : MonoBehaviour
     private Camera _cam;
     private Bounds? _currentBounds;
     private Vector3 _uiOffset = Vector3.zero;
+    private Vector3 _shakeOffset = Vector3.zero;
+    private Coroutine _shakeCoroutine;
 
 	private void Awake()
 	{
@@ -64,7 +67,29 @@ public class CameraController : MonoBehaviour
         smoothedPosition.x = Mathf.Round(smoothedPosition.x / pixelSize) * pixelSize;
         smoothedPosition.y = Mathf.Round(smoothedPosition.y / pixelSize) * pixelSize;
 
-        transform.position = smoothedPosition;
+        transform.position = smoothedPosition + _shakeOffset;
+    }
+
+    public void Shake(float duration, float magnitude)
+    {
+        if (_shakeCoroutine != null)
+            StopCoroutine(_shakeCoroutine);
+        _shakeCoroutine = StartCoroutine(ShakeCoroutine(duration, magnitude));
+    }
+
+    private IEnumerator ShakeCoroutine(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float damper = 1f - (elapsed / duration);
+            _shakeOffset = (Vector3)(Random.insideUnitCircle * magnitude * damper);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        _shakeOffset = Vector3.zero;
+        _shakeCoroutine = null;
     }
 
 	private Vector3 ClampPositionToBounds(Vector3 targetPosition, Bounds bounds)

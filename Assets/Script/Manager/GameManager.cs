@@ -292,4 +292,9 @@ public class GameManager : MonoBehaviour
 			_cameraController.SnapToTarget();
 		}
 	}
+
+    public void CameraShake(float duration, float magnitude)
+    {
+        _cameraController?.Shake(duration, magnitude);
+    }
 }
