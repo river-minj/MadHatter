@@ -6,6 +6,8 @@ public class EnemyFSM : MonoBehaviour
 	[Header("감지/공격 범위")]
 	[SerializeField] private float _detectRange = 7f;
 	[SerializeField] private float _attackRange = 1.5f;
+	[Tooltip("실제로 공격 애니메이션이 발동되는 근접 거리. AttackRange보다 작아야 하며, 이 거리까지 다가간 후에 공격함")]
+	[SerializeField] private float _meleeRange = 0.6f;
 
 	[Header("이동")]
 	[SerializeField] private float _moveSpeed = 2f;
@@ -24,6 +26,7 @@ public class EnemyFSM : MonoBehaviour
 	// 공유 데이터 (State에서 읽기용)
 	public float DetectRange => _detectRange;
 	public float AttackRange => _attackRange;
+	public float MeleeRange => _meleeRange;
 	public float MoveSpeed => _moveSpeed;
 	public int AttackDamage => _attackDamage;
 	public float AttackCooldown => _attackCooldown;
@@ -112,11 +115,38 @@ public class EnemyFSM : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 사망 시 호출. Awake에서 부모 분리된 순찰 포인트는 더 이상 이 인스턴스의 자식이 아니라
+	/// Destroy(gameObject)만으로는 정리되지 않으므로 별도로 파괴해 씬에 남는 것을 방지.
+	/// </summary>
+	public void CleanupPatrolPoints()
+	{
+		if (_patrolPoints == null) return;
+
+		foreach (var point in _patrolPoints)
+		{
+			if (point != null)
+				Destroy(point.gameObject);
+		}
+	}
+
+	/// <summary>
 	/// 타겟과의 거리 반환 (State에서 공용 사용)
 	/// </summary>
 	public float GetDistanceToTarget()
 	{
 		if (Target == null) return float.MaxValue;
 		return Vector2.Distance(transform.position, Target.position);
+	}
+
+	private void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawWireSphere(transform.position, _detectRange);
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, _attackRange);
+
+		Gizmos.color = Color.magenta;
+		Gizmos.DrawWireSphere(transform.position, _meleeRange);
 	}
 }

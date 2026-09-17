@@ -179,6 +179,23 @@ public class PlayerController : MonoBehaviour, IDamageable
 		CompanionManager.Instance.SetFacingDirection(isRight);
 	}
 
+	/// <summary>
+	/// AutoAttack에서 공격 시 호출. _lastDir까지 갱신해야 다음 프레임 UpdateDirection()이
+	/// 이동 입력 없을 때 이 방향을 유지함 (안 그러면 바로 덮어써져서 타겟을 안 보고 공격하는 것처럼 보임)
+	/// </summary>
+	public void FaceDirection(Vector2 direction)
+	{
+		if (direction == Vector2.zero) return;
+
+		_lastDir = direction;
+
+		if (_spineAnimator != null)
+			_spineAnimator.SetFacing(direction);
+
+		bool isRight = direction.x > 0;
+		CompanionManager.Instance.SetFacingDirection(isRight);
+	}
+
 	public void SetPosition(Transform pos)
 	{
 		transform.position = pos.position;

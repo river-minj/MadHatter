@@ -22,6 +22,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 	public bool IsDead => _currentHp <= 0;
 
 	public event Action<EnemyController> OnDeath;
+	public event Action<int, int> OnHpChanged;
 
 	private void Awake()
 	{
@@ -50,6 +51,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 		Debug.Log($"[Enemy] {_enemyId} 피격: {damage} (HP: {_currentHp}/{_maxHp})");
 
 		_hitFlash?.Flash();
+		OnHpChanged?.Invoke(_currentHp, _maxHp);
 
 		if (IsDead)
 		{
@@ -123,6 +125,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 		Debug.Log($"[Enemy] {_enemyId} 사망");
 
 		_fsm.ChangeState(_fsm.DieState);
+		_fsm.CleanupPatrolPoints();
 
 		GameManager.Instance?.CameraShake(_deathShakeDuration, _deathShakeMagnitude);
 

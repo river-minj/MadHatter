@@ -190,10 +190,26 @@ public class EnemyAttackState : IEnemyState
 			return;
 		}
 
+		// 아직 근접 거리(MeleeRange) 밖이면 계속 접근 (허공에 헛스윙하는 것처럼 보이는 것 방지)
+		if (distance > _fsm.MeleeRange)
+		{
+			Vector2 approachDirection = (_fsm.Target.position - _controller.transform.position).normalized;
+			_controller.MoveTo(approachDirection);
+			_controller.Anim.PlayAnimation("run");
+			_controller.Anim.SetFacing(approachDirection);
+			return;
+		}
+
+		_controller.StopMove();
+
 		// 쿨타임 체크 → 공격
 		if (Time.time - _lastAttackTime >= _fsm.AttackCooldown)
 		{
 			_lastAttackTime = Time.time;
+
+			// 공격 발동 직전 타겟 방향으로 시선 갱신
+			Vector2 facingDirection = (_fsm.Target.position - _controller.transform.position).normalized;
+			_controller.Anim.SetFacing(facingDirection);
 
 			_controller.Anim.PlayAnimation("attack", false);
 			_controller.Attack(_fsm.Target);

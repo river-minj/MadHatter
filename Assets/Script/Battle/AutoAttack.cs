@@ -3,6 +3,8 @@
 public class AutoAttack : MonoBehaviour
 {
 	[SerializeField] private float _attackRange = 1.5f;
+	[Tooltip("실제로 공격이 발동되는 근접 거리. AttackRange보다 작아야 하며, 이 거리 안까지 다가와야 실제로 공격함")]
+	[SerializeField] private float _meleeRange = 0.6f;
 	[SerializeField] private int _attackDamage = 3;
 	[SerializeField] private float _attackCooldown = 1.0f;
 	[SerializeField] private LayerMask _enemyLayer;
@@ -12,11 +14,13 @@ public class AutoAttack : MonoBehaviour
 
 	private float _lastAttackTime; //마지막 공격 시간 - 쿨타임 계산용
 	private IAnimator _spineAnimator;
+	private PlayerController _playerController; // Player 태그일 때만 존재, 공격 방향이 이동 입력에 덮어써지지 않도록 처리
 
 
 	private void Awake()
 	{
 		_spineAnimator = GetComponent<IAnimator>();
+		_playerController = GetComponent<PlayerController>();
 	}
 
 	private void Update()
@@ -31,6 +35,11 @@ public class AutoAttack : MonoBehaviour
 
 		EnemyController target = FindClosestEnemy();
 		if (target == null)
+			return;
+
+		// 근접 거리 밖이면 아직 공격하지 않음 (허공에 헛스윙 방지, 플레이어가 더 다가와야 함)
+		float distance = Vector2.Distance(transform.position, target.transform.position);
+		if (distance > _meleeRange)
 			return;
 
 		Attack(target);
@@ -72,7 +81,17 @@ public class AutoAttack : MonoBehaviour
 		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
 		if (_spineAnimator != null)
+		{
+			// 공격 발동 직전 타겟 방향으로 시선 갱신
+			Vector2 facingDirection = (target.transform.position - transform.position).normalized;
+
+			if (_playerController != null)
+				_playerController.FaceDirection(facingDirection); // PlayerController의 이동 기반 facing에 덮어써지지 않도록 _lastDir까지 갱신
+			else
+				_spineAnimator.SetFacing(facingDirection);
+
 			_spineAnimator.PlayAnimation("attack", false);
+		}
 	}
 
 	private int GetFinalDamage()
@@ -92,6 +111,9 @@ public class AutoAttack : MonoBehaviour
 	{
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, _attackRange);
+
+		Gizmos.color = Color.magenta;
+		Gizmos.DrawWireSphere(transform.position, _meleeRange);
 	}
 #endif
 }
