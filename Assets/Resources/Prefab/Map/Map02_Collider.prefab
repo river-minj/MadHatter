@@ -469,8 +469,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10caf2fd4591dc14299c57184c6cf542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
+  _mapId: Prefab/Map/Map02_Collider
   _mapBounds: {fileID: 4985975337306907307}
   _playerScale: {x: 0.2, y: 0.2}
   _playerSpeed: 1

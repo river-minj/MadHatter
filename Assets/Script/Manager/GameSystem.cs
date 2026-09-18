@@ -12,6 +12,7 @@ public class  SaveData
 	public InventorySaveData inventoryData;
 	public CompanionSaveData companionData;
 	public ShopSaveData shopInfo;
+	public string currentMapId;
 }
 
 [Serializable]

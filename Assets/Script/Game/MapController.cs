@@ -27,6 +27,8 @@ public class SpawnPointEntry
 /// </summary>
 public class MapController : MonoBehaviour
 {
+	[Tooltip("세이브/복원용 맵 식별자. Resources 경로 문자열 (예: Prefab/Map/Map01_Grid)")]
+	[SerializeField] private string _mapId;
 	[SerializeField] private MapBounds _mapBounds;
 	[SerializeField] private Vector2 _playerScale = new Vector2(0.4f, 0.4f);
 	[SerializeField] private float _playerSpeed = 0.5f;
@@ -35,6 +37,7 @@ public class MapController : MonoBehaviour
 	[SerializeField] private List<SpawnPointEntry> _listSpawnPoint;
 	private Dictionary<SpawnPointId, Transform> _dicSpawnPoints = new Dictionary<SpawnPointId, Transform>();
 
+	public string MapId => _mapId;
 	public MapBounds MapBounds => _mapBounds;
 	public Vector2 PlayerScale => _playerScale;
 	public float PlayerSpeed => _playerSpeed;

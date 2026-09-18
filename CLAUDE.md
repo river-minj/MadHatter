@@ -136,9 +136,10 @@ SaveData
 │     equippedWeaponId: string
 ├── companionData: CompanionSaveData
 │     ownedCompanionIds: List<string>
-└── shopInfo: ShopSaveData
-      stocks: List<ShopStockEntry>         // 유한 재고(-1 제외)만 저장
-        └── uniqueId(string), remaining(int)
+├── shopInfo: ShopSaveData
+│     stocks: List<ShopStockEntry>         // 유한 재고(-1 제외)만 저장
+│       └── uniqueId(string), remaining(int)
+└── currentMapId: string                  // MapController._mapId (Resources 경로), 복원용
 ```
 
 ## 주요 패턴
@@ -223,3 +224,4 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 적 리스폰은 EnemyRespawner(요청) + MapController(코루틴 소유) 컴포지션으로 분리 — 맵 파괴 시 코루틴 자동 취소됨
 - 적 타입별 프리팹에 EnemyId + EnemyRespawner 설정을 내장 — 리스폰 후에도 설정 유지, 퀘스트 완료 후 리스폰 중단은 _linkedQuestId로 제어
 - 프리팹은 독립(Regular) 타입으로 유지: MCP 등으로 Variant가 생성된 경우 `PrefabUtility.UnpackPrefabInstance(Completely)`로 베이스 연결 해제 후 저장
+- 현재 맵 복원: MapController._mapId(Resources 경로 문자열, 예: Prefab/Map/Map01_Grid)를 맵 프리팹마다 부여, SaveData.currentMapId로 저장 — GameManager._pendingMapId에 보관했다가 LoadFristMap에서 Resources.Load로 복원, 못 찾으면 _firstMapMc로 폴백. SceneLoader 정상 흐름에서는 GameManager.Start()가 맵을 미리 로드하지 않고 OnMainSceneReady(LoadGame 이후 호출)에서만 로드 — LoadGame이 currentMapId를 채우기 전에 맵이 먼저 로드되면 복원이 깨짐

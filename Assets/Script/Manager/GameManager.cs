@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
     private MapController _currentMapController;
     private bool _isLoading;
 
+    //로드된 세이브의 복원 대상 맵 id. 아직 맵이 인스턴스화되기 전(LoadGame 직후) SaveGame이 currentMapId를
+    //잃어버리지 않도록 보관해뒀다가 LoadFristMap에서 소비한다.
+    private string _pendingMapId;
+
     /// <summary>
     /// 입력 잠금 상태 관리 = true 일때 입력 불가
     /// 1. 다이얼로그 시작, 끝
@@ -90,6 +94,7 @@ public class GameManager : MonoBehaviour
             inventoryData = InventoryManager.Instance.GetSaveData(),
             companionData = CompanionManager.Instance.GetSaveData(),
             shopInfo = ShopManager.Instance.GetSaveData(),
+            currentMapId = _currentMapController != null ? _currentMapController.MapId : _pendingMapId,
         };
 
         GameSystem.Save(data);
@@ -106,6 +111,8 @@ public class GameManager : MonoBehaviour
         CompanionManager.Instance.ApplyData(data.companionData);
         InventoryManager.Instance.ApplyData(data.inventoryData);
         ShopManager.Instance.ApplyData(data.shopInfo);
+
+        _pendingMapId = data.currentMapId;
 
         _isLoading = false;
         SaveGame();
@@ -125,8 +132,8 @@ public class GameManager : MonoBehaviour
 
 		if (SceneLoader.Instance != null)
 		{
-			// 정상 흐름: SceneLoader가 LoadGame 관리, 맵만 로드
-			LoadFristMap();
+			// 정상 흐름: SceneLoader가 LoadGame 이후 OnMainSceneReady에서 맵을 로드함
+			// (LoadGame이 currentMapId를 채우기 전에 먼저 맵을 로드해버리면 복원이 안 됨)
 			return;
 		}
 
@@ -175,13 +182,28 @@ public class GameManager : MonoBehaviour
 
     private void LoadFristMap()
     {
-        if (_firstMapMc == null)
+        MapController mapToLoad = _firstMapMc;
+
+        if (!string.IsNullOrEmpty(_pendingMapId))
         {
-			Debug.LogError("[GameManager] First map controller is not assigned.");
+            MapController restoredMap = Resources.Load<MapController>(_pendingMapId);
+            if (restoredMap != null)
+            {
+                mapToLoad = restoredMap;
+            }
+            else
+            {
+                Debug.LogWarningFormat("[GameManager] Failed to resolve saved map id '{0}'. Falling back to first map.", _pendingMapId);
+            }
+        }
+
+        if (mapToLoad == null)
+        {
+			Debug.LogError("[GameManager] No map controller to load (first map not assigned).");
 			return;
 		}
 
-        ChangeMap(_firstMapMc, SpawnPointId.Default, save: false);
+        ChangeMap(mapToLoad, SpawnPointId.Default, save: false);
 
     }
 
