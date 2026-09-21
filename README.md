@@ -38,10 +38,10 @@ PC 브라우저 환경에서 플레이 가능합니다. (모바일 가상 조이
 | 데이터 파이프라인 | Excel → JSON → Database 싱글턴, GameDatabase 파사드 패턴 |
 | 세이브 / 로드 | JSON 직렬화, 이벤트 기반 자동 저장 |
 | 퀘스트 시스템 | Kill / Collect / Talk / Explore 4종 목표, 체인 퀘스트, NPC 보상 수령 |
-| 인벤토리 | 아이템 획득 / 장착 / 사용, 가중치 기반 드롭 테이블 |
+| 인벤토리 | 아이템 획득 / 장착 / 사용 |
 | 상점 | 유한 / 무한 재고, 탭·스크롤뷰 재사용 |
 | 동료 시스템 | 경로 추종 (PlayerTrailRecorder + CompanionController), 2열 대형 |
-| 적 AI | FSM (Idle / Chase / Attack / Hit / Return / Die), 리스폰, 퀘스트 연동 중단 |
+| 적 AI | FSM (Idle / Chase / Attack / Hit / Return / Die), 리스폰, 퀘스트 연동 중단, 가중치 기반 드롭 테이블 |
 | 전투 | AutoAttack 컴포넌트 (범위 자동 공격), IDamageable 인터페이스 |
 | NPC 상호작용 | IInteractable 다형성, 퀘스트 / 상점 / 대화 우선순위 처리 |
 | UI | 범용 탭 시스템 + InfiniteScrollView 풀링, 이벤트 기반 갱신 |
