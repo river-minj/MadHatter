@@ -4,11 +4,11 @@
 
 ## 프로젝트 개요
 
-**MadHatter**는 Unity 2022.3.55f1로 제작된 2D 탑다운 RPG입니다. 4방향 이동, 적 AI 전투, 동료 추종 시스템, 퀘스트, 인벤토리, 대화 기능을 갖추고 있으며 세이브/로드 및 모바일(조이스틱) 지원도 포함합니다.
+**MadHatter**는 Unity 6 (6000.3.22f1)로 제작된 2D 탑다운 RPG입니다. 4방향 이동, 적 AI 전투, 동료 추종 시스템, 퀘스트, 인벤토리, 대화 기능을 갖추고 있으며 세이브/로드 및 모바일(조이스틱) 지원도 포함합니다.
 
 ## 빌드 및 개발
 
-Unity Hub에서 Unity 2022.3.55f1로 프로젝트를 열어야 합니다. CLI 빌드 명령은 없으며 Unity 에디터를 사용합니다. 스크립트는 `Assets/Script/`에 위치합니다.
+Unity Hub에서 Unity 6 (6000.3.22f1)로 프로젝트를 열어야 합니다. CLI 빌드 명령은 없으며 Unity 에디터를 사용합니다. 스크립트는 `Assets/Script/`에 위치합니다.
 
 WebGL 빌드: Unity 에디터의 **File > Build Settings** 에서 WebGL 플랫폼으로 직접 빌드. GitHub Pages 호환을 위해 Player Settings에서 Gzip 압축 + Decompression Fallback 설정 필요.
 
