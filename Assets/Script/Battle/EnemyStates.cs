@@ -202,14 +202,14 @@ public class EnemyAttackState : IEnemyState
 
 		_controller.StopMove();
 
+		// 쿨타임 대기 중에도 타겟 방향으로 계속 갱신 (플레이어가 움직여도 계속 바라보도록)
+		Vector2 facingDirection = (_fsm.Target.position - _controller.transform.position).normalized;
+		_controller.Anim.SetFacing(facingDirection);
+
 		// 쿨타임 체크 → 공격
 		if (Time.time - _lastAttackTime >= _fsm.AttackCooldown)
 		{
 			_lastAttackTime = Time.time;
-
-			// 공격 발동 직전 타겟 방향으로 시선 갱신
-			Vector2 facingDirection = (_fsm.Target.position - _controller.transform.position).normalized;
-			_controller.Anim.SetFacing(facingDirection);
 
 			_controller.Anim.PlayAnimation("attack", false);
 			_controller.Attack(_fsm.Target);

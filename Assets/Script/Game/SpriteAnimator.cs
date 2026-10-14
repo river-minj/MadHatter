@@ -72,7 +72,9 @@ public class SpriteAnimator : MonoBehaviour, IAnimator
 			return;
 		}
 
-		_spriteRenderer.flipX = direction.x > 0f;
+		// 원본 스프라이트가 오른쪽을 기본으로 바라보므로(SpineAnimator.ScaleX 컨벤션과 동일),
+		// 타겟이 왼쪽에 있을 때만 반전
+		_spriteRenderer.flipX = direction.x < 0f;
 	}
 
 	public void DisableAutoIdle()
