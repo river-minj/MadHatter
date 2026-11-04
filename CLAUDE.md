@@ -178,7 +178,11 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - ShopManager 저장 트리거는 OnShopStockChanged 이벤트로 통일 (GameManager가 구독) — 다른 매니저와 동일한 패턴
 - ReadOnlyAttribute는 PropertyAttribute 상속이므로 #if UNITY_EDITOR 없이 정의, DrawerOnly가 에디터 전용
 - 프리팹 참조가 필요한 경우 Resources 경로 문자열로 관리 (CompanionData._companionPrefabPath)
-팝업은 프리팹 로드 방식 — UIManager가 Instantiate, 사용처가 SetPopup으로 데이터 세팅
+- 팝업은 프리팹 로드 방식 — UIManager가 Instantiate, 사용처가 SetPopup으로 데이터 세팅
+- Addressables 도입 (`com.unity.addressables` 2.9.1): Resources → Addressables 점진적 전환 중, 과도기 중 혼재 허용. 현재 전환 완료: `InfoPopup` (주소 `Prefab/Popup/InfoPopup`, Default Local Group). Addressable 에셋은 `Assets/Addressable/` 하위에 Resources와 동일한 폴더 구조로 배치 (폴더명에 `Resources` 금지 — 빌드 중복 포함 방지)
+- Addressable 주소는 기존 Resources 경로 문자열과 동일하게 부여 — 호출부 경로 문자열 변경 최소화
+- `UIManager.ShowInfoPopup`은 `Addressables.LoadAssetAsync`로 비동기 로드: 로드 중 중복 요청은 `isLoadingPopup`으로 차단, 로드 핸들(`popupLoadHandle`)은 `ClearCurrentPopup`에서 Release (로드 실패 시 즉시 Release)
+- Addressables 빌드 산출물(`ServerData/`, `AddressableAssetsData/*/*.bin`)은 .gitignore로 제외
 - 전투는 AutoAttack 컴포넌트 기반 — 플레이어/동료 코드 수정 없이 Inspector에서 추가
 - ATK의 단일 소유자는 PlayerInfoManager (기본 _baseAtk + 장비 보정 합산)
 - AutoAttack.GetFinalDamage(): Player → PlayerInfoManager.Atk 참조, 동료 → Inspector _attackDamage 사용

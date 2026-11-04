@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 /// <summary>
@@ -280,6 +282,12 @@ public class UIManager : MonoBehaviour
 	public void ClearCurrentPopup()
 	{
 		_currentPopup = null;
+
+		if(popupLoadHandle.IsValid())
+		{
+			popupLoadHandle.Release();
+			popupLoadHandle = default;
+		}
 	}
 
 	public void ShowToast(string message, float duration = -1f)
@@ -315,6 +323,8 @@ public class UIManager : MonoBehaviour
 		return popupObj.GetComponent<ItemDetailPopup>();
 	}
 
+	bool isLoadingPopup = false;
+	AsyncOperationHandle<GameObject> popupLoadHandle = default;
 	public void ShowInfoPopup(string message, Action confirmAction)
 	{
 
@@ -323,16 +333,34 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 
-		GameObject prefab = Resources.Load<GameObject>($"Prefab/Popup/InfoPopup");
-		if (prefab == null)
+		if(isLoadingPopup)
 		{
-			Debug.LogError($"[UIManager] 팝업 프리팹을 찾을 수 없습니다: Prefab/Popup/InfoPopup");
+			Debug.LogWarning("[UIManager] 팝업 로딩 중입니다. 잠시 후 다시 시도해주세요.");
 			return;
 		}
-		GameObject popupObj = Instantiate(prefab, _popupRoot);
-		InfoPopup popup = popupObj.GetComponent<InfoPopup>();	
-		popup.SetPopup(message);
 
-		_currentPopup = popup;
+		// Addressables를 사용하여 InfoPopup 프리팹을 비동기적으로 로드 요청
+		isLoadingPopup = true; // 로딩 중 상태 설정
+		var handle = Addressables.LoadAssetAsync<GameObject>("Prefab/Popup/InfoPopup");
+		handle.Completed += (AsyncOperationHandle<GameObject> completedHandle) =>
+		{
+			isLoadingPopup = false; // 로딩 완료 후 상태 초기화
+			popupLoadHandle = completedHandle;
+
+			if (completedHandle.Status == AsyncOperationStatus.Succeeded)
+			{
+				GameObject prefab = completedHandle.Result;
+				GameObject popupObj = Instantiate(prefab, _popupRoot);
+				InfoPopup popup = popupObj.GetComponent<InfoPopup>();
+				popup.SetPopup(message);
+				_currentPopup = popup;
+			}
+			else
+			{
+				Debug.LogError("[UIManager] InfoPopup 프리팹 로드 실패: " + completedHandle.OperationException);
+				popupLoadHandle.Release();
+				popupLoadHandle = default;
+			}
+		};
 	}
 }
