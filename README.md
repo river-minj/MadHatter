@@ -44,7 +44,7 @@ PC 브라우저 환경에서 플레이 가능합니다. (모바일 가상 조이
 | 적 AI | FSM (Idle / Chase / Attack / Hit / Return / Die), 리스폰, 퀘스트 연동 중단, 가중치 기반 드롭 테이블 |
 | 전투 | AutoAttack 컴포넌트 (범위 자동 공격), IDamageable 인터페이스 |
 | NPC 상호작용 | IInteractable 다형성, 퀘스트 / 상점 / 대화 우선순위 처리 |
-| UI | 범용 탭 시스템 + InfiniteScrollView 풀링, 이벤트 기반 갱신 |
+| UI | 범용 탭 시스템 + InfiniteScrollView 셀 재사용, 이벤트 기반 갱신 |
 | 입력 | PC 키보드 + 모바일 / WebGL 가상 조이스틱 |
 | WebGL 빌드 | 커스텀 템플릿 (9:16 반응형), Gzip + GitHub Pages 배포 |
 
