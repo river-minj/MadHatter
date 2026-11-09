@@ -37,6 +37,7 @@ PC 브라우저 환경에서 플레이 가능합니다. (모바일 가상 조이
 | 씬 전환 | SceneLoader 비동기 로딩 + LoadingUI 오버레이 |
 | 데이터 파이프라인 | Excel → JSON → Database 싱글턴, GameDatabase 파사드 패턴 |
 | 세이브 / 로드 | JSON 직렬화, 이벤트 기반 자동 저장 |
+| 리소스 로드 방식 |	UI 팝업 Resources → Addressables 전환 |
 | 퀘스트 시스템 | Kill / Collect / Talk / Explore 4종 목표, 체인 퀘스트, NPC 보상 수령 |
 | 인벤토리 | 아이템 획득 / 장착 / 사용 |
 | 상점 | 유한 / 무한 재고, 탭·스크롤뷰 재사용 |
@@ -52,11 +53,12 @@ PC 브라우저 환경에서 플레이 가능합니다. (모바일 가상 조이
 
 ## ▶ 설계 키워드
 
-- **FSM 3분할** — Controller(데이터·실행) / FSM(상태 전환) / State(행동 판단)로 역할을 분리했습니다. State는 Unity에 종속될 필요가 없다고 판단해 순수 C# 클래스로 구현했습니다.
+- **FSM 3분할** — Controller(데이터, 실행) / FSM(상태 전환) / State(행동 판단)로 역할을 분리했습니다. State는 Unity에 종속될 필요가 없다고 판단해 순수 C# 클래스로 구현했습니다.
 - **IAnimator 추상화** — Spine과 스프라이트 시트를 동일한 인터페이스로 구동합니다. 애니메이션 방식이 바뀌어도 Controller 코드는 그대로 유지됩니다.
 - **데이터 파이프라인** — Excel을 저장하면 에디터 툴이 자동으로 JSON으로 변환합니다. 기획자가 별도의 개발 병목 없이 데이터를 바로 고칠 수 있는 환경입니다.
-- **이벤트 기반 UI 갱신** — UI가 Manager 상태를 매번 확인(폴링)하는 대신 OnInventoryChanged 같은 이벤트를 구독해서, 변경이 일어날 때만 갱신됩니다.
-- **컴포지션 우선** — AutoAttack을 독립 컴포넌트로 분리해 재사용성을 높이고, EnemyRespawner는 MapController에 코루틴 실행을 맡겨 책임을 나눴습니다. 동료가 플레이어를 따라가는 기능 구현을 위해 경로 기록(PlayerTrailRecorder)과 경로 추적(CompanionController)의 역할을 분리했습니다.
+- **이벤트 기반 UI 갱신** — UI가 Manager 상태를 매번 확인(폴링)하는 대신 OnInventoryChanged 같은 이벤트를 구독해 변경이 일어날 때만 갱신됩니다.
+- **Addressables 전환** — Resources 기반 UI 로드를 Addressables로 전환하고 있습니다(UI 팝업 1종 적용). 비동기 로드 중 중복 요청을 막고 handle 기반으로 Load와 Release를 짝지어 관리하며 Addressables Profiler로 핸들 해제와 번들 언로드를 검증했습니다.
+- **컴포지션 우선** — AutoAttack을 독립 컴포넌트로 분리해 재사용성을 높였고 EnemyRespawner는 MapController에 코루틴 실행을 맡겨 책임을 나눴습니다. 동료가 플레이어를 따라가는 기능은 경로 기록(PlayerTrailRecorder)과 경로 추적(CompanionController)으로 역할을 분리했습니다.
 
 ---
 
