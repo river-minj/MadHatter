@@ -236,12 +236,14 @@ public class GameManager : MonoBehaviour
 
     private void ChangeMap(MapController nextMap, SpawnPointId spawnPointId = SpawnPointId.Default, bool save = true)
     {
-        //기존 맵 언로드
-        if (CurrentMapController != null)
-        {
-            Destroy(CurrentMapController.gameObject);
-            Debug.LogFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
-        }
+		//기존 맵 언로드
+		if (CurrentMapController != null)
+		{
+			DroppedItemManager.Instance?.ClearDropItems();
+
+			Debug.LogFormat("[GameManager] Unloaded map: {0}", CurrentMapController.gameObject.name);
+			Destroy(CurrentMapController.gameObject);
+		}
 
 		//새 맵 로드
 		//새 맵이 instantiate될 때 해당 map의 mapController의 start에서 카메라 바운드 적용 요청을 함

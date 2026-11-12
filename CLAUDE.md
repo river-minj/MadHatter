@@ -42,6 +42,7 @@ Start 씬 → (비동기 로드) → Main 씬
 | `QuestManager` | 퀘스트 상태 머신: 시작 → 수락 → 진행 → 완료 → 보상 |
 | `CompanionManager` | 보유 동료 목록, 소환, 2열 대형, 스케일 전파 |
 | `ShopManager` | 상점 재고 상태(`_stockMap`) 관리, 구매 트랜잭션 처리, 유한 재고 Save/Load |
+| `DroppedItemManager` | 드롭 아이템 `ObjectPool` 관리: 스폰/반환, 맵 전환 시 활성 드롭 일괄 회수 |
 
 ### 데이터 파이프라인
 
@@ -73,7 +74,7 @@ Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `
 
 ### 적 FSM
 
-`EnemyFSM`은 `IEnemyState` 객체를 사용합니다: `Idle → Chase → Attack → Hit → Return → Die`. 상태 전환은 탐지 범위, 공격 범위, 넉백에 의해 결정됩니다. `EnemyController`는 사망 시 `QuestManager.ReportKill()`을 호출하고 `DropDatabase`로 아이템 드롭을 처리합니다.
+`EnemyFSM`은 `IEnemyState` 객체를 사용합니다: `Idle → Chase → Attack → Hit → Return → Die`. 상태 전환은 탐지 범위, 공격 범위, 넉백에 의해 결정됩니다. `EnemyController`는 사망 시 `QuestManager.ReportKill()`을 호출하고 `DropDatabase`로 드롭 아이템을 결정한 뒤 `DroppedItemManager.SpawnDrop()`으로 풀에서 꺼내 배치합니다.
 
 ### 적 리스폰 시스템
 
@@ -201,6 +202,11 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 슬라이싱 재설정 후 애니메이션 클립의 스프라이트 참조(fileID)가 끊겨 Missing 프레임이 발생할 수 있음 — 재슬라이싱 시 해당 클립도 반드시 재생성
 - 탭 시스템은 범용 컴포넌트(TabController/Tab/TabPage)로 분리, 데이터 로직은 사용처(InventoryUI 등)가 담당
 - 드롭 테이블은 엑셀 데이터로 관리, 가중치 기반 랜덤 선택
+- 드롭 아이템은 `DroppedItemManager`의 `UnityEngine.Pool.ObjectPool`로 재사용 — `Instantiate`/`Destroy` 금지, `EnemyController`는 `SpawnDrop(position, itemId)`만 호출
+- 드롭 아이템 반환은 콜백 중개: 생성 시 `SetReleaseCallback`으로 매니저의 `ReleaseDropItem` 주입, `DroppedItemController`는 획득 시 `_onRelease`만 호출 (매니저 직접 참조 안 함)
+- 풀링 대상은 `Init`에서 이전 상태(아이콘, 메시지)를 반드시 초기화 — 재사용 시 잔존 데이터 방지
+- 활성 드롭은 `_activeItems`(HashSet)로 추적, 중복 반환은 `Remove` 결과로 차단. 맵 전환 시 `GameManager.ChangeMap`이 맵 파괴 전에 `ClearDropItems()` 호출
+- 풀 오브젝트 부모(`DroppedItemRoot`)는 DontDestroyOnLoad 매니저 하위 — 맵 프리팹 하위에 두면 맵 파괴 시 풀 오브젝트가 함께 파괴됨
 - 모든 키보드 입력은 PlayerController에서 통합 관리 — InteractionTrigger 등 개별 컴포넌트에서 키 입력 감지 금지
 - 인터랙션 감지와 실행의 분리: InteractionTrigger는 범위 감지만 담당 (SetInteractable/ClearInteractable), 실행(Interact 호출)은 PlayerController가 E키로 처리
 - IInteractable 인터페이스로 다형적 인터랙션: PlayerController는 상대가 NPC/DroppedItem/상자 등 무엇인지 모르고 Interact()만 호출, 새 인터랙션 대상 추가 시 PlayerController 수정 불필요

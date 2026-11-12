@@ -154,12 +154,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 	{
 		if (string.IsNullOrEmpty(droppedItemId)) return;
 
-		GameObject prefab = Resources.Load<GameObject>("Prefab/DroppedItem/DroppedItem");
-		if (prefab == null) return;
-
-		GameObject dropObj = Instantiate(prefab, transform.position, Quaternion.identity);
-		DroppedItemController dic = dropObj.GetComponent<DroppedItemController>();
-		if (dic != null)
-			dic.Init(droppedItemId);
+		DroppedItemManager.Instance?.SpawnDrop(transform.position, droppedItemId);
 	}
 }
