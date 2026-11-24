@@ -93,7 +93,7 @@ Sorting Layer (위 → 아래 = 먼저 → 나중에 그려짐):
 - 바닥(Ground/Road)을 `Character`와 같은 레이어에 두지 말 것 — 캐릭터와 Y-Sort되어 바닥 아래로 들어감
 - Sorting Layer는 이름이 같아도 재생성 시 uniqueID가 바뀜 → 레이어 삭제/재생성 후 참조하던 렌더러·Canvas 재지정 필요
 
-현재 적용 상태: `SortingGroup` 적용 = `Player_new`, Map01/Map03 NPC. 동료(Spine)는 MeshRenderer에 레이어만 지정, 적은 SpriteRenderer(Sprite Sort Point `Center`) — 정렬 이상 시 우선 확인 대상.
+현재 적용 상태: `SortingGroup` 적용 = `Player_new`, `Companion001`, `Companion002`, Map01/Map03 NPC. 적(`Enemy`, `Enemy_Goblin`, `Enemy_Slime`)은 미적용 — 스프라이트 피벗이 중앙이라 루트 = 몸 중앙이므로 SortingGroup만 붙여서는 효과 없음. 예정 작업: Sprite Editor에서 피벗을 발 위치(Custom)로 변경 → 콜라이더 offset·`HealthBarCanvas`·자식 오브젝트 위치 보정 → 루트에 SortingGroup 추가.
 
 **스크립트 정렬 → 엔진 정렬로 바꾼 이유** (2026-11-24):
 - 기존: `ObjectSortingOrder`가 `LateUpdate`에서 `sortingOrder = -(y × 100)`을 매 프레임 계산 (캐릭터/NPC에 부착)
