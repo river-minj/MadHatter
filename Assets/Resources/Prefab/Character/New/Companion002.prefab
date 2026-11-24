@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3580424674450643059}
   - component: {fileID: 5248492859444429339}
   - component: {fileID: 4859265640905222570}
+  - component: {fileID: 2910665944653404025}
   m_Layer: 0
   m_Name: Companion002
   m_TagString: Untagged
@@ -189,3 +190,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _finalAttackDamage: 0
+--- !u!210 &2910665944653404025
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3249069818054013467}
+  m_Enabled: 1
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
