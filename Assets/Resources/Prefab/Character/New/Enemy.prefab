@@ -73,7 +73,6 @@ GameObject:
   - component: {fileID: 1383047146785578221}
   - component: {fileID: 1914801221650010983}
   - component: {fileID: 8705621276514667886}
-  - component: {fileID: 4092655183642268065}
   - component: {fileID: 6171914001449806578}
   - component: {fileID: 5798910616105252940}
   - component: {fileID: 5810667562986842304}
@@ -105,6 +104,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1914801221650010983
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -120,6 +120,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -141,9 +146,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 923763221
-  m_SortingLayer: 3
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 2
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 843238608, guid: 4ab6ca2dfa76443469297790e9cb6e4b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -153,11 +160,10 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &8705621276514667886
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,26 +177,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4092655183642268065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7796491294123472089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _renderer: {fileID: 1914801221650010983}
-  _sortPrecision: 100
-  _sortOffset: 0
 --- !u!114 &6171914001449806578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +198,8 @@ MonoBehaviour:
   _enemyId: E_001
   _maxHp: 10
   _currentHp: 0
+  _deathShakeDuration: 0.15
+  _deathShakeMagnitude: 0.12
 --- !u!114 &5798910616105252940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _detectRange: 7
   _attackRange: 1.5
+  _meleeRange: 0.6
   _moveSpeed: 2
   _attackDamage: 3
   _attackCooldown: 1
@@ -255,7 +250,7 @@ MonoBehaviour:
     actualName: DeathBackward
 --- !u!50 &2387949362465655995
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -266,8 +261,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -288,6 +283,7 @@ CircleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7796491294123472089}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -311,7 +307,7 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.09}
-  serializedVersion: 2
   m_Radius: 0.4

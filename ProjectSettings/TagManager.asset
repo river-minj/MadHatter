@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - DamageObject
   - Enemy
@@ -43,21 +43,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Coin
-    uniqueID: 3534837493
-    locked: 0
-  - name: Block
-    uniqueID: 2494971979
-    locked: 0
-  - name: 
-    uniqueID: 923763221
-    locked: 0
-  - name: UI
-    uniqueID: 4086813705
+  - name: Background
+    uniqueID: 3717386827
     locked: 0
   - name: Character
     uniqueID: 2223640805
     locked: 0
-  - name: Background
-    uniqueID: 3717386827
+  - name: Overlay
+    uniqueID: 1906030005
     locked: 0
+  - name: WorldUI
+    uniqueID: 1114756571
+    locked: 0
+  m_RenderingLayers:
+  - Default

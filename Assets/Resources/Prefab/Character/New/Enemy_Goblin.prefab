@@ -348,7 +348,6 @@ GameObject:
   - component: {fileID: 2313783014324374786}
   - component: {fileID: 3008152732923609736}
   - component: {fileID: 5475588817788066945}
-  - component: {fileID: 856158219398938702}
   - component: {fileID: 7388907789030685469}
   - component: {fileID: 7157478829753592227}
   - component: {fileID: 7173675883676416303}
@@ -426,8 +425,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 923763221
-  m_SortingLayer: 3
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4030792056451597264, guid: 736d01f5dc1bc3f4981b1a5f7bafc2ed, type: 3}
@@ -462,21 +461,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &856158219398938702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854220177349879094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _renderer: {fileID: 3008152732923609736}
-  _sortPrecision: 100
-  _sortOffset: 0
 --- !u!114 &7388907789030685469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +674,6 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -208153591
+  m_SortingLayerID: 1114756571
   m_SortingOrder: 0
   m_TargetDisplay: 0

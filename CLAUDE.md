@@ -68,6 +68,40 @@ Database 싱글턴 목록: `DialogueDatabase`, `QuestDatabase`, `NpcDatabase`, `
 
 맵 전환 흐름: `MapController.RequestMapTransition()` → `GameManager`가 입력 잠금 → 페이드 → 기존 맵 파괴 → 새 맵 인스턴스화 → 플레이어/동료 재배치 → 자동 세이브
 
+### 렌더링 정렬 (Y-Sort)
+
+엔진 축 정렬로 통일: **Transparency Sort Axis + SortingGroup**. 스크립트로 `sortingOrder`를 계산하지 않음.
+
+Unity 정렬 우선순위: ① Sorting Layer → ② Order in Layer → ③ Transparency Sort Axis (①②가 **완전히 같을 때만** 위치 비교). 따라서 서로 앞뒤가 바뀌어야 하는 대상은 모두 같은 Layer + 같은 Order(0)에 둔다.
+
+Sorting Layer (위 → 아래 = 먼저 → 나중에 그려짐):
+
+| 레이어 | 용도 | 대상 |
+|---|---|---|
+| `Default` | 미사용 (없는 레이어 참조 시 폴백) | — |
+| `Background` | 바닥 | Ground, Road 타일맵, 배경 이미지(맵 2) |
+| `Character` | Y-Sort 대상 (전부 Order 0) | 플레이어, 동료, NPC, 적, 드롭 아이템, Deco 타일맵(나무 등) |
+| `Overlay` | 항상 캐릭터 위를 덮는 월드 장식 | 지붕, 구름 등 |
+| `WorldUI` | 월드 공간 UI | 적 HP바(`HealthBarCanvas`), 이름표 등 |
+
+설정 규칙:
+- **Project Settings > Graphics**: Transparency Sort Mode `Custom Axis`, Axis `(0, 1, 0)` (Built-in 파이프라인)
+- **Deco 타일맵**: Tilemap Renderer Mode `Individual` (Chunk는 타일맵 전체가 한 덩어리로 정렬됨), Layer `Character`, Order 0
+- **여러 칸짜리 오브젝트(나무 등)**: 스프라이트 하나로 합치고 Pivot을 밑동(땅에 닿는 지점)에 Custom 지정 → 타일로 배치
+- **캐릭터/NPC**: 루트에 `SortingGroup`(Layer `Character`, Order 0), 루트 transform 위치 = 발밑. Spine(MeshRenderer)은 SortingGroup 없이는 bounds 중심(몸통) 기준으로 정렬되므로 필수
+- **단일 SpriteRenderer**: SortingGroup 대신 Sprite Sort Point `Pivot` + 피벗을 발밑에 두는 것도 허용
+- 바닥(Ground/Road)을 `Character`와 같은 레이어에 두지 말 것 — 캐릭터와 Y-Sort되어 바닥 아래로 들어감
+- Sorting Layer는 이름이 같아도 재생성 시 uniqueID가 바뀜 → 레이어 삭제/재생성 후 참조하던 렌더러·Canvas 재지정 필요
+
+현재 적용 상태: `SortingGroup` 적용 = `Player_new`, Map01/Map03 NPC. 동료(Spine)는 MeshRenderer에 레이어만 지정, 적은 SpriteRenderer(Sprite Sort Point `Center`) — 정렬 이상 시 우선 확인 대상.
+
+**스크립트 정렬 → 엔진 정렬로 바꾼 이유** (2026-11-24):
+- 기존: `ObjectSortingOrder`가 `LateUpdate`에서 `sortingOrder = -(y × 100)`을 매 프레임 계산 (캐릭터/NPC에 부착)
+- 문제: 타일맵에 그린 나무는 스크립트를 붙일 수 없어 Order가 상수로 고정됨 → 캐릭터는 ②Order로, 나무는 고정값으로 정렬되는 **이중 규칙** 상태. 실제 비교는 "캐릭터 y×100 vs 나무의 고정 Order"가 되어 나무 위치는 무시되고, 맵 위치에 따라 캐릭터가 항상 나무 앞 또는 항상 뒤로 고정됨. Deco를 Overlay 레이어로 올리는 우회는 캐릭터가 나무 앞에 있을 때도 가려지는 문제를 만듦
+- 결정: 정렬 규칙을 엔진 축 정렬 하나로 통일 → 타일·스프라이트·Spine 등 렌더러 종류와 무관하게 같은 기준으로 비교, 정렬 대상 추가 시 스크립트 부착 규칙 불필요, 매 프레임 `sortingOrder` 갱신 비용 제거
+- 검토한 대안: 나무를 SpriteRenderer 오브젝트로 배치 + 스크립트 유지 → 타일 팔레트 배치 불가, 정렬 대상마다 스크립트 부착 필요하여 기각
+- `ObjectSortingOrder.cs`는 `[Obsolete]` 레거시로 보존 (학습 기록용, 사용처 없음 — 다시 부착 금지)
+
 ### 동료 추종 시스템
 
 `PlayerTrailRecorder`가 플레이어 이동 위치를 0.15 유닛 간격으로 원형 버퍼(최대 1000개)에 기록합니다. `CompanionController`는 이 버퍼를 설정된 간격으로 읽어 동일한 경로를 따라 이동합니다. 동료는 A/B 두 열로 나뉘며 맵 전환 시 `CompanionManager`를 통해 플레이어 기준 상대 스케일이 업데이트됩니다.
@@ -215,8 +249,9 @@ TableData 클래스는 엑셀 행과 1:1 매핑 (원본), 게임용 데이터 �
 - 퀘스트 대화 역할 분리: startDialogueId/progressDialogueId/completedDialogueId는 giver NPC 전용, targetDialogueId는 target NPC 전용
 - ClaimReward는 보상만 지급: completedDialogue 재생과 nextQuest 자동 시작을 하지 않음, NPC에게 직접 가야 완료 대사와 다음 퀘스트 진행
 - 체인 퀘스트 giver 제한: NPCController 체인 탐색 시 questGiverNpcId != _npcId이면 체인 중단, 다른 NPC의 퀘스트를 주지 않음
+- 렌더링 정렬은 엔진 축 정렬(Transparency Sort Axis + SortingGroup)로 단일화 — 스크립트로 sortingOrder 계산 금지, 상세 규칙은 "렌더링 정렬 (Y-Sort)" 섹션 참조
 - 디자인 패턴 적용 기준: 런타임 교체가 필요 없으면 전략 패턴을 쓰지 않음, 인터페이스 기반 컴포넌트 조합으로 충분
-- 맵 제작은 다중 Tilemap 레이어 구조: Ground(시각) + Road(시각) + Walls(충돌 전용, 렌더러 비활성) + Decoration(플레이어 위 장식), MapBounds는 카메라 제한 전용이며 이동 제한은 Walls가 담당
+- 맵 제작은 다중 Tilemap 레이어 구조: Ground(시각) + Road(시각) + Walls(충돌 전용, 렌더러 비활성) + Decoration(나무 등 장식, `Character` 레이어에서 캐릭터와 Y-Sort — 항상 위에 덮는 장식은 `Overlay` 레이어 별도 타일맵), MapBounds는 카메라 제한 전용이며 이동 제한은 Walls가 담당
 - 맵별 캐릭터 스케일: MapController._playerScale로 관리, ChangeMap에서 플레이어 + 동료에 일괄 적용
 - 동료 스케일은 비율 기반: CompanionController._scaleRatio로 프리팹 원본 스케일과 플레이어 스케일의 비율을 저장, 맵 전환 시 비율 유지 (동료마다 개별 비율)
 - 맵 제작 방식은 2가지 공존: 타일맵 방식(맵 1)과 배경 이미지+콜라이더 방식(맵 2), 맵 특성에 따라 선택

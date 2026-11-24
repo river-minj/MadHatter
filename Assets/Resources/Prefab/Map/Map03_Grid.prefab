@@ -3869,8 +3869,8 @@ GameObject:
   - component: {fileID: 2345380637101480684}
   - component: {fileID: 8003745796706396646}
   - component: {fileID: 4521824500716127842}
-  - component: {fileID: 7149631844003063451}
   - component: {fileID: 3153678011183478997}
+  - component: {fileID: 2599967458704492249}
   m_Layer: 0
   m_Name: NPC_1
   m_TagString: Untagged
@@ -3939,7 +3939,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -2071326491
-  m_SortingLayer: 5
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 847824e491b293741bf0d17df3315eb1, type: 3}
@@ -3979,21 +3979,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3adbced3fe99ccf479445a513d682543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7149631844003063451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3927698185367930737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d813c8b6e35278a44b0ed9e82e6a8568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _renderer: {fileID: 2345380637101480684}
-  _sortPrecision: 100
-  _sortOffset: 0
 --- !u!61 &3153678011183478997
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4040,6 +4025,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4, y: 3}
   m_EdgeRadius: 0
+--- !u!210 &2599967458704492249
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3927698185367930737}
+  m_Enabled: 1
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &5673762434663552267
 GameObject:
   m_ObjectHideFlags: 0
@@ -4498,8 +4496,8 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1906030005
+  m_SortingLayer: 3
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
