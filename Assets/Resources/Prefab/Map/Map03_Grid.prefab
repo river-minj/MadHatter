@@ -4050,7 +4050,7 @@ GameObject:
   - component: {fileID: 7591823682216323207}
   - component: {fileID: 8541001147507744158}
   m_Layer: 0
-  m_Name: MapTransistor
+  m_Name: MapTransitionTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
