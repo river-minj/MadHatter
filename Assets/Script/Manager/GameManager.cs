@@ -76,7 +76,10 @@ public class GameManager : MonoBehaviour
 	private void OnDestroy()
 	{
         if (QuestManager.Instance != null)
+        {
             QuestManager.Instance.OnQuestRewardClaimed -= OnQuestRewardClaimed;
+            QuestManager.Instance.OnQuestProgressUpdate -= OnQuestProgressUpdated;
+        }
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnInventoryChanged -= SaveGame;
@@ -125,7 +128,10 @@ public class GameManager : MonoBehaviour
 	public void Start()
 	{
 		if (QuestManager.Instance != null)
+		{
 			QuestManager.Instance.OnQuestRewardClaimed += OnQuestRewardClaimed;
+			QuestManager.Instance.OnQuestProgressUpdate += OnQuestProgressUpdated;
+		}
 		if (InventoryManager.Instance != null)
 		{
 			InventoryManager.Instance.OnInventoryChanged += SaveGame;
@@ -165,6 +171,12 @@ public class GameManager : MonoBehaviour
     {
         SaveGame();
     }
+
+	// Kill/Talk 진행도는 다른 저장 트리거가 없어 강제 종료 시 유실되므로 진행도 갱신마다 저장
+	private void OnQuestProgressUpdated(QuestState state)
+	{
+		SaveGame();
+	}
 
     // SceneLoader가 Main 씬 로드 완료 후 호출 — DontDestroyOnLoad GameManager의 씬 참조를 갱신하고
     // Start()가 재실행되지 않는 재진입 시에도 첫 맵을 생성한다 (CheatConsole 초기화 후 재시작 등)
