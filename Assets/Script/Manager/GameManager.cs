@@ -57,8 +57,12 @@ public class GameManager : MonoBehaviour
         //카메라
         if (_cameraController == null)
         {
-            _cameraController = Camera.main.GetComponent<CameraController>();
-            Debug.LogError("CameraController component is required on the main camera.");
+            Camera mainCam = Camera.main;
+            if (mainCam != null)
+                _cameraController = mainCam.GetComponent<CameraController>();
+
+            if (_cameraController == null)
+                Debug.LogError("CameraController component is required on the main camera.");
         }
         
         //플레이어
