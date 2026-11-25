@@ -99,8 +99,6 @@ public class EnemyChaseState : IEnemyState
 
 	public void Update()
 	{
-		//Debug.Log($"[ChaseState] dist: {_fsm.GetDistanceToTarget()}");
-
 		// 대상 사망 시 복귀
 		var targetDamageable = _fsm.TargetDamageable;
 		if (targetDamageable == null || targetDamageable.IsDead)
@@ -165,7 +163,6 @@ public class EnemyAttackState : IEnemyState
 
 	public void Update()
 	{
-		//Debug.Log($"[AttackState] dist: {_fsm.GetDistanceToTarget()}, detectRange: {_fsm.DetectRange}");
 		float distance = _fsm.GetDistanceToTarget();
 
 		//대상 사망 시 복귀
@@ -253,7 +250,6 @@ public class EnemyHitState : IEnemyState
 	public void Update()
 	{
 		_stunTimer += Time.deltaTime;
-		//Debug.Log($"[HitState] stunTimer: {_stunTimer} / {_fsm.HitStunDuration}");
 		if (_stunTimer >= _fsm.HitStunDuration)
 		{
 			// 경직 해제 → 감지 범위 내면 Chase, 밖이면 Return

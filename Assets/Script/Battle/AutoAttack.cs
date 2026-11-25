@@ -78,7 +78,7 @@ public class AutoAttack : MonoBehaviour
 		_finalAttackDamage = finalDamage;
 		target.TakeDamage(finalDamage);
 
-		Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
+		//Debug.Log($"[AutoAttack] {gameObject.name} → {target.EnemyId} 공격 ({_attackDamage} dmg)");
 
 		if (_spineAnimator != null)
 		{

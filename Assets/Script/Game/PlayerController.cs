@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (_isjoystickActive)
 		{
 			_moveDir = _joysticInput;
-			Debug.Log($"[PlayerContorller] HandleInput - moveDir: {_moveDir}");
 		}
 		else
 		{
@@ -128,31 +127,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			TryInteract();
 		}
-
-		//test
-		// 키보드 T 누르면 아이템 추가 테스트
-		if (Input.GetKeyDown(KeyCode.T))
-		{
-			InventoryManager.Instance.AddItem("weapon_sword_01");
-			InventoryManager.Instance.AddItem("potion_hp_small", 3);
-			Debug.Log($"장비 수: {InventoryManager.Instance.GetItemsByType(ItemType.Equipment).Count}");
-			Debug.Log($"소비 수: {InventoryManager.Instance.GetItemsByType(ItemType.Consumable).Count}");
-		}
-
-		// 키보드 Y 누르면 장착 테스트
-		if (Input.GetKeyDown(KeyCode.Y))
-		{
-			InventoryManager.Instance.EquipWeapon("weapon_sword_01");
-			var weapon = InventoryManager.Instance.GetEquippedWeaponData();
-			Debug.Log($"장착 무기: {weapon?._itemName}, 공격력 +{weapon?._effectValue}");
-		}
-
-		// 키보드 U 누르면 사용 테스트
-		if (Input.GetKeyDown(KeyCode.U))
-		{
-			InventoryManager.Instance.UseItem("potion_hp_small");
-			Debug.Log($"남은 포션: {InventoryManager.Instance.GetItemsByType(ItemType.Consumable)[0].count}");
-		}
 	}
 
 	private Vector2 _joysticInput = Vector2.zero;
@@ -161,7 +135,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		_joysticInput = direction;
 		_isjoystickActive = direction.magnitude > 0.1f;
-		Debug.Log($"[PlayerController] SetJoystickInput - input: {_joysticInput}, isActive: {_isjoystickActive}");
 	}
 
 

@@ -58,12 +58,10 @@ public class JoystickUI : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
 
 		//방향 값 계산 후 player controller에 전달
 		Vector2 direction = clamped / _handleRange; // -1 ~ 1 범위로 정규화
-		Debug.Log($"[JoystickUI] Handle Position: {clamped}, Direction: {direction}");
 
 		if (_playerController != null)
 		{
-			Debug.Log($"[JoystickUI] Before SetJoystickInput: {direction}");
-			_playerController?.SetJoystickInput(direction);
+			_playerController.SetJoystickInput(direction);
 		}
 	}
 

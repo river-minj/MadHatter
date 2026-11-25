@@ -59,12 +59,9 @@ public class UIManager : MonoBehaviour
 	{
 		InitializeFadeImage();
 
-		if(_npcPrompt == null)
+		if (_npcPrompt == null)
 		{
-			if(_npcPrompt == null)
-			{
-				Debug.LogWarning("NPCPromptUI not found in the scene.");
-			}
+			Debug.LogWarning("NPCPromptUI not found in the scene.");
 		}
 	}
 

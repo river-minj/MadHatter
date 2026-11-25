@@ -288,7 +288,7 @@ public class GameManager : MonoBehaviour
 
 			if (onComplete != null)
 			{
-		    	onComplete?.Invoke();
+				onComplete.Invoke();
 			}
 			else
 			{
