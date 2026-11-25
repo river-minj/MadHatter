@@ -22,6 +22,12 @@ public class ShopManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	public int GetStock(string uniqueId)
 	{
 		ShopItemData item = ShopDatabase.Instance.GetShopItemByUniqueId(uniqueId);

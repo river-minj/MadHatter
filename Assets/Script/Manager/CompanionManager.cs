@@ -33,6 +33,12 @@ public class CompanionManager : MonoBehaviour
 
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	private void Start()
 	{
 		if(_player == null)

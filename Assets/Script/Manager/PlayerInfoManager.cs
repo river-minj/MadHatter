@@ -94,6 +94,8 @@ public class PlayerInfoManager : MonoBehaviour
 			InventoryManager.Instance.OnEquipChanged -= HandleEquipChanged;
 		}
 
+		if (Instance == this)
+			Instance = null;
 	}
 
 	private void HandleEquipChanged()

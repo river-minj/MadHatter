@@ -42,6 +42,12 @@ public class InventoryManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	//아이템 추가 / 제거
 	public void AddItem(string itemId, int count = 1)
 	{

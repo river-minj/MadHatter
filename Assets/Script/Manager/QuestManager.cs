@@ -88,6 +88,12 @@ public class QuestManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	public QuestSaveData GetSaveData()
 	{
 		QuestSaveData data = new QuestSaveData

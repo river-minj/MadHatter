@@ -23,6 +23,12 @@ public class DroppedItemManager : MonoBehaviour
 
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	//필드
 	[SerializeField] private Transform _droppedItemRoot;
 	[SerializeField] private DroppedItemController _dropPrefab;

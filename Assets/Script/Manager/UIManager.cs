@@ -51,8 +51,15 @@ public class UIManager : MonoBehaviour
 			Debug.LogWarning("Multiple instances of UIManager detected. Destroying duplicate.");
 			Destroy(gameObject);
 			return;
-		}  
+		}
 
+	}
+
+	private void OnDestroy()
+	{
+		// 중복 인스턴스가 파괴될 때 원본 Instance를 지우지 않도록 자기 자신일 때만 해제
+		if (Instance == this)
+			Instance = null;
 	}
 
 	private void Start()

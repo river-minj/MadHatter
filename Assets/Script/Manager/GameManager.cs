@@ -87,6 +87,9 @@ public class GameManager : MonoBehaviour
         }
         if (ShopManager.Instance != null)
             ShopManager.Instance.OnShopStockChanged -= SaveGame;
+
+        if (Instance == this)
+            Instance = null;
     }
 
 	public void SaveGame()

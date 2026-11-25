@@ -63,6 +63,12 @@ public class PlayerTrailRecorder : MonoBehaviour
 
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	private void Start()
 	{
 		_player_ = GetComponent<PlayerController>();

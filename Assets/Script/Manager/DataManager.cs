@@ -21,6 +21,12 @@ public class DataManager : MonoBehaviour
 		Instance = this;
 	}
 
+	private void OnDestroy()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	public IEnumerator LoadAllDataAsync(Action<float, string> onProgress = null)
 	{
 		if (_isLoaded) yield break;
