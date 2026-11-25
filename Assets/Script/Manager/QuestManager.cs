@@ -67,7 +67,7 @@ public class QuestManager : MonoBehaviour
 	private HashSet<string> _setCompletedQuest = new HashSet<string>(); //완료된 퀘스트ID
 	private Dictionary<string, QuestState> _dicActiveQuest = new Dictionary<string, QuestState>();
 
-	public Dictionary<string, QuestState> DicActiveQuest => _dicActiveQuest;
+	public IReadOnlyDictionary<string, QuestState> DicActiveQuest => _dicActiveQuest;
 
 	private const int MaxQuestCount = 5;
 

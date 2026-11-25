@@ -138,7 +138,7 @@ public class InventoryManager : MonoBehaviour
 	}
 
 	// UI용 조회
-	public Dictionary<string, InventorySlot> GetAllItems()
+	public IReadOnlyDictionary<string, InventorySlot> GetAllItems()
 	{
 		return _dicInventory;
 	}

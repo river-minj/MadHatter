@@ -32,7 +32,7 @@ public class EnemyFSM : MonoBehaviour
 	public float AttackCooldown => _attackCooldown;
 	public float KnockbackForce => _knockbackForce;
 	public float HitStunDuration => _hitStunDuration;
-	public List<Transform> PatrolPoints => _patrolPoints;
+	public IReadOnlyList<Transform> PatrolPoints => _patrolPoints;
 	public Vector3 OriginPosition { get; private set; }
 	public Transform Target { get; private set; }
 

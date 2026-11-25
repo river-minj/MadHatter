@@ -47,7 +47,7 @@ public class ShopDatabase
 		Debug.Log($"[ShopDatabase] {_dicShopItem.Count}개 상품 로드 완료");
 	}
 
-	public List<ShopItemData> GetShopItems(string shopId)
+	public IReadOnlyList<ShopItemData> GetShopItems(string shopId)
 	{
 		if (_dicShop.TryGetValue(shopId, out var list))
 			return list;
