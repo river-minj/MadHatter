@@ -182,7 +182,7 @@ SaveData
 
 ## 주요 패턴
 
-- **싱글턴 매니저** — `Awake()`에서 `public static Instance` 설정
+- **싱글턴 매니저** — `Awake()`에서 `public static Instance` 설정, `OnDestroy()`에서 `if (Instance == this) Instance = null;`로 해제 (중복 인스턴스 파괴 시 원본을 지우지 않도록 `Instance == this` 조건 필수)
 - **이벤트 델리게이트** — `OnInventoryChanged`, `OnEquipChanged`로 UI 업데이트 및 세이브 연동
 - **설정 기반 구조** — Inspector의 직렬화 필드 + JSON 데이터 테이블 사용, 하드코딩 지양
 - **템플릿 메서드** — `MapController`, `InteractionController`가 서브클래스용 가상 훅 제공
@@ -193,8 +193,9 @@ SaveData
 - 이벤트는 매니저에 선언, UI가 구독
 - UI 슬롯은 매니저 직접 참조 안 함 → 콜백(Action)으로 중개
 - UI 슬롯은 부모 UI(InventoryUI 등)도 직접 참조 안 함 → Action 콜백으로 클릭 전달
-- DontDestroyOnLoad 매니저는 현재 Main 씬에 배치 (나중에 Boot 씬 분리 가능)
-- DataManager만 Main 씬 Hierarchy에 배치 (MonoBehaviour, 코루틴 사용)
+- DontDestroyOnLoad 매니저는 현재 Main 씬의 `Manager` 오브젝트 하나에 컴포넌트로 함께 배치 (UIManager, GameManager, QuestManager, CompanionManager, PlayerInfoManager, DataManager, InventoryManager, ShopManager, DroppedItemManager) — 나중에 Boot 씬 분리 가능
+- `Manager` 오브젝트의 DontDestroyOnLoad는 GameManager.Awake가 호출 → 같은 오브젝트의 DataManager 등도 함께 유지됨 (DataManager는 자체적으로 DDOL을 호출하지 않음). 컴포넌트를 다른 오브젝트로 옮기면 DDOL이 풀리므로 주의
+- 데이터 계층에서 Hierarchy에 배치되는 것은 DataManager뿐 (MonoBehaviour, 코루틴 사용)
 - Database는 일반 C# 클래스 싱글톤 — DataManager가 CreateInstance로 생성, Hierarchy 배치 불필요
 - MonoBehaviour 사용 기준: Unity 엔진 기능(렌더링, 물리, 코루틴, Inspector)이 필요한 경우만
 - Save/Load 진입점은 GameManager, 실제 파일 I/O는 GameSystem(static 유틸)에 위임
