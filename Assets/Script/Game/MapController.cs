@@ -105,14 +105,15 @@ public class MapController : MonoBehaviour
 
 	public Transform GetSpawnPoint(SpawnPointId id)
 	{
-		if (_dicSpawnPoints.TryGetValue(id, out Transform spawnPoint))
+		// 항목은 등록됐지만 Transform이 비어 있는 경우도 "없음"으로 보고 Default로 대체
+		if (_dicSpawnPoints.TryGetValue(id, out Transform spawnPoint) && spawnPoint != null)
 		{
 			return spawnPoint;
 		}
 
 		Debug.LogWarningFormat("[MapController] Spawn point with ID {0} not found. => Default", id);
 
-		if(_dicSpawnPoints.TryGetValue(SpawnPointId.Default, out Transform fallback))
+		if (_dicSpawnPoints.TryGetValue(SpawnPointId.Default, out Transform fallback) && fallback != null)
 		{
 			return fallback;
 		}

@@ -267,18 +267,32 @@ public class GameManager : MonoBehaviour
         _cameraController.SetBounds(_currentMapController.GetCurrentMapBounds());
 
         //플레이어 위치 설정
+        //요청 스폰 포인트 → Default 순으로 탐색 (MapController.GetSpawnPoint), 둘 다 없으면 null
         Transform playerSpawnPos = _currentMapController.GetSpawnPoint(spawnPointId);
         Vector2 scale = _currentMapController.PlayerScale;
-        if(_playerController != null && playerSpawnPos != null)
+        if (_playerController != null)
         {
-            _playerController.SetPosition(playerSpawnPos);
-            _playerController.SetMapCondition(playerSpawnPos, scale, _currentMapController.PlayerSpeed);
+            if (playerSpawnPos != null)
+            {
+                _playerController.SetPosition(playerSpawnPos);
+            }
+            else
+            {
+                //맵 데이터 오류: 위치는 유지하되 전환 흐름(페이드/입력 잠금 해제/저장)은 끊지 않음
+                Debug.LogErrorFormat("[GameManager] 스폰 포인트({0})와 Default를 모두 찾지 못해 플레이어 위치를 유지합니다: {1}",
+                    spawnPointId, _currentMapController.gameObject.name);
+            }
+
+            //스케일/속도는 스폰 포인트 유무와 관계없이 새 맵 기준으로 적용
+            _playerController.SetMapCondition(scale, _currentMapController.PlayerSpeed);
         }
 
         //동료 스케일 설정
         CompanionManager.Instance?.SetScale(scale);
 
-        PlayerTrailRecorder.Instance?.ResetToPosition(playerSpawnPos.position);
+        //동료 트레일은 플레이어의 실제 위치 기준으로 리셋 (스폰 포인트가 없을 때 NRE 방지)
+        if (_playerController != null)
+            PlayerTrailRecorder.Instance?.ResetToPosition(_playerController.transform.position);
         CompanionManager.Instance?.SnapAllToFormation();
 
         _cameraController.SnapToTarget();

@@ -174,9 +174,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 		transform.position = pos.position;
 	}
 
-	public void SetMapCondition(Transform pos, Vector3 scale, float speed)
+	// 위치는 SetPosition으로 분리 — 스폰 포인트가 없어도 맵별 스케일/속도는 적용되도록
+	public void SetMapCondition(Vector3 scale, float speed)
 	{
-		SetPosition(pos);
 		transform.localScale = scale;
 		_moveSpeed = speed;
 	}
@@ -223,7 +223,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 			//hp 회복 + 스폰 포인트로 이동
 			PlayerInfoManager.Instance.RestoreHp();
 			Transform spawnPoint = GameManager.Instance.CurrentMapController.GetSpawnPoint(SpawnPointId.Default);
-			SetPosition(spawnPoint);
+			if (spawnPoint != null)
+				SetPosition(spawnPoint);
+			else
+				Debug.LogError("[PlayerController] Default 스폰 포인트가 없어 사망 위치에서 부활합니다.");
 			_isDead = false;
 
 			GameManager.Instance.SnapCamera();
