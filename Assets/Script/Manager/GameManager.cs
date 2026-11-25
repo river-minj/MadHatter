@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private bool _isLoading;
 
     //로드된 세이브의 복원 대상 맵 id. 아직 맵이 인스턴스화되기 전(LoadGame 직후) SaveGame이 currentMapId를
-    //잃어버리지 않도록 보관해뒀다가 LoadFristMap에서 소비한다.
+    //잃어버리지 않도록 보관해뒀다가 LoadFirstMap에서 소비한다.
     private string _pendingMapId;
 
     /// <summary>
@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
 			LoadGame(data);
 		}
 
-		LoadFristMap();
+		LoadFirstMap();
 	}
 
 	private void OnQuestRewardClaimed(string questId)
@@ -177,10 +177,10 @@ public class GameManager : MonoBehaviour
         }
 
         if (_currentMapController == null)
-            LoadFristMap();
+            LoadFirstMap();
     }
 
-    private void LoadFristMap()
+    private void LoadFirstMap()
     {
         MapController mapToLoad = _firstMapMc;
 

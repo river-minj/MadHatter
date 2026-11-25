@@ -81,9 +81,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void HandleInput()
 	{
 
-		if (_isjoystickActive)
+		if (_isJoystickActive)
 		{
-			_moveDir = _joysticInput;
+			_moveDir = _joystickInput;
 		}
 		else
 		{
@@ -129,12 +129,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	private Vector2 _joysticInput = Vector2.zero;
-	private bool _isjoystickActive = false;
+	private Vector2 _joystickInput = Vector2.zero;
+	private bool _isJoystickActive = false;
 	public void SetJoystickInput(Vector2 direction)
 	{
-		_joysticInput = direction;
-		_isjoystickActive = direction.magnitude > 0.1f;
+		_joystickInput = direction;
+		_isJoystickActive = direction.magnitude > 0.1f;
 	}
 
 

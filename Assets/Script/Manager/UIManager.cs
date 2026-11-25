@@ -89,7 +89,7 @@ public class UIManager : MonoBehaviour
 
 	}
 
-	private IEnumerator FadeOutCouroutine(float duration)
+	private IEnumerator FadeOutCoroutine(float duration)
 	{
 		if (fadeImage == null)
 			yield break;
@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviour
 		_isFading = true;
 
 		//페이드 아웃
-		yield return StartCoroutine(FadeOutCouroutine(duration));
+		yield return StartCoroutine(FadeOutCoroutine(duration));
 
 		//페이드 아웃 완료 콜백
 		onFadeOutComplete?.Invoke();
@@ -189,11 +189,11 @@ public class UIManager : MonoBehaviour
 	}
 
 
-	public void ShowPrompt(string message, Transform npcTransfomt)
+	public void ShowPrompt(string message, Transform npcTransform)
 	{
 		if (_npcPrompt != null)
 		{
-			_npcPrompt.Show(message, npcTransfomt);
+			_npcPrompt.Show(message, npcTransform);
 		}
 	}
 

@@ -16,7 +16,7 @@ public abstract class InteractionController : MonoBehaviour, IInteractable
 	{
 		if (CanInteract() == false)
 		{
-			Debug.Log("Do Not Interacted with " + gameObject.name);
+			Debug.Log("Cannot interact with " + gameObject.name);
 			return;
 		}
 
