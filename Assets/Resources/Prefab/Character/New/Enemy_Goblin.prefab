@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 2200525278281329488}
   - component: {fileID: 5593289718304034310}
   - component: {fileID: 6629841006079059325}
+  - component: {fileID: 7726698575148796752}
   m_Layer: 7
   m_Name: Enemy_Goblin
   m_TagString: Enemy
@@ -585,7 +586,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.03}
+  m_Offset: {x: 0, y: 0.24875}
   m_Radius: 0.3
 --- !u!114 &5593289718304034310
 MonoBehaviour:
@@ -617,6 +618,19 @@ MonoBehaviour:
   _barRoot: {fileID: 7929054736097218329}
   _slider: {fileID: 2765097215434517310}
   _visibleDuration: 2
+--- !u!210 &7726698575148796752
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854220177349879094}
+  m_Enabled: 1
+  m_SortingLayerID: -2071326491
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &7929054736097218329
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.423}
+  m_AnchoredPosition: {x: 0, y: 0.64175}
   m_SizeDelta: {x: 0.9, y: 0.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4099170609102725425
